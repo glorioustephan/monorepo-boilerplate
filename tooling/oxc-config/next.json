@@ -1,0 +1,19 @@
+{
+  "extends": ["./react.json"],
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "import",
+    "oxc",
+    "react",
+    "react-perf",
+    "jsx-a11y",
+    "nextjs"
+  ],
+  "globals": {
+    "React": "readonly"
+  },
+  "rules": {
+    "react/no-unknown-property": "error"
+  }
+}

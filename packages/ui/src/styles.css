@@ -1,0 +1,14 @@
+/*
+ * UI kit stylesheet. A consuming app pulls the kit into its own Tailwind entry:
+ *
+ *   @import "tailwindcss";
+ *   @import "@monorepo-boilerplate/ui/styles.css";
+ *
+ * This file ships the design tokens AND tells Tailwind to scan the kit's
+ * components for class names — the `@source` path is relative to THIS file, so
+ * it resolves correctly no matter which app imports it (enabling HMR from
+ * source). Additional themes live in ./themes and can be imported on demand.
+ */
+@import "./themes/default.css";
+
+@source "./components";

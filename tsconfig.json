@@ -1,0 +1,12 @@
+{
+  "//": "Root tsconfig exists only to aid editors. Builds and typechecks use each package's own tsconfig (extending @monorepo-boilerplate/ts-config). Keep this empty of compilerOptions so editing it never busts Turborepo's cache.",
+  "files": [],
+  "references": [
+    { "path": "apps/web" },
+    { "path": "apps/mcp-server" },
+    { "path": "packages/types" },
+    { "path": "packages/ui" },
+    { "path": "packages/environment" },
+    { "path": "packages/providers" }
+  ]
+}

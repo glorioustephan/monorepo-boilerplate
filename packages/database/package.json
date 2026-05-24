@@ -1,0 +1,20 @@
+{
+  "name": "@monorepo-boilerplate/database",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Future home for database schema, queries, and migrations. ORM-agnostic placeholder.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "db:generate": "echo '[database] db:generate is not configured yet — see roadmap Phase 2'",
+    "db:migrate": "echo '[database] db:migrate is not configured yet — see roadmap Phase 2'"
+  },
+  "devDependencies": {
+    "@monorepo-boilerplate/ts-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

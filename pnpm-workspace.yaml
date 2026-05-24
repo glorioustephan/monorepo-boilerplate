@@ -1,0 +1,57 @@
+packages:
+  - "apps/*"
+  - "tooling/*"
+  - "packages/*"
+
+allowBuilds:
+  esbuild: true
+  lefthook: true
+  sharp: true
+
+# Centralized dependency versions. Reference with "catalog:" in any package.json.
+# Bump a version here once and it applies across the whole monorepo.
+catalog:
+  # Framework
+  next: ^16.2.6
+  react: ^19.2.6
+  react-dom: ^19.2.6
+  babel-plugin-react-compiler: ^1.0.0
+
+  # Language + types
+  typescript: ^6.0.3
+  "@types/node": ^25.9.1
+  "@types/react": ^19.2.0
+  "@types/react-dom": ^19.2.0
+
+  # Tooling
+  turbo: ^2.9.14
+  oxlint: ^1.66.0
+  oxfmt: ^0.51.0
+  lefthook: ^2.1.8
+  "@changesets/cli": ^2.31.0
+  tsx: ^4.22.3
+  tsdown: ^0.22.0
+
+  # Validation / env
+  zod: ^4.4.3
+  "@t3-oss/env-nextjs": ^0.13.11
+
+  # Styling
+  tailwindcss: ^4.3.0
+  "@tailwindcss/postcss": ^4.3.0
+  clsx: ^2.1.1
+  tailwind-merge: ^3.6.0
+  class-variance-authority: ^0.7.1
+  lucide-react: ^1.16.0
+
+  # MCP
+  "@modelcontextprotocol/sdk": ^1.29.0
+
+  # Testing
+  vitest: ^4.1.7
+  "@vitejs/plugin-react": ^6.0.2
+  "@playwright/test": ^1.60.0
+  jsdom: ^29.1.1
+  "@testing-library/react": ^16.3.2
+  "@testing-library/dom": ^10.4.1
+  "@testing-library/jest-dom": ^6.9.1

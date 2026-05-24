@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+/* Pull in the UI kit's tokens and tell Tailwind to scan its components.
+   The kit's @source paths are relative to the kit, so this works from any app. */
+@import "@monorepo-boilerplate/ui/styles.css";

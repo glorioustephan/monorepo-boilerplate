@@ -1,0 +1,4 @@
+{
+  "extends": "@monorepo-boilerplate/ts-config/node.json",
+  "include": ["src"]
+}

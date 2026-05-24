@@ -1,0 +1,42 @@
+{
+  "plugins": ["typescript", "unicorn", "import", "oxc"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "env": {
+    "es2024": true
+  },
+  "rules": {
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "no-var": "error",
+    "prefer-const": "error",
+    "no-debugger": "error",
+    "no-console": "off",
+    "no-new-wrappers": "error",
+    "no-throw-literal": "error",
+    "guard-for-in": "error",
+    "no-array-constructor": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-non-null-assertion": "error",
+    "@typescript-eslint/ban-ts-comment": "error",
+    "@typescript-eslint/no-namespace": "error",
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      { "prefer": "type-imports", "fixStyle": "inline-type-imports" }
+    ],
+    "@typescript-eslint/array-type": ["error", { "default": "array-simple" }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "import/no-cycle": "error",
+    "import/no-duplicates": "error",
+    "import/no-unassigned-import": [
+      "warn",
+      { "allow": ["**/*.css", "**/*.scss", "**/test-setup.ts", "@testing-library/jest-dom/**"] }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+/*
+ * Example alternate theme. Apps opt in with:
+ *   @import "@monorepo-boilerplate/ui/themes/emerald";
+ * then set `data-theme="emerald"` on a root element. Demonstrates how multiple
+ * themes coexist; add your own files alongside this one.
+ */
+[data-theme="emerald"] {
+  --primary: oklch(0.6 0.14 162);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+.dark[data-theme="emerald"],
+[data-theme="emerald"] .dark {
+  --primary: oklch(0.72 0.13 162);
+  --primary-foreground: oklch(0.15 0 0);
+}

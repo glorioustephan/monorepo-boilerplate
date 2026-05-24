@@ -1,0 +1,86 @@
+# AGENTS.md
+
+Canonical, cross-agent guidance for this repository. Works with Claude Code,
+Cursor, and any tool that reads `AGENTS.md`. `CLAUDE.md` files re-export this.
+Keep it accurate — agents and humans both rely on it.
+
+## What this is
+
+`@monorepo-boilerplate` is an opinionated **Turborepo + pnpm** monorepo template:
+Next.js 16 + React 19 web app, a Model Context Protocol server, and shared
+packages. It is meant to be forked as the starting point for new monorepos.
+
+## Layout
+
+```
+apps/        runnable applications
+  web/         Next.js 16 (App Router, Turbopack, React Compiler)
+  mcp-server/  MCP server (stdio transport)
+tooling/     config-only packages (ship nothing at runtime)
+  ts-config/   TypeScript presets (base/node/react-library/next)
+  oxc-config/  oxlint presets + oxfmt config
+  test-config/ Vitest + Playwright presets
+packages/    real libraries (ship code)
+  types/       cross-cutting shared types (keep small)
+  ui/          Tailwind v4 UI kit, consumed from source for HMR
+  environment/ t3-env + zod env validation, env:doctor helper
+  providers/   third-party API clients + webhook handlers
+  database/    placeholder data layer (roadmap Phase 2)
+```
+
+All packages share the `@monorepo-boilerplate/*` namespace.
+
+## Golden rules
+
+- **TypeScript everywhere, strict.** Follow `.claude/reference/typescript.md`. The
+  tsconfig is strict with `noUncheckedIndexedAccess` and `verbatimModuleSyntax`.
+- **Lint with oxlint, format with oxfmt.** Never hand-format; run `pnpm format`.
+  Rules live in `tooling/oxc-config/`. Don't restate them in code review — fix and move on.
+- **Internal packages are consumed from source** (their `exports` point at `.ts`).
+  This is deliberate — it gives HMR across package boundaries. Do not add build
+  steps to library packages; only `apps/mcp-server` builds (via tsdown).
+- **Centralize dependency versions** in `pnpm-workspace.yaml` `catalog:`. Add a new
+  shared dep there and reference it as `"catalog:"` — never pin versions per package.
+- **Use `workspace:*`** for internal dependencies.
+- **Don't read `process.env` directly in app code.** Import the typed `env` from the
+  app's `src/env.ts` (built on `@monorepo-boilerplate/environment`).
+
+## Domain references (read before writing code in that area)
+
+- TypeScript style → `.claude/reference/typescript.md`
+- React 19 / RSC / Compiler → `.claude/reference/react.md`
+- Next.js 16 → `.claude/reference/nextjs.md`
+
+## Scripts (`command:segment:subsegment`)
+
+Run from the repo root; Turborepo fans out and caches.
+
+| Command                             | What it does                          |
+| ----------------------------------- | ------------------------------------- |
+| `pnpm dev`                          | run all dev servers                   |
+| `pnpm build`                        | build everything (cached)             |
+| `pnpm lint` / `pnpm lint:fix`       | oxlint over the repo (nested configs) |
+| `pnpm format` / `pnpm format:check` | oxfmt write / check                   |
+| `pnpm typecheck`                    | `tsc --noEmit` per package            |
+| `pnpm test` / `pnpm test:unit`      | Vitest                                |
+| `pnpm test:e2e`                     | Playwright (web)                      |
+| `pnpm env:doctor`                   | validate environment variables        |
+| `pnpm changeset`                    | record a versioned change             |
+
+Verify a change end-to-end with: `pnpm lint && pnpm typecheck && pnpm test && pnpm build`.
+
+## Adding things
+
+- **A shared dependency**: add to `pnpm-workspace.yaml` `catalog:`, then reference `"catalog:"`.
+- **A new package**: see the `scaffold-package` command/skill in `.claude/`. Decide
+  `apps/` vs `tooling/` vs `packages/`; give it a `package.json`, a `tsconfig.json`
+  extending the right `ts-config` preset, and source-pointing `exports` if it's a library.
+- **A UI component**: follow the `add-ui-component` skill; match the `Button` pattern.
+- **A provider**: copy `packages/providers/src/example` and add a subpath export.
+
+## Conventions that bite
+
+- Next.js request APIs (`params`, `searchParams`, `cookies()`, `headers()`) are **async** — `await` them.
+- React Compiler is on; **don't** hand-write `useMemo`/`useCallback` for performance.
+- In the MCP server, **never write to stdout** (`console.log`) — stdio is the JSON-RPC channel; log to stderr.
+- Default exports only where a framework requires them (Next special files, config files); named exports otherwise.

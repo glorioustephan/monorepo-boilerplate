@@ -1,0 +1,22 @@
+{
+  "name": "@monorepo-boilerplate/providers",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Third-party API clients and webhook handlers. One subpath export per provider.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./example": "./src/example/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@monorepo-boilerplate/ts-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

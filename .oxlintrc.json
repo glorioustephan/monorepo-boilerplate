@@ -1,0 +1,11 @@
+{
+  "extends": ["./tooling/oxc-config/base.json"],
+  "ignorePatterns": [
+    "**/dist/**",
+    "**/.next/**",
+    "**/.turbo/**",
+    "**/coverage/**",
+    "**/node_modules/**",
+    "**/next-env.d.ts"
+  ]
+}

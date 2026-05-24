@@ -1,0 +1,10 @@
+# Default owners for everything in the repo.
+# Replace with your team handles when using this template.
+* @your-org/maintainers
+
+# Tooling and conventions deserve closer review.
+/tooling/        @your-org/platform
+/.github/        @your-org/platform
+/.claude/        @your-org/platform
+/AGENTS.md       @your-org/platform
+/CLAUDE.md       @your-org/platform
