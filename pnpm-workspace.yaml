@@ -48,6 +48,7 @@ catalog:
   tailwind-merge: ^3.6.0
   class-variance-authority: ^0.7.1
   lucide-react: ^1.16.0
+  radix-ui: ^1.4.3
 
   # MCP
   "@modelcontextprotocol/sdk": ^1.29.0

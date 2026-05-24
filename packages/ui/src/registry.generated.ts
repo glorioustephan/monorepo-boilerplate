@@ -132,6 +132,36 @@ export const componentRegistry: readonly ComponentMeta[] = [
     },
   },
   {
+    name: "Dialog",
+    description: "Modal dialog (Radix) with overlay, focus trap, and keyboard handling.",
+    importPath: "@monorepo-boilerplate/ui",
+    sourcePath: "src/components/dialog.tsx",
+    tier: "Primitive",
+    renderEnvironment: "client",
+    props: [
+      {
+        name: "Dialog",
+        type: "Radix Dialog.Root props (open, onOpenChange, …)",
+        required: false,
+      },
+      {
+        name: "DialogContent",
+        type: "ComponentPropsWithRef<typeof Dialog.Content>",
+        required: false,
+      },
+    ],
+    examples: [
+      {
+        label: "basic",
+        code: "<Dialog>\n  <DialogTrigger>Open</DialogTrigger>\n  <DialogContent>\n    <DialogTitle>Title</DialogTitle>\n    <DialogDescription>Body</DialogDescription>\n  </DialogContent>\n</Dialog>",
+      },
+    ],
+    intent: {
+      use: ["Blocking, focus-trapped interactions: confirmations, forms, detail overlays."],
+      avoid: ["Non-blocking transient hints — use Tooltip. Always render DialogTitle for a11y."],
+    },
+  },
+  {
     name: "Input",
     description: "Text input styled with the kit's semantic tokens.",
     importPath: "@monorepo-boilerplate/ui",
@@ -154,6 +184,63 @@ export const componentRegistry: readonly ComponentMeta[] = [
     intent: {
       use: ["Single-line text entry, always paired with a <label htmlFor> or aria-label."],
       avoid: ["Relying on placeholder as the accessible name — it is not a label."],
+    },
+  },
+  {
+    name: "Select",
+    description: "Accessible single-select dropdown (Radix) styled with kit tokens.",
+    importPath: "@monorepo-boilerplate/ui",
+    sourcePath: "src/components/select.tsx",
+    tier: "Primitive",
+    renderEnvironment: "client",
+    props: [
+      {
+        name: "Select",
+        type: "Radix Select.Root props (value, onValueChange, …)",
+        required: false,
+      },
+      {
+        name: "SelectTrigger",
+        type: "ComponentPropsWithRef<typeof Select.Trigger>",
+        required: false,
+      },
+    ],
+    examples: [
+      {
+        label: "basic",
+        code: '<Select>\n  <SelectTrigger><SelectValue placeholder="Pick one" /></SelectTrigger>\n  <SelectContent>\n    <SelectItem value="a">A</SelectItem>\n    <SelectItem value="b">B</SelectItem>\n  </SelectContent>\n</Select>',
+      },
+    ],
+    intent: {
+      use: ["Choosing one option from a small-to-medium list with full keyboard a11y."],
+      avoid: [
+        "Free text entry — use Input. Multi-select — compose checkboxes or a dedicated control.",
+      ],
+    },
+  },
+  {
+    name: "Tooltip",
+    description: "Hover/focus tooltip (Radix). Requires a TooltipProvider ancestor.",
+    importPath: "@monorepo-boilerplate/ui",
+    sourcePath: "src/components/tooltip.tsx",
+    tier: "Primitive",
+    renderEnvironment: "client",
+    props: [
+      {
+        name: "TooltipContent",
+        type: "ComponentPropsWithRef<typeof Tooltip.Content>",
+        required: false,
+      },
+    ],
+    examples: [
+      {
+        label: "basic",
+        code: "<TooltipProvider>\n  <Tooltip>\n    <TooltipTrigger>Hover</TooltipTrigger>\n    <TooltipContent>Hint</TooltipContent>\n  </Tooltip>\n</TooltipProvider>",
+      },
+    ],
+    intent: {
+      use: ["Short, transient hints on hover/focus for an already-labelled control."],
+      avoid: ["Essential information (tooltips are not reliably reachable on touch)."],
     },
   },
 ];
