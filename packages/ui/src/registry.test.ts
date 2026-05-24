@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 
 import {
   componentRegistry,
+  filterByRenderEnvironment,
   getComponent,
   getComponentBySlug,
   listComponents,
+  searchComponents,
   toSlug,
 } from "./registry";
 
@@ -47,5 +49,42 @@ describe("getComponentBySlug", () => {
 
   it("returns undefined for an unknown slug", () => {
     expect(getComponentBySlug("does-not-exist")).toBeUndefined();
+  });
+});
+
+describe("searchComponents", () => {
+  it("ranks a name match above a weaker intent-only match", () => {
+    const results = searchComponents("confirm dialog");
+    expect(results[0]?.name).toBe("ConfirmDialog");
+    expect(results.map((r) => r.name)).toContain("Dialog");
+  });
+
+  it("ranks a tier-name query so that tier comes first", () => {
+    const results = searchComponents("block");
+    expect(results[0]?.tier).toBe("Block");
+    const blockNames = results.filter((r) => r.tier === "Block").map((r) => r.name);
+    expect(blockNames).toEqual(expect.arrayContaining(["Hero", "Cta", "FeatureGrid"]));
+  });
+
+  it("returns nothing for a blank or non-matching query", () => {
+    expect(searchComponents("   ")).toHaveLength(0);
+    expect(searchComponents("zzzzznotacomponent")).toHaveLength(0);
+  });
+
+  it("orders results by descending score", () => {
+    const results = searchComponents("dialog");
+    const scores = results.map((r) => r.score);
+    expect(scores).toEqual([...scores].toSorted((a, b) => b - a));
+  });
+});
+
+describe("filterByRenderEnvironment", () => {
+  it("returns only components for the given environment", () => {
+    expect(filterByRenderEnvironment("client").every((c) => c.renderEnvironment === "client")).toBe(
+      true,
+    );
+    const serverNames = filterByRenderEnvironment("server").map((c) => c.name);
+    expect(serverNames).toContain("Button");
+    expect(serverNames).not.toContain("Dialog");
   });
 });

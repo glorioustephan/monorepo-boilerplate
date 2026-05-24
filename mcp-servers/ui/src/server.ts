@@ -1,6 +1,16 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-import { getComponentInputSchema, getComponentTool, listComponentsTool } from "./tools";
+import {
+  filterByRenderEnvironmentInputSchema,
+  filterByRenderEnvironmentTool,
+  getComponentInputSchema,
+  getComponentTool,
+  listByTierInputSchema,
+  listByTierTool,
+  listComponentsTool,
+  searchComponentsInputSchema,
+  searchComponentsTool,
+} from "./tools";
 
 /** Build the UI-kit MCP server and register its tools. Transport-agnostic. */
 export function createServer(): McpServer {
@@ -27,6 +37,38 @@ export function createServer(): McpServer {
       inputSchema: getComponentInputSchema,
     },
     async (args) => getComponentTool(args),
+  );
+
+  server.registerTool(
+    "search_components",
+    {
+      title: "Search UI components",
+      description:
+        "Rank kit components against a free-text query (name, tier, render environment, description, intent). Use this first when looking for a component to build a UI.",
+      inputSchema: searchComponentsInputSchema,
+    },
+    async (args) => searchComponentsTool(args),
+  );
+
+  server.registerTool(
+    "list_by_tier",
+    {
+      title: "List components by tier",
+      description: "List components in one taxonomy tier: Primitive, Recipe, Block, or Template.",
+      inputSchema: listByTierInputSchema,
+    },
+    async (args) => listByTierTool(args),
+  );
+
+  server.registerTool(
+    "filter_by_render_environment",
+    {
+      title: "Filter components by render environment",
+      description:
+        "List components by render environment: server (RSC-safe), client ('use client'), or universal.",
+      inputSchema: filterByRenderEnvironmentInputSchema,
+    },
+    async (args) => filterByRenderEnvironmentTool(args),
   );
 
   return server;
