@@ -2,19 +2,35 @@
   "name": "@monorepo-boilerplate/database",
   "version": "0.0.0",
   "private": true,
-  "description": "Future home for database schema, queries, and migrations. ORM-agnostic placeholder.",
+  "description": "Data layer: Drizzle ORM schema, typed queries, and migrations (PostgreSQL).",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./schema": "./src/schema/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "db:generate": "echo '[database] db:generate is not configured yet — see roadmap Phase 2'",
-    "db:migrate": "echo '[database] db:migrate is not configured yet — see roadmap Phase 2'"
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/migrate.ts",
+    "db:seed": "tsx src/seed.ts",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@monorepo-boilerplate/logger": "workspace:*",
+    "@monorepo-boilerplate/types": "workspace:*",
+    "drizzle-orm": "catalog:",
+    "postgres": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
+    "@monorepo-boilerplate/test-config": "workspace:*",
     "@monorepo-boilerplate/ts-config": "workspace:*",
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "drizzle-kit": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

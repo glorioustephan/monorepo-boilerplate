@@ -8,6 +8,7 @@
     { "path": "packages/logger" },
     { "path": "packages/ui" },
     { "path": "packages/environment" },
-    { "path": "packages/providers" }
+    { "path": "packages/providers" },
+    { "path": "packages/database" }
   ]
 }

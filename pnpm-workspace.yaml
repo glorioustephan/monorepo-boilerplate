@@ -49,6 +49,11 @@ catalog:
   # MCP
   "@modelcontextprotocol/sdk": ^1.29.0
 
+  # Database
+  drizzle-orm: ^0.45.2
+  drizzle-kit: ^0.31.10
+  postgres: ^3.4.9
+
   # Testing
   vitest: ^4.1.7
   "@vitejs/plugin-react": ^6.0.2

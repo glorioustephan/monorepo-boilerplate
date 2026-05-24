@@ -1,4 +1,4 @@
 {
   "extends": "@monorepo-boilerplate/ts-config/node.json",
-  "include": ["src"]
+  "include": ["src", "drizzle.config.ts"]
 }
