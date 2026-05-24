@@ -9,6 +9,7 @@
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "lint:tokens": "tsx tooling/catalog-lint/src/check-tokens.ts",
+    "lint:catalog": "tsx tooling/catalog-lint/src/check-catalog.ts",
     "catalog:generate": "tsx tooling/catalog-extractor/src/cli.ts && oxfmt --write packages/ui/src/registry.generated.ts",
     "catalog:check": "pnpm catalog:generate && git diff --exit-code -- packages/ui/src/registry.generated.ts",
     "lint:smells": "tsx tooling/catalog-lint/src/check-smells.ts",

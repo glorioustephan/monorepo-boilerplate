@@ -2,7 +2,7 @@
   "name": "@monorepo-boilerplate/catalog-lint",
   "version": "0.0.0",
   "private": true,
-  "description": "Custom checks oxlint can't express. Token-bypass now; catalog AST rules added in U7.",
+  "description": "Custom checks oxlint can't express: token-bypass + catalog AST rules (raw-HTML/ui-import).",
   "type": "module",
   "exports": {
     ".": "./src/index.ts"
@@ -11,6 +11,10 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run"
+  },
+  "dependencies": {
+    "@monorepo-boilerplate/ui": "workspace:*",
+    "ts-morph": "catalog:"
   },
   "devDependencies": {
     "@monorepo-boilerplate/test-config": "workspace:*",
