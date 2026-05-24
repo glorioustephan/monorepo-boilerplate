@@ -1,9 +1,9 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import type { HTMLAttributes } from "react";
+import type { ComponentPropsWithRef } from "react";
 
 import { cn } from "../lib/cn";
 
-const badgeVariants = cva(
+export const badgeVariants = cva(
   "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
   {
     variants: {
@@ -19,8 +19,10 @@ const badgeVariants = cva(
   },
 );
 
-export type BadgeProps = HTMLAttributes<HTMLDivElement> & VariantProps<typeof badgeVariants>;
+export type BadgeProps = ComponentPropsWithRef<"span"> & VariantProps<typeof badgeVariants>;
 
+// Renders a <span> (inline, valid inside text/table cells). For a badge that
+// announces dynamic status, add `aria-live="polite"` at the call site.
 export function Badge({ className, variant, ...props }: BadgeProps) {
-  return <div className={cn(badgeVariants({ variant }), className)} {...props} />;
+  return <span className={cn(badgeVariants({ variant }), className)} {...props} />;
 }

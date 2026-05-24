@@ -13,10 +13,12 @@ export type Result<T, E = Error> =
   | { readonly ok: true; readonly value: T }
   | { readonly ok: false; readonly error: E };
 
+/** Wrap a success value in a {@link Result}. */
 export function ok<T>(value: T): Result<T, never> {
   return { ok: true, value };
 }
 
+/** Wrap a failure value in a {@link Result}. */
 export function err<E>(error: E): Result<never, E> {
   return { ok: false, error };
 }

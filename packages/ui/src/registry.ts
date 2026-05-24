@@ -43,7 +43,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     props: [
       { name: "variant", type: '"primary" | "outline" | "ghost"', required: false },
       { name: "size", type: '"sm" | "md" | "lg"', required: false },
-      { name: "...button", type: "ButtonHTMLAttributes<HTMLButtonElement>", required: false },
+      { name: "...button", type: 'ComponentPropsWithRef<"button">', required: false },
     ],
     variants: [
       { name: "variant", values: ["primary", "outline", "ghost"], default: "primary" },
@@ -56,7 +56,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Bordered surface container for grouping content.",
     importPath: IMPORT,
     sourcePath: "src/components/card.tsx",
-    props: [{ name: "...div", type: "HTMLAttributes<HTMLDivElement>", required: false }],
+    props: [{ name: "...div", type: 'ComponentPropsWithRef<"div">', required: false }],
     example: "<Card>Content</Card>",
   },
   {
@@ -64,15 +64,18 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Text input styled with the kit's semantic tokens.",
     importPath: IMPORT,
     sourcePath: "src/components/input.tsx",
-    props: [{ name: "...input", type: "InputHTMLAttributes<HTMLInputElement>", required: false }],
-    example: '<Input placeholder="Email" type="email" />',
+    props: [{ name: "...input", type: 'ComponentPropsWithRef<"input">', required: false }],
+    example: '<label htmlFor="email">Email<Input id="email" type="email" /></label>',
   },
   {
     name: "Badge",
-    description: "Small status/label pill with variants.",
+    description: "Small status/label pill with variants. Renders a <span>.",
     importPath: IMPORT,
     sourcePath: "src/components/badge.tsx",
-    props: [{ name: "variant", type: '"default" | "outline" | "muted"', required: false }],
+    props: [
+      { name: "variant", type: '"default" | "outline" | "muted"', required: false },
+      { name: "...span", type: 'ComponentPropsWithRef<"span">', required: false },
+    ],
     variants: [{ name: "variant", values: ["default", "outline", "muted"], default: "default" }],
     example: '<Badge variant="muted">Beta</Badge>',
   },

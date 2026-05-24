@@ -1,9 +1,14 @@
 /**
  * Provider-agnostic session primitives. This module does NOT pick an identity
  * provider — it gives you a tamper-proof, expiring session token (HMAC-SHA256
- * over a JSON payload) that works in any runtime with Web Crypto (Node, edge).
- * Wire your own login that, on success, `seal()`s a payload into a cookie.
+ * over a JSON payload). Wire your own login that, on success, `seal()`s a payload
+ * into a cookie.
+ *
+ * Runtime: Node (uses `node:crypto` for a constant-time comparison and `Buffer`
+ * for base64url). The Next proxy runs on the Node runtime, so it can import this.
  */
+
+import { timingSafeEqual } from "node:crypto";
 
 const encoder = new TextEncoder();
 
@@ -28,12 +33,11 @@ async function sign(secret: string, data: string): Promise<string> {
 }
 
 function safeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let mismatch = 0;
-  for (let i = 0; i < a.length; i += 1) {
-    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-  return mismatch === 0;
+  const aBytes = Buffer.from(a);
+  const bBytes = Buffer.from(b);
+  // timingSafeEqual requires equal-length inputs; the length guard only leaks
+  // the (fixed, public) length of an HMAC-SHA256 digest, not secret material.
+  return aBytes.length === bBytes.length && timingSafeEqual(aBytes, bBytes);
 }
 
 interface SealedEnvelope {
@@ -42,13 +46,9 @@ interface SealedEnvelope {
 }
 
 function isSealedEnvelope(value: unknown): value is SealedEnvelope {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "exp" in value &&
-    typeof (value as { exp: unknown }).exp === "number" &&
-    "data" in value
-  );
+  if (typeof value !== "object" || value === null) return false;
+  const record = value as Record<string, unknown>;
+  return typeof record.exp === "number" && typeof record.data === "object" && record.data !== null;
 }
 
 export interface SessionCodecOptions {

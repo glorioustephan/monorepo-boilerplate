@@ -21,7 +21,8 @@
   --primary: oklch(0.55 0.2 264);
   --primary-foreground: oklch(0.98 0 0);
   --muted: oklch(0.96 0 0);
-  --muted-foreground: oklch(0.45 0 0);
+  /* Dark enough that text-xs muted text clears WCAG AA (~7:1) on white and on --muted. */
+  --muted-foreground: oklch(0.37 0 0);
   --border: oklch(0.9 0 0);
   --radius: 0.5rem;
 }

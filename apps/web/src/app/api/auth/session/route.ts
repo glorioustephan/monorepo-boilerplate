@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 
+import { env } from "@/env";
 import { SESSION_COOKIE, sessionCodec } from "@/lib/session";
 
 // Demo login/logout. In a real app, POST would first authenticate credentials
@@ -11,7 +12,7 @@ export async function POST(): Promise<Response> {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
-    secure: process.env.NODE_ENV === "production",
+    secure: env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 7,
   });
   return Response.json({ ok: true });

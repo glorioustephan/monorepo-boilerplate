@@ -93,12 +93,13 @@ npx @modelcontextprotocol/inspector node apps/mcp-server/dist/index.mjs
 
 ## How internal-package HMR works
 
-Library packages (`ui`, `types`, `environment`, `providers`) set their `exports` to
-**TypeScript source** (`./src/*.ts`) — they have no build step. The web app lists the
-UI kit in `transpilePackages`, so Next transpiles it on the fly. Editing
+Every package under `packages/` sets its `exports` to **TypeScript source**
+(`./src/*.ts`) — they have no build step. The web app lists the internal packages it
+imports in `transpilePackages`, so Next transpiles them on the fly. Editing
 `packages/ui/src/components/button.tsx` hot-reloads `apps/web` instantly, with no
-rebuild or version bump. Only `apps/mcp-server` is bundled (with tsdown), because it
-runs as a standalone Node process.
+rebuild or version bump. Only the MCP server apps (`apps/mcp-server`, `apps/ui-mcp-server`)
+are bundled (with tsdown), because they run as standalone Node processes — and tsdown
+inlines the internal packages so there are no `.ts` imports at runtime.
 
 Tailwind v4 follows the same source-first idea: `apps/web/src/app/globals.css` imports
 `@monorepo-boilerplate/ui/styles.css`, which carries the design tokens and an

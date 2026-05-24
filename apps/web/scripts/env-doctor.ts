@@ -1,13 +1,8 @@
 import { checkEnv, printDoctorReport } from "@monorepo-boilerplate/environment";
-import { z } from "zod";
 
-// Mirror the variables defined in src/env.ts. `checkEnv` validates every key
-// and reports each one, rather than throwing on the first failure.
-const schemas = {
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
-  SESSION_SECRET: z.string().min(16).default("dev-insecure-session-secret-change-me"),
-  NEXT_PUBLIC_APP_NAME: z.string().min(1).default("monorepo-boilerplate"),
-};
+import { clientSchema, serverSchema } from "../src/env.schema";
 
-const ok = printDoctorReport(checkEnv(schemas));
+// Same schema as src/env.ts (imported, not duplicated). `checkEnv` validates
+// every key and reports each one, rather than throwing on the first failure.
+const ok = printDoctorReport(checkEnv({ ...serverSchema, ...clientSchema }));
 process.exit(ok ? 0 : 1);

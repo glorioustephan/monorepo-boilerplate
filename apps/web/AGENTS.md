@@ -7,8 +7,9 @@ Next.js 16 App Router (Turbopack, React Compiler on). Full conventions in
 
 - **Server Components by default.** Add `"use client"` only for interactivity, at the leaves.
 - **Request APIs are async** — `await params`, `await searchParams`, `await cookies()`, `await headers()`.
-- **Env**: import `env` from `src/env.ts`; never touch `process.env` directly. Add new vars there
-  (and mirror them in `scripts/env-doctor.ts`). Only `NEXT_PUBLIC_*` reaches the browser.
+- **Env**: import `env` from `src/env.ts`; never touch `process.env` directly. Add new vars to
+  `src/env.schema.ts` (the single source `env.ts` and `scripts/env-doctor.ts` both consume — no
+  mirroring). Server secrets fail-fast at startup; only `NEXT_PUBLIC_*` reaches the browser.
 - **Styling**: Tailwind v4. `src/app/globals.css` imports `tailwindcss` then
   `@monorepo-boilerplate/ui/styles.css`. Use the kit's semantic token classes.
 - The UI kit is transpiled from source via `transpilePackages` in `next.config.ts` — editing

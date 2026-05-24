@@ -15,12 +15,16 @@ export interface ExampleProviderOptions {
   readonly baseUrl?: string;
 }
 
+export interface ExampleProvider {
+  getUser(id: string): Promise<ExampleUser>;
+}
+
 /**
  * Reference provider. Copy this folder to add a real integration: define
  * response schemas, build a client, expose typed methods, and add resilience
  * (retry/timeout/rate limiting) from `../resilience` where appropriate.
  */
-export function createExampleProvider(options: ExampleProviderOptions) {
+export function createExampleProvider(options: ExampleProviderOptions): ExampleProvider {
   const client = createJsonClient({
     baseUrl: options.baseUrl ?? "https://api.example.com",
     headers: { authorization: `Bearer ${options.apiKey}` },

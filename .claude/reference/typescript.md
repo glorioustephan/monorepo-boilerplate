@@ -121,14 +121,15 @@ The following override ts.dev rules that predate isolatedModules/bundlers:
    default export. Note `route.ts` (named `GET`/`POST`/…) and `proxy.ts` (named `proxy` + `config`)
    use **named** exports. Everywhere else, **named exports are the default.**
 
-3. **No barrel `index.ts` re-exports** inside packages unless the package's public API is intentionally
-   bounded. Barrels defeat tree-shaking and slow bundler resolution.
+3. **Avoid nested barrel files** (`components/index.ts`, `utils/index.ts`) inside a package —
+   they defeat tree-shaking and slow bundler resolution. Each package's root `src/index.ts` is
+   its one intentional, bounded public-API barrel; that is expected and fine.
 
 ### General import rules
 
 - Group imports: external packages → internal workspace packages → relative. Blank line between groups.
   oxlint enforces import ordering. _(enforced)_
-- Use absolute workspace imports (`@repo/ui`) over relative paths that cross package boundaries.
+- Use absolute workspace imports (`@monorepo-boilerplate/ui`) over relative paths that cross package boundaries.
 - No `require()` calls in TypeScript source. _(enforced)_
 
 ---

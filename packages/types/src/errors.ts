@@ -40,7 +40,7 @@ export class AppError extends Error {
   readonly details?: Record<string, unknown>;
 
   constructor(message: string, options: AppErrorOptions = {}) {
-    super(message, options.cause === undefined ? undefined : { cause: options.cause });
+    super(message, options.cause !== undefined ? { cause: options.cause } : undefined);
     this.name = "AppError";
     this.code = options.code ?? "INTERNAL";
     this.status = options.status ?? DEFAULT_STATUS[this.code];

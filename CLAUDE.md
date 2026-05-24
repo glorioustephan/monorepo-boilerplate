@@ -12,4 +12,5 @@ The canonical, cross-agent guidance lives in `AGENTS.md` — read it first.
 - **Skills** (`.claude/skills/`): `add-ui-component`, `add-provider`.
 - **Hook**: a `PostToolUse` hook (`.claude/settings.json` → `.claude/hooks/oxfmt-file.sh`)
   auto-formats files you edit with oxfmt, so you never need to format by hand.
-- After non-trivial changes, run `pnpm lint && pnpm typecheck && pnpm test` before declaring done.
+- After non-trivial changes, run `pnpm lint && pnpm typecheck && pnpm test && pnpm build` before
+  declaring done (the `build` step catches the MCP servers' tsdown bundling failures).

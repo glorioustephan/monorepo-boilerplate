@@ -1,10 +1,17 @@
+// @vitest-environment node
+// Route handlers are server-only; the node env lets `@/env` expose server vars
+// (t3-env blocks server-var access under the jsdom/client default).
 import { createHmac } from "node:crypto";
 
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { POST } from "./route";
+const secret = "hook-secret-0123456789"; // ≥16 chars to satisfy the env schema
 
-const secret = "hook-secret";
+// `env` reads process.env when its module is first imported, so the secret must
+// be set before route.ts (which imports `@/env`) loads. Set it, then dynamically import.
+process.env.WEBHOOK_SECRET = secret;
+const { POST } = await import("./route");
+
 const body = JSON.stringify({ type: "ping", id: "evt_1" });
 const sign = (payload: string) => createHmac("sha256", secret).update(payload).digest("hex");
 
@@ -19,13 +26,6 @@ function makeRequest(payload: string, signature: string): Request {
 const params = Promise.resolve({ provider: "example" });
 
 describe("POST /api/webhooks/[provider]", () => {
-  beforeEach(() => {
-    process.env.WEBHOOK_SECRET = secret;
-  });
-  afterEach(() => {
-    delete process.env.WEBHOOK_SECRET;
-  });
-
   it("accepts a correctly signed payload", async () => {
     const res = await POST(makeRequest(body, sign(body)), { params });
     expect(res.status).toBe(200);

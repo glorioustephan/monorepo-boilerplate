@@ -34,12 +34,20 @@ describe("retry", () => {
 
 describe("withTimeout", () => {
   it("resolves when fast enough", async () => {
-    await expect(withTimeout(Promise.resolve(42), 50)).resolves.toBe(42);
+    await expect(withTimeout(() => Promise.resolve(42), 50)).resolves.toBe(42);
   });
 
-  it("rejects with a TIMEOUT error when too slow", async () => {
-    const slow = new Promise((resolve) => setTimeout(resolve, 50));
+  it("rejects with a TIMEOUT error and aborts the signal when too slow", async () => {
+    let aborted = false;
+    const slow = (signal: AbortSignal) =>
+      new Promise((_, reject) => {
+        signal.addEventListener("abort", () => {
+          aborted = true;
+          reject(new Error("aborted"));
+        });
+      });
     await expect(withTimeout(slow, 5)).rejects.toMatchObject({ code: "TIMEOUT" });
+    expect(aborted).toBe(true);
   });
 });
 

@@ -1,7 +1,8 @@
 # MCP server — `@monorepo-boilerplate/mcp-server`
 
 A Model Context Protocol server over **stdio**, built with `@modelcontextprotocol/sdk`.
-Bundled with **tsdown** to `dist/index.mjs` (the only app that has a build step).
+Bundled with **tsdown** to `dist/index.mjs` (tsdown inlines internal `@monorepo-boilerplate/*`
+packages via `noExternal`, so the standalone Node process has no `.ts` runtime imports).
 
 ## Rules
 

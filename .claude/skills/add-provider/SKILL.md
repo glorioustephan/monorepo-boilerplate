@@ -15,8 +15,9 @@ Add an integration to `packages/providers`. The reference implementation is
    - Build a client with `createJsonClient` (from `../http`) so every response is
      validated and typed — never return `unknown` or `any`.
    - Expose a `create<Provider>Provider(options)` factory returning typed methods.
-   - For webhooks, verify signatures in constant time (see `verifyWebhookSignature`
-     in the example, using `node:crypto`).
+   - For webhooks, use `verifyWebhookSignature` / `parseSignedWebhook` from
+     `packages/providers/src/webhooks/index.ts` (exported as the `./webhooks` subpath) — they
+     verify HMAC signatures in constant time via `node:crypto`. Don't reimplement the compare.
 2. **Add a subpath export** in `packages/providers/package.json`:
    `"./<provider>": "./src/<provider>/index.ts"`.
 3. **Secrets** (API keys, signing secrets) are passed in by the caller from validated

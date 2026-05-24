@@ -1,5 +1,5 @@
-export { Badge, type BadgeProps } from "./components/badge";
-export { Button, type ButtonProps } from "./components/button";
-export { Card } from "./components/card";
+export { Badge, badgeVariants, type BadgeProps } from "./components/badge";
+export { Button, buttonVariants, type ButtonProps } from "./components/button";
+export { Card, type CardProps } from "./components/card";
 export { Input, type InputProps } from "./components/input";
 export { cn } from "./lib/cn";

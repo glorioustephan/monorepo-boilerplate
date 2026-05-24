@@ -27,7 +27,10 @@ export async function retry<T>(fn: () => Promise<T>, options: RetryOptions = {})
       return await fn();
     } catch (error) {
       if (attempt === retries || !shouldRetry(error)) throw error;
-      await sleep(baseDelayMs * factor ** attempt);
+      // Full jitter (random within the exponential window) avoids a thundering
+      // herd when many clients back off against the same dependency at once.
+      const window = baseDelayMs * factor ** attempt;
+      await sleep(Math.random() * window);
       attempt += 1;
     }
   }
@@ -36,23 +39,29 @@ export async function retry<T>(fn: () => Promise<T>, options: RetryOptions = {})
   throw new AppError("retry exhausted", { code: "INTERNAL" });
 }
 
-/** Reject with a `TIMEOUT` AppError if `promise` doesn't settle within `ms`. */
+/**
+ * Run `fn` with a deadline. On timeout, the passed `AbortSignal` is aborted (so
+ * the underlying work — `fetch`, a DB query — can cancel and free its resources)
+ * and a `TIMEOUT` AppError is thrown. Pass the signal through to your I/O:
+ *
+ *   withTimeout((signal) => fetch(url, { signal }), 5000)
+ */
 export async function withTimeout<T>(
-  promise: Promise<T>,
+  fn: (signal: AbortSignal) => Promise<T>,
   ms: number,
   label = "operation",
 ): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const timeout = new Promise<never>((_, reject) => {
-    timer = setTimeout(
-      () => reject(new AppError(`${label} timed out after ${ms}ms`, { code: "TIMEOUT" })),
-      ms,
-    );
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
   try {
-    return await Promise.race([promise, timeout]);
+    return await fn(controller.signal);
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new AppError(`${label} timed out after ${ms}ms`, { code: "TIMEOUT", cause: error });
+    }
+    throw error;
   } finally {
-    if (timer) clearTimeout(timer);
+    clearTimeout(timer);
   }
 }
 

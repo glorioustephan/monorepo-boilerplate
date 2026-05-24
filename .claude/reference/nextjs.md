@@ -62,7 +62,9 @@ export default async function UserCard({ id }: { id: string }) {
 
 ## 4. React Compiler
 
-- Enabled via `reactCompiler: true` in `next.config.ts`; `babel-plugin-react-compiler` is installed
+- Enabled via `reactCompiler: true` in `next.config.ts`. `babel-plugin-react-compiler` is a required
+  devDep even though Next compiles with SWC — Next runs the React Compiler through this Babel plugin
+  for the files it applies to, so it must be installed.
 - **Do not hand-memoize** — no `useMemo`, `useCallback`, or `React.memo` unless the compiler opts a component out
 - The compiler infers all memoization statically; manual memos conflict and add noise
 
@@ -72,12 +74,19 @@ export default async function UserCard({ id }: { id: string }) {
 
 ```ts
 // next.config.ts
-transpilePackages: ["@monorepo-boilerplate/ui"];
+transpilePackages: [
+  "@monorepo-boilerplate/auth",
+  "@monorepo-boilerplate/environment",
+  "@monorepo-boilerplate/providers",
+  "@monorepo-boilerplate/types",
+  "@monorepo-boilerplate/ui",
+];
 ```
 
-- Tells Next to compile the UI kit's TypeScript source directly instead of expecting pre-built dist
-- Edits inside `packages/ui/src/` hot-reload in `apps/web` without a separate build step
-- Add any new internal `@monorepo-boilerplate/*` packages here if they ship raw TS
+- Tells Next to compile each internal package's TypeScript source directly instead of expecting pre-built dist
+- Edits inside `packages/*/src/` hot-reload in `apps/web` without a separate build step
+- **List every internal `@monorepo-boilerplate/*` package the app imports** (it ships raw TS). When
+  you add a new one as a dependency of `apps/web`, add it here too.
 
 ---
 

@@ -41,7 +41,8 @@ All packages share the `@monorepo-boilerplate/*` namespace.
   Rules live in `tooling/oxc-config/`. Don't restate them in code review — fix and move on.
 - **Internal packages are consumed from source** (their `exports` point at `.ts`).
   This is deliberate — it gives HMR across package boundaries. Do not add build
-  steps to library packages; only `apps/mcp-server` builds (via tsdown).
+  steps to library packages; only the MCP server apps (`apps/mcp-server`,
+  `apps/ui-mcp-server`) build (via tsdown), since they run as standalone Node processes.
 - **Centralize dependency versions** in `pnpm-workspace.yaml` `catalog:`. Add a new
   shared dep there and reference it as `"catalog:"` — never pin versions per package.
 - **Use `workspace:*`** for internal dependencies.
@@ -87,3 +88,6 @@ Verify a change end-to-end with: `pnpm lint && pnpm typecheck && pnpm test && pn
 - React Compiler is on; **don't** hand-write `useMemo`/`useCallback` for performance.
 - In the MCP server, **never write to stdout** (`console.log`) — stdio is the JSON-RPC channel; log to stderr.
 - Default exports only where a framework requires them (Next special files, config files); named exports otherwise.
+- **Secrets have dev defaults, not prod ones.** `SESSION_SECRET` falls back to an insecure dev
+  value — set a 32+ char random value in production. `WEBHOOK_SECRET` is optional and the webhook
+  route fails **closed** when it's unset (rejects requests) — never make secrets default to `""`.

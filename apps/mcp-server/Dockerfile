@@ -5,12 +5,21 @@ ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable
 
-FROM base AS build
+# Produce a pruned workspace: out/json (manifests + lockfile, for a cached
+# install layer) and out/full (only the files this app's graph needs).
+FROM base AS pruner
 WORKDIR /repo
 COPY . .
-# Install the full workspace, then build the MCP server and prune to a
-# self-contained deployable directory at /out.
+RUN pnpm dlx turbo prune @monorepo-boilerplate/mcp-server --docker
+
+FROM base AS build
+WORKDIR /repo
+# Install against manifests only — this layer is reused until the lockfile or a
+# package.json changes, so editing source no longer triggers a reinstall.
+COPY --from=pruner /repo/out/json/ ./
 RUN pnpm install --frozen-lockfile
+# Bring in source, build, and prune to a self-contained deployable at /out.
+COPY --from=pruner /repo/out/full/ ./
 RUN pnpm --filter @monorepo-boilerplate/mcp-server build
 RUN pnpm --filter @monorepo-boilerplate/mcp-server deploy --prod /out
 

@@ -1,6 +1,8 @@
 import { parseSignedWebhook } from "@monorepo-boilerplate/providers/webhooks";
-import { toAppError } from "@monorepo-boilerplate/types";
+import { AppError, toAppError } from "@monorepo-boilerplate/types";
 import { z } from "zod";
+
+import { env } from "@/env";
 
 const eventSchema = z.object({
   type: z.string(),
@@ -18,7 +20,12 @@ export async function POST(
 ): Promise<Response> {
   try {
     const { provider } = await params;
-    const secret = process.env.WEBHOOK_SECRET ?? "";
+    // Fail closed: never fall back to an empty secret (which would make every
+    // forged payload verify). A missing secret is a server misconfiguration.
+    const secret = env.WEBHOOK_SECRET;
+    if (!secret) {
+      throw new AppError("WEBHOOK_SECRET is not configured", { code: "INTERNAL" });
+    }
     const event = parseSignedWebhook(
       {
         payload: await request.text(),

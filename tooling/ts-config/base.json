@@ -23,10 +23,6 @@
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
 
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "incremental": true,
     "noEmit": true
   },
   "exclude": ["node_modules", "dist", ".next", ".turbo", "coverage"]

@@ -51,7 +51,7 @@ export function checkEnv(
 
 /** Pretty-print a {@link DoctorReport} to the console and return its `ok` flag. */
 export function printDoctorReport(report: DoctorReport): boolean {
-  // eslint-disable-next-line no-console -- this helper exists to print a report
+  // Intentional stdout: this helper is the CLI face of `env:doctor`.
   const log = console.log;
   log("\nEnvironment doctor\n");
   for (const check of report.checks) {

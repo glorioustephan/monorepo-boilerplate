@@ -2,12 +2,11 @@
   "name": "@monorepo-boilerplate/oxc-config",
   "version": "0.0.0",
   "private": true,
-  "description": "Shared oxlint presets and oxfmt formatting config. Extend one of base/node/react/next.",
+  "description": "Shared oxlint presets. Extend one of base/node/react/next. (oxfmt config is the root .oxfmtrc.json.)",
   "files": [
     "base.json",
     "node.json",
     "react.json",
-    "next.json",
-    "oxfmtrc.json"
+    "next.json"
   ]
 }
