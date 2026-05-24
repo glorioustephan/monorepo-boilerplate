@@ -41,12 +41,16 @@ export const componentRegistry: readonly ComponentMeta[] = [
     importPath: IMPORT,
     sourcePath: "src/components/button.tsx",
     props: [
-      { name: "variant", type: '"primary" | "outline" | "ghost"', required: false },
+      { name: "variant", type: '"primary" | "outline" | "ghost" | "destructive"', required: false },
       { name: "size", type: '"sm" | "md" | "lg"', required: false },
       { name: "...button", type: 'ComponentPropsWithRef<"button">', required: false },
     ],
     variants: [
-      { name: "variant", values: ["primary", "outline", "ghost"], default: "primary" },
+      {
+        name: "variant",
+        values: ["primary", "outline", "ghost", "destructive"],
+        default: "primary",
+      },
       { name: "size", values: ["sm", "md", "lg"], default: "md" },
     ],
     example: '<Button variant="outline" size="lg">Save</Button>',

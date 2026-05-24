@@ -134,6 +134,9 @@ importers:
       oxlint:
         specifier: 'catalog:'
         version: 1.66.0
+      tsx:
+        specifier: 'catalog:'
+        version: 4.22.3
       turbo:
         specifier: 'catalog:'
         version: 2.9.14
@@ -462,6 +465,27 @@ importers:
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.0
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.7(@types/node@25.9.1)(jsdom@29.1.1)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3))
+
+  tooling/catalog-lint:
+    devDependencies:
+      '@monorepo-boilerplate/test-config':
+        specifier: workspace:*
+        version: link:../test-config
+      '@monorepo-boilerplate/ts-config':
+        specifier: workspace:*
+        version: link:../ts-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.9.1
+      tsx:
+        specifier: 'catalog:'
+        version: 4.22.3
       typescript:
         specifier: 'catalog:'
         version: 6.0.3

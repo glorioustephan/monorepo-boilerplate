@@ -11,8 +11,13 @@ consuming apps get HMR. See `.claude/reference/react.md` for component conventio
 - One component per file in `src/components/`, named export, re-exported from `src/index.ts`.
 - Variants via **`class-variance-authority`**; merge classes with **`cn()`** (`src/lib/cn.ts`).
   Match `src/components/button.tsx` — it's the canonical pattern.
-- Style with **semantic token classes** (`bg-background`, `text-foreground`, `bg-primary`,
-  `border-border`) — never hard-coded colors. Tokens are defined in `src/themes/`.
+- Style with **semantic token classes only** — never raw palette (`bg-red-600`), arbitrary
+  values (`bg-[#fff]`), or inline color styles. `pnpm lint:tokens` (+ a pre-commit hook) enforces
+  this. Full contract + theming rules: `.claude/reference/tailwind.md`. Token roles:
+  `bg-background`/`text-foreground` (page), `bg-surface`/`text-surface-foreground` (cards/panels),
+  `bg-primary`/`text-primary-foreground`, `bg-muted`/`text-muted-foreground`,
+  `bg-destructive`/`text-destructive-foreground`, `border-border`, `ring-ring` (focus),
+  radius `rounded-sm|md|lg`.
 - **Theming**: tokens are CSS variables mapped via `@theme inline` in `src/themes/default.css`.
   Add a theme as `src/themes/<name>.css` scoped to `[data-theme="<name>"]`; apps opt in by
   importing `@monorepo-boilerplate/ui/themes/<name>` and setting `data-theme`. `.dark` toggles dark mode.

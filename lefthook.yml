@@ -11,6 +11,9 @@ pre-commit:
       glob: "*.{js,jsx,ts,tsx}"
       run: pnpm exec oxlint --fix {staged_files}
       stage_fixed: true
+    tokens:
+      glob: "*.{ts,tsx}"
+      run: pnpm exec tsx tooling/catalog-lint/src/check-tokens.ts {staged_files}
 
 commit-msg:
   commands:
