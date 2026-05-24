@@ -25,8 +25,9 @@ packages/    real libraries (ship code)
   logger/      zero-dep structured logger (stderr-safe for the MCP server)
   ui/          Tailwind v4 UI kit, consumed from source for HMR
   environment/ t3-env + zod env validation, env:doctor helper
-  providers/   third-party API clients + webhook handlers
-  database/    placeholder data layer (roadmap Phase 2)
+  providers/   third-party API clients + webhook handlers + resilience utils
+  database/    Drizzle ORM data layer (schema, queries, migrations)
+  auth/        optional provider-agnostic signed-session primitives
 ```
 
 All packages share the `@monorepo-boilerplate/*` namespace.

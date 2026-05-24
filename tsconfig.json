@@ -9,6 +9,7 @@
     { "path": "packages/ui" },
     { "path": "packages/environment" },
     { "path": "packages/providers" },
-    { "path": "packages/database" }
+    { "path": "packages/database" },
+    { "path": "packages/auth" }
   ]
 }

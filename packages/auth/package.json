@@ -1,0 +1,22 @@
+{
+  "name": "@monorepo-boilerplate/auth",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Provider-agnostic signed-session primitives (HMAC, Web Crypto). Optional module.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run"
+  },
+  "devDependencies": {
+    "@monorepo-boilerplate/test-config": "workspace:*",
+    "@monorepo-boilerplate/ts-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

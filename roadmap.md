@@ -78,7 +78,7 @@ Grow `packages/providers` into a robust integration layer.
 
 A pluggable, framework-generic authentication pattern that consumers can keep or drop.
 
-- Session/middleware pattern in `apps/web` (Next middleware) kept provider-agnostic.
+- Session pattern in `apps/web` via the Next 16 proxy (`src/proxy.ts`) kept provider-agnostic.
 - Typed `auth()` accessor for Server Components and route handlers.
 - Clear seams for the chosen auth provider; secrets flow through validated `env`.
 - Document as an opt-in module so the boilerplate stays useful for apps that don't need auth.

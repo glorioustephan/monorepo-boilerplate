@@ -116,9 +116,10 @@ The following override ts.dev rules that predate isolatedModules/bundlers:
    ```
 
 2. **Default exports are allowed where the framework requires them.**
-   Next.js `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`,
-   `middleware.ts`, `next.config.ts`, and config files (`vitest.config.ts`, `playwright.config.ts`,
-   `tsdown.config.ts`) **must** use default exports. Everywhere else, **named exports are the default.**
+   Next.js `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `next.config.ts`,
+   and config files (`vitest.config.ts`, `playwright.config.ts`, `tsdown.config.ts`) **must** use a
+   default export. Note `route.ts` (named `GET`/`POST`/…) and `proxy.ts` (named `proxy` + `config`)
+   use **named** exports. Everywhere else, **named exports are the default.**
 
 3. **No barrel `index.ts` re-exports** inside packages unless the package's public API is intentionally
    bounded. Barrels defeat tree-shaking and slow bundler resolution.

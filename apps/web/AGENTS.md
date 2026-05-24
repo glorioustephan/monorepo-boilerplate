@@ -14,4 +14,9 @@ Next.js 16 App Router (Turbopack, React Compiler on). Full conventions in
 - The UI kit is transpiled from source via `transpilePackages` in `next.config.ts` — editing
   `packages/ui/src` hot-reloads here. Don't duplicate UI primitives; add them to the kit.
 - Don't hand-memoize — React Compiler handles it.
+- **Auth/sessions**: route protection lives in `src/proxy.ts` (Next 16's renamed middleware).
+  The session codec + cookie name are in `src/lib/session.ts` (no `next/headers`, so the proxy can
+  import it); `getSession()` in `src/lib/auth.ts` is for Server Components/route handlers.
+- **Webhooks**: `src/app/api/webhooks/[provider]/route.ts` verifies signatures via
+  `@monorepo-boilerplate/providers/webhooks` and maps `AppError` to HTTP status.
 - Tests: Vitest unit/component tests (`*.test.tsx`); Playwright specs in `e2e/`.
