@@ -98,7 +98,7 @@ Make shipping a non-event.
 
 ---
 
-## Phase 6 — UI library + internal MCP server (final, intentionally open-ended) ✅ (seeded)
+## Phase 6 — UI library + internal MCP server (final, intentionally open-ended) ✅ (built out in the U-track)
 
 The capstone: evolve `packages/ui` from a starter kit into a **full, themed component
 library that exposes its own internal MCP server** — so AI agents can query component
@@ -127,6 +127,27 @@ Directionally:
 Because this is the end state and the most app-specific, it should remain a _pattern and
 a set of seams_ rather than a fixed implementation — adopters wire in their own design
 system on top of the provided architecture.
+
+---
+
+## UI-Kit Expansion track (U0–U8) ✅
+
+The Phase 6 seams above were grown into a full, AI-consumable **component catalog**.
+Detail: [`docs/phases/ui-kit-catalog.md`](./docs/phases/ui-kit-catalog.md).
+
+- [x] **U0** — MCP servers moved to `mcp-servers/`; `services/` reserved; root `.mcp.json`.
+- [x] **U1** — semantic token contract + theming + `lint:tokens` bypass guard.
+- [x] **U2** — catalog schema + codegen (`tooling/catalog-extractor` → committed
+      `registry.generated.ts` from source + typed `*.catalog.ts` sidecars).
+- [x] **U3** — interactive primitives via unified `radix-ui` (Dialog/Tooltip/Select).
+- [x] **U4** — Recipe (ConfirmDialog, FormField) and Block (Hero, Cta, FeatureGrid) tiers.
+- [x] **U5** — example corpus + RSC harness (`/ui/[component]`); "no example ⇒ not in catalog".
+- [x] **U6** — `mcp-ui` lexical search (`search_components`, tier/render-env filters).
+- [x] **U7** — `tooling/catalog-lint` AST enforcement (raw-HTML / require-ui-import) in
+      lefthook + CI + a `.claude` hook.
+- [x] **U8** — docs, `/scaffold-ui-component`, Changesets publish flow for `ui`, and the
+      **opt-in semantic layer documented** (ONNX MiniLM `embeddings.json` + brute-force JS
+      cosine fused with lexical) — intentionally not built by default to keep installs lean.
 
 ---
 
