@@ -9,6 +9,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Small status/label pill with variants. Renders a <span>.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/components/badge.tsx",
+    examplePath: "examples/badge.example.tsx",
     tier: "Primitive",
     renderEnvironment: "server",
     props: [
@@ -50,6 +51,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Clickable button with style and size variants.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/components/button.tsx",
+    examplePath: "examples/button.example.tsx",
     tier: "Primitive",
     renderEnvironment: "server",
     props: [
@@ -111,6 +113,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Bordered surface container for grouping related content.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/components/card.tsx",
+    examplePath: "examples/card.example.tsx",
     tier: "Primitive",
     renderEnvironment: "server",
     props: [
@@ -136,6 +139,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Modal dialog (Radix) with overlay, focus trap, and keyboard handling.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/components/dialog.tsx",
+    examplePath: "examples/dialog.example.tsx",
     tier: "Primitive",
     renderEnvironment: "client",
     props: [
@@ -166,6 +170,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Text input styled with the kit's semantic tokens.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/components/input.tsx",
+    examplePath: "examples/input.example.tsx",
     tier: "Primitive",
     renderEnvironment: "server",
     props: [
@@ -191,6 +196,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Accessible single-select dropdown (Radix) styled with kit tokens.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/components/select.tsx",
+    examplePath: "examples/select.example.tsx",
     tier: "Primitive",
     renderEnvironment: "client",
     props: [
@@ -223,6 +229,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Hover/focus tooltip (Radix). Requires a TooltipProvider ancestor.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/components/tooltip.tsx",
+    examplePath: "examples/tooltip.example.tsx",
     tier: "Primitive",
     renderEnvironment: "client",
     props: [
@@ -248,6 +255,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Dialog wired to a confirm/cancel decision; owns its open state.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/recipes/confirm-dialog.tsx",
+    examplePath: "examples/confirm-dialog.example.tsx",
     tier: "Recipe",
     renderEnvironment: "client",
     props: [
@@ -310,6 +318,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Labelled Input with optional description and error, accessibly wired.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/recipes/form-field.tsx",
+    examplePath: "examples/form-field.example.tsx",
     tier: "Recipe",
     renderEnvironment: "server",
     props: [
@@ -360,6 +369,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Closing call-to-action panel on an elevated surface with an action slot.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/blocks/cta.tsx",
+    examplePath: "examples/cta.example.tsx",
     tier: "Block",
     renderEnvironment: "server",
     props: [
@@ -401,6 +411,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Responsive grid of feature cards driven by a features list.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/blocks/feature-grid.tsx",
+    examplePath: "examples/feature-grid.example.tsx",
     tier: "Block",
     renderEnvironment: "server",
     props: [
@@ -437,6 +448,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     description: "Centered page-intro section with title, copy, and action/media slots.",
     importPath: "@monorepo-boilerplate/ui",
     sourcePath: "src/blocks/hero.tsx",
+    examplePath: "examples/hero.example.tsx",
     tier: "Block",
     renderEnvironment: "server",
     props: [

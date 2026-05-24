@@ -6,6 +6,7 @@
  * This module is plain data (no React/CSS), safe to import from a Node process.
  */
 import type { ComponentMeta, ComponentTier } from "./catalog-schema";
+import { toSlug } from "./catalog-schema";
 import { componentRegistry } from "./registry.generated";
 
 export type {
@@ -19,7 +20,7 @@ export type {
   RenderEnvironment,
 } from "./catalog-schema";
 
-export { componentRegistry };
+export { componentRegistry, toSlug };
 
 export interface ComponentSummary {
   readonly name: string;
@@ -34,6 +35,11 @@ export function listComponents(): readonly ComponentSummary[] {
 export function getComponent(name: string): ComponentMeta | undefined {
   const target = name.toLowerCase();
   return componentRegistry.find((component) => component.name.toLowerCase() === target);
+}
+
+/** Look up a component by its kebab-case slug (`confirm-dialog`) — used by the example route. */
+export function getComponentBySlug(slug: string): ComponentMeta | undefined {
+  return componentRegistry.find((component) => toSlug(component.name) === slug);
 }
 
 export function listByTier(tier: ComponentTier): readonly ComponentMeta[] {

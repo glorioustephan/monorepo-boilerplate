@@ -1,8 +1,9 @@
-import { readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import type { CatalogSidecar, ComponentMeta } from "@monorepo-boilerplate/ui/catalog-schema";
+import { toSlug } from "@monorepo-boilerplate/ui/catalog-schema";
 import { Project } from "ts-morph";
 
 import { extractVariants, inferRenderEnvironment } from "./infer";
@@ -46,6 +47,16 @@ export async function buildRegistry(): Promise<ComponentMeta[]> {
       const sourceFile = project.addSourceFileAtPath(componentPath);
       const variants = extractVariants(sourceFile);
 
+      // Enforce "no example ⇒ not in catalog": every component must ship a live
+      // `examples/<slug>.example.tsx` ground truth, or generation fails (so
+      // `catalog:check` fails in CI).
+      const examplePath = join("examples", `${toSlug(sidecar.name)}.example.tsx`);
+      if (!existsSync(join(UI_ROOT, examplePath))) {
+        throw new Error(
+          `${sidecar.name}: missing example file \`${examplePath}\` (every catalogued component needs one)`,
+        );
+      }
+
       // Optional fields are set to `undefined` when absent; JSON.stringify drops
       // them, so the generated module stays clean.
       return {
@@ -53,6 +64,7 @@ export async function buildRegistry(): Promise<ComponentMeta[]> {
         description: sidecar.description,
         importPath: IMPORT_PATH,
         sourcePath: relative(UI_ROOT, componentPath),
+        examplePath,
         tier: sidecar.tier,
         renderEnvironment: inferRenderEnvironment(sourceFile),
         props: sidecar.props,

@@ -51,12 +51,27 @@ export interface ComponentMeta {
   readonly description: string;
   readonly importPath: string;
   readonly sourcePath: string;
+  /** Path (relative to the kit root) of the live `*.example.tsx` ground truth. */
+  readonly examplePath: string;
   readonly tier: ComponentTier;
   readonly renderEnvironment: RenderEnvironment;
   readonly props: readonly ComponentProp[];
   readonly variants?: readonly ComponentVariant[];
   readonly examples: readonly ComponentExample[];
   readonly intent?: ComponentIntent;
+}
+
+/**
+ * The URL/file slug for a component: PascalCase → kebab-case
+ * (`ConfirmDialog` → `confirm-dialog`, `FeatureGrid` → `feature-grid`). Shared by
+ * the extractor (to locate the example file) and the registry (to look up by slug),
+ * so both agree on one mapping.
+ */
+export function toSlug(name: string): string {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
+    .toLowerCase();
 }
 
 /**
