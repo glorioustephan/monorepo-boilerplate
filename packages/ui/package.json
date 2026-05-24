@@ -10,6 +10,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./registry": "./src/registry.ts",
+    "./catalog-schema": "./src/catalog-schema.ts",
     "./styles.css": "./src/styles.css",
     "./themes/*": "./src/themes/*.css"
   },

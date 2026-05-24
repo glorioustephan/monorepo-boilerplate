@@ -12,6 +12,7 @@
     { "path": "packages/providers" },
     { "path": "packages/database" },
     { "path": "packages/auth" },
-    { "path": "tooling/catalog-lint" }
+    { "path": "tooling/catalog-lint" },
+    { "path": "tooling/catalog-extractor" }
   ]
 }

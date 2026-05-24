@@ -43,6 +43,9 @@ jobs:
       - name: Token-bypass check
         run: pnpm lint:tokens
 
+      - name: Catalog up to date
+        run: pnpm catalog:check
+
       - name: Typecheck
         run: pnpm typecheck
 
