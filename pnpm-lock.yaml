@@ -180,6 +180,9 @@ importers:
       '@monorepo-boilerplate/environment':
         specifier: workspace:*
         version: link:../../packages/environment
+      '@monorepo-boilerplate/providers':
+        specifier: workspace:*
+        version: link:../../packages/providers
       '@monorepo-boilerplate/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -324,10 +327,16 @@ importers:
 
   packages/providers:
     dependencies:
+      '@monorepo-boilerplate/types':
+        specifier: workspace:*
+        version: link:../types
       zod:
         specifier: 'catalog:'
         version: 4.4.3
     devDependencies:
+      '@monorepo-boilerplate/test-config':
+        specifier: workspace:*
+        version: link:../../tooling/test-config
       '@monorepo-boilerplate/ts-config':
         specifier: workspace:*
         version: link:../../tooling/ts-config
@@ -337,6 +346,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.7(@types/node@25.9.1)(jsdom@29.1.1)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3))
 
   packages/types:
     devDependencies:

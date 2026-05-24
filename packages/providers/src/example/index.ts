@@ -1,8 +1,7 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
-
 import { z } from "zod";
 
 import { createJsonClient } from "../http";
+import { retry } from "../resilience";
 
 const exampleUserSchema = z.object({
   id: z.string(),
@@ -18,7 +17,8 @@ export interface ExampleProviderOptions {
 
 /**
  * Reference provider. Copy this folder to add a real integration: define
- * response schemas, build a client, and expose typed methods.
+ * response schemas, build a client, expose typed methods, and add resilience
+ * (retry/timeout/rate limiting) from `../resilience` where appropriate.
  */
 export function createExampleProvider(options: ExampleProviderOptions) {
   const client = createJsonClient({
@@ -28,24 +28,8 @@ export function createExampleProvider(options: ExampleProviderOptions) {
 
   return {
     getUser: (id: string): Promise<ExampleUser> =>
-      client.get(`/users/${encodeURIComponent(id)}`, exampleUserSchema),
+      retry(() => client.get(`/users/${encodeURIComponent(id)}`, exampleUserSchema), {
+        retries: 2,
+      }),
   };
-}
-
-export interface WebhookVerification {
-  readonly payload: string;
-  readonly signature: string;
-  readonly secret: string;
-}
-
-/** Verify an HMAC-SHA256 webhook signature in constant time. */
-export function verifyWebhookSignature({
-  payload,
-  signature,
-  secret,
-}: WebhookVerification): boolean {
-  const expected = createHmac("sha256", secret).update(payload).digest("hex");
-  const expectedBytes = Buffer.from(expected);
-  const actualBytes = Buffer.from(signature);
-  return expectedBytes.length === actualBytes.length && timingSafeEqual(expectedBytes, actualBytes);
 }

@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@monorepo-boilerplate/environment": "workspace:*",
+    "@monorepo-boilerplate/providers": "workspace:*",
     "@monorepo-boilerplate/types": "workspace:*",
     "@monorepo-boilerplate/ui": "workspace:*",
     "next": "catalog:",

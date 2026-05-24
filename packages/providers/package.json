@@ -6,17 +6,23 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./example": "./src/example/index.ts"
+    "./example": "./src/example/index.ts",
+    "./webhooks": "./src/webhooks/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run"
   },
   "dependencies": {
+    "@monorepo-boilerplate/types": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@monorepo-boilerplate/test-config": "workspace:*",
     "@monorepo-boilerplate/ts-config": "workspace:*",
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }
