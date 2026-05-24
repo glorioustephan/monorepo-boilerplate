@@ -38,5 +38,14 @@
       "warn",
       { "allow": ["**/*.css", "**/*.scss", "**/test-setup.ts", "@testing-library/jest-dom/**"] }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ]
 }

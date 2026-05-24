@@ -1,16 +1,19 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { createLogger } from "@monorepo-boilerplate/logger";
 
 import { createServer } from "./server";
+
+// Logger writes to stderr, keeping stdout clean for the JSON-RPC channel.
+const log = createLogger("mcp-server");
 
 async function main(): Promise<void> {
   const server = createServer();
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  // Never write to stdout here — stdio transport uses it for JSON-RPC.
-  process.stderr.write("monorepo-boilerplate MCP server running on stdio\n");
+  log.info("MCP server running on stdio");
 }
 
 main().catch((error: unknown) => {
-  process.stderr.write(`Fatal MCP server error: ${String(error)}\n`);
+  log.error("Fatal MCP server error", { error: String(error) });
   process.exit(1);
 });

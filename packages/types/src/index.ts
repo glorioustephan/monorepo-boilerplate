@@ -6,6 +6,8 @@
  * Types tied to a feature should live with that feature's package instead.
  */
 
+export { AppError, isAppError, toAppError, type AppErrorOptions, type ErrorCode } from "./errors";
+
 /** A discriminated result type for operations that can fail without throwing. */
 export type Result<T, E = Error> =
   | { readonly ok: true; readonly value: T }

@@ -1,0 +1,22 @@
+{
+  "name": "@monorepo-boilerplate/logger",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Tiny zero-dependency structured logger (level-aware, JSON in prod, pretty in dev).",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run"
+  },
+  "devDependencies": {
+    "@monorepo-boilerplate/test-config": "workspace:*",
+    "@monorepo-boilerplate/ts-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

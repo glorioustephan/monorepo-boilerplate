@@ -29,6 +29,8 @@ catalog:
   oxfmt: ^0.51.0
   lefthook: ^2.1.8
   "@changesets/cli": ^2.31.0
+  "@commitlint/cli": ^21.0.1
+  "@commitlint/config-conventional": ^21.0.1
   tsx: ^4.22.3
   tsdown: ^0.22.0
 

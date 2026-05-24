@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "catalog:",
+    "@monorepo-boilerplate/logger": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {

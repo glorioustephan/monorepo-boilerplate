@@ -21,7 +21,8 @@ tooling/     config-only packages (ship nothing at runtime)
   oxc-config/  oxlint presets + oxfmt config
   test-config/ Vitest + Playwright presets
 packages/    real libraries (ship code)
-  types/       cross-cutting shared types (keep small)
+  types/       cross-cutting shared types + error taxonomy (keep small)
+  logger/      zero-dep structured logger (stderr-safe for the MCP server)
   ui/          Tailwind v4 UI kit, consumed from source for HMR
   environment/ t3-env + zod env validation, env:doctor helper
   providers/   third-party API clients + webhook handlers

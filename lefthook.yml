@@ -12,6 +12,11 @@ pre-commit:
       run: pnpm exec oxlint --fix {staged_files}
       stage_fixed: true
 
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}
+
 pre-push:
   commands:
     typecheck:

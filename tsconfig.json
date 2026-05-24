@@ -5,6 +5,7 @@
     { "path": "apps/web" },
     { "path": "apps/mcp-server" },
     { "path": "packages/types" },
+    { "path": "packages/logger" },
     { "path": "packages/ui" },
     { "path": "packages/environment" },
     { "path": "packages/providers" }
