@@ -7,7 +7,7 @@ export const meta: CatalogSidecar = {
   props: [
     {
       name: "features",
-      type: "ReadonlyArray<{ title: string; description: ReactNode; icon?: ReactNode }>",
+      type: "ReadonlyArray<{ title: string; description: string; icon?: ReactNode }>",
       required: true,
     },
     { name: "columns", type: "2 | 3 | 4", required: false, default: "3" },

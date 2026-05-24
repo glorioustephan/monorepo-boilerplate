@@ -417,7 +417,7 @@ export const componentRegistry: readonly ComponentMeta[] = [
     props: [
       {
         name: "features",
-        type: "ReadonlyArray<{ title: string; description: ReactNode; icon?: ReactNode }>",
+        type: "ReadonlyArray<{ title: string; description: string; icon?: ReactNode }>",
         required: true,
       },
       {

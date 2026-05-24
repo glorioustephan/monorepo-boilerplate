@@ -16,6 +16,10 @@ const REACT_HOOKS = new Set([
   "useActionState",
   "useOptimistic",
   "useFormStatus",
+  "useCallback",
+  "useMemo",
+  "useDebugValue",
+  "useInsertionEffect",
 ]);
 
 /**

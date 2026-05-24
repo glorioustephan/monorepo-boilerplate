@@ -3,14 +3,15 @@ import { join, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import type { CatalogSidecar, ComponentMeta } from "@monorepo-boilerplate/ui/catalog-schema";
-import { toSlug } from "@monorepo-boilerplate/ui/catalog-schema";
+import { COMPONENT_TIERS, toSlug } from "@monorepo-boilerplate/ui/catalog-schema";
 import { Project } from "ts-morph";
 
 import { extractVariants, inferRenderEnvironment } from "./infer";
 
 const UI_ROOT = resolve("packages/ui");
 const IMPORT_PATH = "@monorepo-boilerplate/ui";
-const TIER_ORDER = ["Primitive", "Recipe", "Block", "Template"];
+// Sort by the canonical tier order from the schema — no separate list to drift.
+const TIER_ORDER: readonly string[] = COMPONENT_TIERS;
 const SKIP_DIRS = new Set(["node_modules", "dist"]);
 
 function findSidecars(dir: string): string[] {
@@ -23,7 +24,13 @@ function findSidecars(dir: string): string[] {
   }
   for (const name of names) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) {
+    let isDirectory = false;
+    try {
+      isDirectory = statSync(full).isDirectory();
+    } catch {
+      continue;
+    }
+    if (isDirectory) {
       if (!SKIP_DIRS.has(name)) out.push(...findSidecars(full));
     } else if (name.endsWith(".catalog.ts")) {
       out.push(full);
@@ -44,6 +51,11 @@ export async function buildRegistry(): Promise<ComponentMeta[]> {
       if (!sidecar) throw new Error(`${sidecarPath}: missing exported \`meta\``);
 
       const componentPath = sidecarPath.replace(/\.catalog\.ts$/, ".tsx");
+      if (!existsSync(componentPath)) {
+        throw new Error(
+          `${sidecarPath}: no component file \`${relative(UI_ROOT, componentPath)}\` next to the sidecar`,
+        );
+      }
       const sourceFile = project.addSourceFileAtPath(componentPath);
       const variants = extractVariants(sourceFile);
 
@@ -66,7 +78,8 @@ export async function buildRegistry(): Promise<ComponentMeta[]> {
         sourcePath: relative(UI_ROOT, componentPath),
         examplePath,
         tier: sidecar.tier,
-        renderEnvironment: inferRenderEnvironment(sourceFile),
+        // Sidecar may override the inferred environment (e.g. declare "universal").
+        renderEnvironment: sidecar.renderEnvironment ?? inferRenderEnvironment(sourceFile),
         props: sidecar.props,
         variants: variants.length > 0 ? variants : undefined,
         examples: sidecar.examples,

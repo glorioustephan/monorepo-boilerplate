@@ -5,7 +5,8 @@ import { cn } from "../lib/cn";
 export interface Feature {
   /** Short heading; also used as the list key, so keep it unique within a grid. */
   readonly title: string;
-  readonly description: ReactNode;
+  /** Plain prose; rendered in a `<p>`, so keep it text (not block-level JSX). */
+  readonly description: string;
   /** Optional leading visual (icon, glyph) rendered above the title. */
   readonly icon?: ReactNode;
 }

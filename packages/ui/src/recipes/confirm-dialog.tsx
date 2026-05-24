@@ -39,10 +39,18 @@ export function ConfirmDialog({
   onConfirm,
 }: ConfirmDialogProps) {
   const [open, setOpen] = useState(false);
+  const [pending, setPending] = useState(false);
 
+  // Guards against double-submit and keeps the dialog open if `onConfirm` rejects
+  // (the caller surfaces the error; we only close on success).
   async function handleConfirm() {
-    await onConfirm();
-    setOpen(false);
+    setPending(true);
+    try {
+      await onConfirm();
+      setOpen(false);
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -53,10 +61,13 @@ export function ConfirmDialog({
         {description ? <DialogDescription>{description}</DialogDescription> : null}
         <div className="flex justify-end gap-2">
           <DialogClose asChild>
-            <Button variant="outline">{cancelLabel}</Button>
+            <Button variant="outline" disabled={pending}>
+              {cancelLabel}
+            </Button>
           </DialogClose>
           <Button
             variant={destructive ? "destructive" : "primary"}
+            disabled={pending}
             onClick={() => void handleConfirm()}
           >
             {confirmLabel}

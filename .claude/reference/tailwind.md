@@ -25,10 +25,16 @@ Style with these token utilities only. Never raw palette (`bg-red-600`), arbitra
 | `bg-surface` / `text-surface-foreground`         | Cards, panels, elevated containers                           |
 | `bg-primary` / `text-primary-foreground`         | Brand action surfaces                                        |
 | `bg-muted` / `text-muted-foreground`             | Subtle hover/disabled surfaces; secondary text               |
-| `bg-destructive` / `text-destructive-foreground` | Error/danger actions                                         |
+| `bg-destructive` / `text-destructive-foreground` | Error/danger actions (text ON a destructive surface)         |
+| `text-destructive`                               | Error/validation text on a neutral background (no fill)      |
+| `text-primary`                                   | Brand-colored text/icons on a neutral background (no fill)   |
 | `border-border`                                  | All borders and dividers                                     |
 | `ring-ring`                                      | Focus rings (`focus-visible:ring-2 focus-visible:ring-ring`) |
 | `rounded-sm` / `rounded-md` / `rounded-lg`       | Radius scale                                                 |
+
+The `-foreground` tokens are for text placed _on_ the matching colored surface;
+the bare color token (`text-destructive`, `text-primary`) is the same role used as
+ink on a neutral (`bg-background`/`bg-surface`) background.
 
 ## Adding a token
 

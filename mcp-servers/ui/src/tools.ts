@@ -1,4 +1,5 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { COMPONENT_TIERS, RENDER_ENVIRONMENTS } from "@monorepo-boilerplate/ui/catalog-schema";
 import {
   filterByRenderEnvironment,
   getComponent,
@@ -42,7 +43,7 @@ export function searchComponentsTool({ query }: { query: string }): CallToolResu
   return json(searchComponents(query));
 }
 
-const tierSchema = z.enum(["Primitive", "Recipe", "Block", "Template"]);
+const tierSchema = z.enum(COMPONENT_TIERS);
 
 export const listByTierInputSchema = {
   tier: tierSchema.describe("Catalog tier to list"),
@@ -53,7 +54,7 @@ export function listByTierTool({ tier }: { tier: z.infer<typeof tierSchema> }): 
   return json(listByTier(tier));
 }
 
-const renderEnvironmentSchema = z.enum(["server", "client", "universal"]);
+const renderEnvironmentSchema = z.enum(RENDER_ENVIRONMENTS);
 
 export const filterByRenderEnvironmentInputSchema = {
   renderEnvironment: renderEnvironmentSchema.describe(

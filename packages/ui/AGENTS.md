@@ -17,7 +17,8 @@ consuming apps get HMR. See `.claude/reference/react.md` for component conventio
   `bg-background`/`text-foreground` (page), `bg-surface`/`text-surface-foreground` (cards/panels),
   `bg-primary`/`text-primary-foreground`, `bg-muted`/`text-muted-foreground`,
   `bg-destructive`/`text-destructive-foreground`, `border-border`, `ring-ring` (focus),
-  radius `rounded-sm|md|lg`.
+  radius `rounded-sm|md|lg`. The bare color token as ink on a neutral background is also
+  allowed — `text-destructive` (error/validation text), `text-primary` (brand text/icons).
 - **Theming**: tokens are CSS variables mapped via `@theme inline` in `src/themes/default.css`.
   Add a theme as `src/themes/<name>.css` scoped to `[data-theme="<name>"]`; apps opt in by
   importing `@monorepo-boilerplate/ui/themes/<name>` and setting `data-theme`. `.dark` toggles dark mode.

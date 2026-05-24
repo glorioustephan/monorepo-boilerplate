@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ReactNode } from "react";
 
 import { getComponentBySlug, listComponents, toSlug } from "@monorepo-boilerplate/ui/registry";
 import { notFound } from "next/navigation";
@@ -24,13 +24,16 @@ export function generateStaticParams(): Array<{ component: string }> {
  */
 export default async function ComponentExamplePage({ params }: ComponentPageProps) {
   const { component } = await params;
+  // Unreachable in the SSG build (dynamicParams=false 404s unknown slugs first),
+  // but guards `next dev`, where unlisted slugs still reach this handler.
   const meta = getComponentBySlug(component);
   if (!meta) notFound();
 
   const exampleModule = (await import(`@monorepo-boilerplate/ui/examples/${component}`)) as {
-    default: ComponentType;
+    default?: () => ReactNode;
   };
   const Example = exampleModule.default;
+  if (!Example) notFound();
 
   return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col gap-6 p-8">
