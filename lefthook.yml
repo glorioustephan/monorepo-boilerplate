@@ -14,6 +14,11 @@ pre-commit:
     tokens:
       glob: "*.{ts,tsx}"
       run: pnpm exec tsx tooling/catalog-lint/src/check-tokens.ts {staged_files}
+    todos:
+      # Regenerate the TODO digest from code and include it in the commit, so
+      # docs/todo.md can never drift from the annotations in source (CI enforces
+      # this via `pnpm todos:check`). Mirrors the catalog generate-and-stage rule.
+      run: pnpm todos:generate && git add docs/todo.md
 
 commit-msg:
   commands:

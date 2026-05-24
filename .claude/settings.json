@@ -12,6 +12,10 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/check-tokens-file.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/check-smells-file.sh"
           }
         ]
       }
