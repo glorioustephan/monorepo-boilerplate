@@ -14,8 +14,9 @@ packages. It is meant to be forked as the starting point for new monorepos.
 
 ```
 apps/        runnable applications
-  web/         Next.js 16 (App Router, Turbopack, React Compiler)
-  mcp-server/  MCP server (stdio transport)
+  web/            Next.js 16 (App Router, Turbopack, React Compiler)
+  mcp-server/     MCP server (stdio transport)
+  ui-mcp-server/  MCP server exposing the UI kit's component registry to agents
 tooling/     config-only packages (ship nothing at runtime)
   ts-config/   TypeScript presets (base/node/react-library/next)
   oxc-config/  oxlint presets + oxfmt config

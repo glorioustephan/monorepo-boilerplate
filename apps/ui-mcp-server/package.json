@@ -1,0 +1,33 @@
+{
+  "name": "@monorepo-boilerplate/ui-mcp-server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Internal MCP server exposing the UI kit's component registry to agents.",
+  "bin": {
+    "monorepo-boilerplate-ui-mcp": "./dist/index.mjs"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsdown",
+    "start": "node dist/index.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "catalog:",
+    "@monorepo-boilerplate/logger": "workspace:*",
+    "@monorepo-boilerplate/ui": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@monorepo-boilerplate/test-config": "workspace:*",
+    "@monorepo-boilerplate/ts-config": "workspace:*",
+    "@types/node": "catalog:",
+    "tsdown": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

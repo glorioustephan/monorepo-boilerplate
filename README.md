@@ -5,8 +5,9 @@ starting point for new projects. It ships a working Next.js 16 + React 19 web ap
 a Model Context Protocol (MCP) server, a Tailwind v4 UI kit, and a cohesive
 **cross-agent convention layer** so both humans and AI coding agents stay consistent.
 
-> Status: **Phase 0 — Foundation** (see [`roadmap.md`](./roadmap.md)). This is a living
-> boilerplate; it is meant to be iterated on holistically.
+> Status: **Phases 0–6 complete** (see [`roadmap.md`](./roadmap.md)) — foundation, hardening,
+> data layer, providers, auth, deployment, and a UI kit with its own MCP server. This is a
+> living boilerplate; keep iterating holistically.
 
 ## Why this exists
 
@@ -35,18 +36,21 @@ discoverable by people and agents alike.
 
 ```
 apps/
-  web/          Next.js 16 + React 19 hello-world
-  mcp-server/   MCP server (stdio) with a `greet` tool
-tooling/        config-only packages (ship nothing)
-  ts-config/    TypeScript presets
-  oxc-config/   oxlint presets + oxfmt config
-  test-config/  Vitest + Playwright presets
-packages/       real libraries
-  types/        cross-cutting shared types
-  ui/           Tailwind v4 UI kit
-  environment/  typed env validation + env:doctor
-  providers/    third-party API clients + webhooks
-  database/     placeholder data layer (roadmap Phase 2)
+  web/            Next.js 16 + React 19 (UI kit, auth proxy, webhook route)
+  mcp-server/     MCP server (stdio) with a `greet` tool
+  ui-mcp-server/  MCP server exposing the UI kit's component registry
+tooling/          config-only packages (ship nothing)
+  ts-config/      TypeScript presets
+  oxc-config/     oxlint presets + oxfmt config
+  test-config/    Vitest + Playwright presets
+packages/         real libraries
+  types/          cross-cutting types + AppError taxonomy
+  logger/         zero-dep structured logger
+  ui/             Tailwind v4 UI kit (Button/Card/Input/Badge) + component registry
+  environment/    typed env validation + env:doctor
+  providers/      API clients, resilience utils, webhook verification
+  database/       Drizzle ORM data layer (schema, queries, migrations)
+  auth/           optional provider-agnostic signed-session primitives
 ```
 
 Everything shares the `@monorepo-boilerplate/*` namespace. Rename it to your own

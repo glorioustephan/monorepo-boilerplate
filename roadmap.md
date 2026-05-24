@@ -28,7 +28,7 @@ The skeleton everything else builds on.
 
 ---
 
-## Phase 1 — Hardening & DX
+## Phase 1 — Hardening & DX ✅
 
 Make the foundation production-grade and pleasant to work in daily.
 
@@ -47,7 +47,7 @@ Make the foundation production-grade and pleasant to work in daily.
 
 ---
 
-## Phase 2 — Data layer
+## Phase 2 — Data layer ✅
 
 Turn `packages/database` from placeholder into a real, ORM-agnostic foundation.
 
@@ -61,7 +61,7 @@ Turn `packages/database` from placeholder into a real, ORM-agnostic foundation.
 
 ---
 
-## Phase 3 — Providers & integrations
+## Phase 3 — Providers & integrations ✅
 
 Grow `packages/providers` into a robust integration layer.
 
@@ -74,7 +74,7 @@ Grow `packages/providers` into a robust integration layer.
 
 ---
 
-## Phase 4 — Auth & sessions (optional module)
+## Phase 4 — Auth & sessions (optional module) ✅
 
 A pluggable, framework-generic authentication pattern that consumers can keep or drop.
 
@@ -85,7 +85,7 @@ A pluggable, framework-generic authentication pattern that consumers can keep or
 
 ---
 
-## Phase 5 — Deployment & release
+## Phase 5 — Deployment & release ✅
 
 Make shipping a non-event.
 
@@ -98,11 +98,17 @@ Make shipping a non-event.
 
 ---
 
-## Phase 6 — UI library + internal MCP server (final, intentionally open-ended)
+## Phase 6 — UI library + internal MCP server (final, intentionally open-ended) ✅ (seeded)
 
 The capstone: evolve `packages/ui` from a starter kit into a **full, themed component
 library that exposes its own internal MCP server** — so AI agents can query component
 metadata, props, variants, and usage examples while building UIs.
+
+> **Seeded in this iteration:** a machine-readable component registry
+> (`packages/ui/src/registry.ts`), `apps/ui-mcp-server` exposing it via `list_components` /
+> `get_component` tools, and a starter component set (Button, Card, Input, Badge) on a
+> multi-theme Tailwind v4 base. The architecture and seams are in place; the items below
+> remain intentionally open-ended for adopters to grow into their own design system.
 
 This phase is deliberately **non-specific**: the boilerplate must stay usable
 out-of-the-box for _any_ UI approach, so we won't prescribe a particular design system.

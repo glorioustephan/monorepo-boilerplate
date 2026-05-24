@@ -9,6 +9,7 @@
   ],
   "exports": {
     ".": "./src/index.ts",
+    "./registry": "./src/registry.ts",
     "./styles.css": "./src/styles.css",
     "./themes/*": "./src/themes/*.css"
   },

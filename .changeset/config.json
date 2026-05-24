@@ -7,5 +7,9 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@monorepo-boilerplate/web", "@monorepo-boilerplate/mcp-server"]
+  "ignore": [
+    "@monorepo-boilerplate/web",
+    "@monorepo-boilerplate/mcp-server",
+    "@monorepo-boilerplate/ui-mcp-server"
+  ]
 }
