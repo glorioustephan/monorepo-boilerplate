@@ -16,7 +16,7 @@ The skeleton everything else builds on.
 - [x] Turborepo task pipeline (`build`, `dev`, `typecheck`, `test`, `test:e2e`, `env:doctor`).
 - [x] Shared config packages: `ts-config`, `oxc-config` (oxlint + oxfmt), `test-config`.
 - [x] `apps/web` — Next.js 16 + React 19 hello-world rendering a UI-kit component.
-- [x] `apps/mcp-server` — MCP server (stdio) with a `greet` tool, bundled via tsdown.
+- [x] `mcp-servers/example` — MCP server (stdio) with a `greet` tool, bundled via tsdown.
 - [x] `packages/ui` — Tailwind v4 kit (multi-theme, source-exported) with `Button`/`Card`.
 - [x] `packages/environment` — t3-env + zod validation and an `env:doctor`.
 - [x] `packages/providers` — example typed client + webhook verifier.
@@ -91,7 +91,7 @@ Make shipping a non-event.
 
 - **Vercel** config via `vercel.ts` for `apps/web`; preview-deploy wiring and env-var
   management documented (`vercel env`).
-- A **Dockerfile** (or container build) for `apps/mcp-server` and a publish workflow.
+- A **Dockerfile** (or container build) for `mcp-servers/example` and a publish workflow.
 - **Release automation**: Changesets-driven versioning + changelog + (optional) npm
   publish for the shareable packages, gated in CI.
 - Rollback/preview/promotion notes; CI matrix for the supported Node versions.
@@ -105,7 +105,7 @@ library that exposes its own internal MCP server** — so AI agents can query co
 metadata, props, variants, and usage examples while building UIs.
 
 > **Seeded in this iteration:** a machine-readable component registry
-> (`packages/ui/src/registry.ts`), `apps/ui-mcp-server` exposing it via `list_components` /
+> (`packages/ui/src/registry.ts`), `mcp-servers/ui` exposing it via `list_components` /
 > `get_component` tools, and a starter component set (Button, Card, Input, Badge) on a
 > multi-theme Tailwind v4 base. The architecture and seams are in place; the items below
 > remain intentionally open-ended for adopters to grow into their own design system.

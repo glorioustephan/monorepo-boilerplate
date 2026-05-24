@@ -30,7 +30,7 @@ reference is `packages/ui/src/components/button.tsx`. Also read
    `cva` variant generator).
 3. **Add an entry to `packages/ui/src/registry.ts`** — `name`, `description`, `importPath`,
    `sourcePath`, `props`, `variants` (if any), and a runnable `example`. This is how
-   `apps/ui-mcp-server` surfaces the component to agents; skipping it makes the component invisible.
+   `mcp-servers/ui` surfaces the component to agents; skipping it makes the component invisible.
 4. **Add a test** `packages/ui/src/components/<name>.test.tsx` using Testing Library
    (`render` + `screen`, jsdom via the react preset). Cover render, one variant, `className`
    merge, and (for interactive/ref'd components) ref forwarding.

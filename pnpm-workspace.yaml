@@ -1,5 +1,7 @@
 packages:
   - "apps/*"
+  - "mcp-servers/*"
+  - "services/*"
   - "tooling/*"
   - "packages/*"
 

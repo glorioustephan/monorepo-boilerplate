@@ -13,17 +13,19 @@ packages. It is meant to be forked as the starting point for new monorepos.
 ## Layout
 
 ```
-apps/        runnable applications
+apps/          user-facing deliverables
   web/            Next.js 16 (App Router, Turbopack, React Compiler)
-  mcp-server/     MCP server (stdio transport)
-  ui-mcp-server/  MCP server exposing the UI kit's component registry to agents
-tooling/     config-only packages (ship nothing at runtime)
+mcp-servers/   internal MCP servers (agent/dev tooling; bundled with tsdown)
+  example/        generic hello-world MCP server (stdio)
+  ui/             exposes the UI kit's component catalog to agents
+services/      RESERVED for future backend services (README only; not built)
+tooling/       config-only + build-time tooling (ship nothing at runtime)
   ts-config/   TypeScript presets (base/node/react-library/next)
   oxc-config/  oxlint presets + oxfmt config
   test-config/ Vitest + Playwright presets
-packages/    real libraries (ship code)
+packages/    real libraries (ship code; consumed from source)
   types/       cross-cutting shared types + error taxonomy (keep small)
-  logger/      zero-dep structured logger (stderr-safe for the MCP server)
+  logger/      zero-dep structured logger (stderr-safe for the MCP servers)
   ui/          Tailwind v4 UI kit, consumed from source for HMR
   environment/ t3-env + zod env validation, env:doctor helper
   providers/   third-party API clients + webhook handlers + resilience utils
@@ -31,7 +33,8 @@ packages/    real libraries (ship code)
   auth/        optional provider-agnostic signed-session primitives
 ```
 
-All packages share the `@monorepo-boilerplate/*` namespace.
+All packages share the `@monorepo-boilerplate/*` namespace. `apps/` = products,
+`mcp-servers/` = agent tooling, `services/` = future backends — keep them distinct.
 
 ## Golden rules
 
@@ -41,8 +44,8 @@ All packages share the `@monorepo-boilerplate/*` namespace.
   Rules live in `tooling/oxc-config/`. Don't restate them in code review — fix and move on.
 - **Internal packages are consumed from source** (their `exports` point at `.ts`).
   This is deliberate — it gives HMR across package boundaries. Do not add build
-  steps to library packages; only the MCP server apps (`apps/mcp-server`,
-  `apps/ui-mcp-server`) build (via tsdown), since they run as standalone Node processes.
+  steps to library packages; only the MCP servers (`mcp-servers/example`,
+  `mcp-servers/ui`) build (via tsdown), since they run as standalone Node processes.
 - **Centralize dependency versions** in `pnpm-workspace.yaml` `catalog:`. Add a new
   shared dep there and reference it as `"catalog:"` — never pin versions per package.
 - **Use `workspace:*`** for internal dependencies.

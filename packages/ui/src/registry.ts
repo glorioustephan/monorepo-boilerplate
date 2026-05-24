@@ -1,6 +1,6 @@
 /**
  * Machine-readable component metadata. This is the seam the UI-kit MCP server
- * (apps/ui-mcp-server) reads so agents can discover components, props, variants,
+ * (mcp-servers/ui) reads so agents can discover components, props, variants,
  * and usage without scanning source. It is plain data — no React/CSS imports —
  * so it's safe to consume from a Node process.
  *

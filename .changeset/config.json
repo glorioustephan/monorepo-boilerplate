@@ -9,7 +9,7 @@
   "updateInternalDependencies": "patch",
   "ignore": [
     "@monorepo-boilerplate/web",
-    "@monorepo-boilerplate/mcp-server",
-    "@monorepo-boilerplate/ui-mcp-server"
+    "@monorepo-boilerplate/mcp-example",
+    "@monorepo-boilerplate/mcp-ui"
   ]
 }

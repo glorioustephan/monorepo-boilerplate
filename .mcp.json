@@ -1,0 +1,13 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/2025/mcp.json",
+  "mcpServers": {
+    "ui-kit": {
+      "command": "node",
+      "args": ["mcp-servers/ui/dist/index.mjs"]
+    },
+    "example": {
+      "command": "node",
+      "args": ["mcp-servers/example/dist/index.mjs"]
+    }
+  }
+}

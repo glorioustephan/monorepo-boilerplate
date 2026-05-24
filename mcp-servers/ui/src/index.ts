@@ -3,7 +3,7 @@ import { createLogger } from "@monorepo-boilerplate/logger";
 
 import { createServer } from "./server";
 
-const log = createLogger("ui-mcp-server");
+const log = createLogger("mcp-ui");
 
 async function main(): Promise<void> {
   const server = createServer();

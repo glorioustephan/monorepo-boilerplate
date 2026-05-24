@@ -35,11 +35,13 @@ discoverable by people and agents alike.
 ## Layout
 
 ```
-apps/
+apps/             user-facing deliverables
   web/            Next.js 16 + React 19 (UI kit, auth proxy, webhook route)
-  mcp-server/     MCP server (stdio) with a `greet` tool
-  ui-mcp-server/  MCP server exposing the UI kit's component registry
-tooling/          config-only packages (ship nothing)
+mcp-servers/      internal MCP servers (agent/dev tooling)
+  example/        MCP server (stdio) with a `greet` tool
+  ui/             MCP server exposing the UI kit's component catalog
+services/         reserved for future backend services (README only)
+tooling/          config-only + build-time tooling (ship nothing)
   ts-config/      TypeScript presets
   oxc-config/     oxlint presets + oxfmt config
   test-config/    Vitest + Playwright presets
@@ -72,8 +74,8 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm build
 Run the MCP server on its own and inspect it:
 
 ```bash
-pnpm --filter @monorepo-boilerplate/mcp-server build
-npx @modelcontextprotocol/inspector node apps/mcp-server/dist/index.mjs
+pnpm --filter @monorepo-boilerplate/mcp-example build
+npx @modelcontextprotocol/inspector node mcp-servers/example/dist/index.mjs
 # call the `greet` tool with { "name": "World" } → "Hello, World!"
 ```
 
@@ -97,7 +99,7 @@ Every package under `packages/` sets its `exports` to **TypeScript source**
 (`./src/*.ts`) — they have no build step. The web app lists the internal packages it
 imports in `transpilePackages`, so Next transpiles them on the fly. Editing
 `packages/ui/src/components/button.tsx` hot-reloads `apps/web` instantly, with no
-rebuild or version bump. Only the MCP server apps (`apps/mcp-server`, `apps/ui-mcp-server`)
+rebuild or version bump. Only the MCP servers (`mcp-servers/example`, `mcp-servers/ui`)
 are bundled (with tsdown), because they run as standalone Node processes — and tsdown
 inlines the internal packages so there are no `.ts` imports at runtime.
 

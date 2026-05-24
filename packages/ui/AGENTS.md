@@ -20,4 +20,4 @@ consuming apps get HMR. See `.claude/reference/react.md` for component conventio
   any consumer. Don't move that `@source` — its relative path is what makes cross-app scanning work.
 - Tests: Vitest + Testing Library (`*.test.tsx`), jsdom via the `reactPreset`.
 - **Registry**: when you add a component, also add an entry to `src/registry.ts` (plain,
-  machine-readable metadata) — `apps/ui-mcp-server` surfaces it to agents via MCP.
+  machine-readable metadata) — `mcp-servers/ui` surfaces it to agents via MCP.

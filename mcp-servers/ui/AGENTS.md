@@ -1,4 +1,4 @@
-# UI-kit MCP server — `@monorepo-boilerplate/ui-mcp-server`
+# UI-kit MCP server — `@monorepo-boilerplate/mcp-ui`
 
 A Model Context Protocol server (stdio) that exposes the UI kit's component
 **registry** so agents can discover components while building UIs. Bundled with

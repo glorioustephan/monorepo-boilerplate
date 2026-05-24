@@ -3,8 +3,8 @@
   "files": [],
   "references": [
     { "path": "apps/web" },
-    { "path": "apps/mcp-server" },
-    { "path": "apps/ui-mcp-server" },
+    { "path": "mcp-servers/example" },
+    { "path": "mcp-servers/ui" },
     { "path": "packages/types" },
     { "path": "packages/logger" },
     { "path": "packages/ui" },

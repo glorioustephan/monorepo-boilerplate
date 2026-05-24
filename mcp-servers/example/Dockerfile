@@ -1,5 +1,5 @@
 # Multi-stage build for the MCP server. Build from the REPO ROOT:
-#   docker build -f apps/mcp-server/Dockerfile -t monorepo-boilerplate-mcp .
+#   docker build -f mcp-servers/example/Dockerfile -t monorepo-boilerplate-mcp .
 FROM node:22-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
@@ -10,7 +10,7 @@ RUN corepack enable
 FROM base AS pruner
 WORKDIR /repo
 COPY . .
-RUN pnpm dlx turbo prune @monorepo-boilerplate/mcp-server --docker
+RUN pnpm dlx turbo prune @monorepo-boilerplate/mcp-example --docker
 
 FROM base AS build
 WORKDIR /repo
@@ -20,8 +20,8 @@ COPY --from=pruner /repo/out/json/ ./
 RUN pnpm install --frozen-lockfile
 # Bring in source, build, and prune to a self-contained deployable at /out.
 COPY --from=pruner /repo/out/full/ ./
-RUN pnpm --filter @monorepo-boilerplate/mcp-server build
-RUN pnpm --filter @monorepo-boilerplate/mcp-server deploy --prod /out
+RUN pnpm --filter @monorepo-boilerplate/mcp-example build
+RUN pnpm --filter @monorepo-boilerplate/mcp-example deploy --prod /out
 
 FROM base AS runtime
 WORKDIR /app

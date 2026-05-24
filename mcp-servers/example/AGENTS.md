@@ -1,4 +1,4 @@
-# MCP server — `@monorepo-boilerplate/mcp-server`
+# MCP server (example) — `@monorepo-boilerplate/mcp-example`
 
 A Model Context Protocol server over **stdio**, built with `@modelcontextprotocol/sdk`.
 Bundled with **tsdown** to `dist/index.mjs` (tsdown inlines internal `@monorepo-boilerplate/*`

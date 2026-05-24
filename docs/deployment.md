@@ -17,10 +17,10 @@ Edit `apps/web/vercel.ts` to add redirects, rewrites, headers, crons, or functio
 
 ## MCP server → container
 
-The MCP server ships a multi-stage `apps/mcp-server/Dockerfile`. Build from the **repo root**:
+The MCP server ships a multi-stage `mcp-servers/example/Dockerfile`. Build from the **repo root**:
 
 ```bash
-docker build -f apps/mcp-server/Dockerfile -t monorepo-boilerplate-mcp .
+docker build -f mcp-servers/example/Dockerfile -t monorepo-boilerplate-mcp .
 docker run -i --rm monorepo-boilerplate-mcp     # talks JSON-RPC over stdio
 ```
 
