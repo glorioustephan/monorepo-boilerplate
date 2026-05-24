@@ -29,6 +29,7 @@ Enforced by oxlint with `react` + `react-hooks` + `jsx-a11y` plugins (`tooling/o
 - Rules of React must hold: renders must be pure; never mutate props or external state during render.
 - `oxlint` rules-of-hooks catches violations statically; treat them as blocking errors.
 - `"use no memo"` directive exists as an escape hatch for the rare case you must opt a component out of compiler output. Use it only with a comment explaining why.
+- The `react-perf` "no new object/array/function/JSX as prop" rules are **disabled** (`tooling/oxc-config/react.json`): they exist to push manual memoization, which the Compiler makes redundant and which slot-prop composition (passing JSX/handlers as props) requires.
 
 ---
 

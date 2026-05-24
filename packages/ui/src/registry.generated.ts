@@ -243,4 +243,240 @@ export const componentRegistry: readonly ComponentMeta[] = [
       avoid: ["Essential information (tooltips are not reliably reachable on touch)."],
     },
   },
+  {
+    name: "ConfirmDialog",
+    description: "Dialog wired to a confirm/cancel decision; owns its open state.",
+    importPath: "@monorepo-boilerplate/ui",
+    sourcePath: "src/recipes/confirm-dialog.tsx",
+    tier: "Recipe",
+    renderEnvironment: "client",
+    props: [
+      {
+        name: "trigger",
+        type: "ReactNode",
+        required: true,
+        description: "Control that opens it.",
+      },
+      {
+        name: "title",
+        type: "ReactNode",
+        required: true,
+      },
+      {
+        name: "description",
+        type: "ReactNode",
+        required: false,
+      },
+      {
+        name: "confirmLabel",
+        type: "string",
+        required: false,
+        default: '"Confirm"',
+      },
+      {
+        name: "cancelLabel",
+        type: "string",
+        required: false,
+        default: '"Cancel"',
+      },
+      {
+        name: "destructive",
+        type: "boolean",
+        required: false,
+        default: "false",
+      },
+      {
+        name: "onConfirm",
+        type: "() => void | Promise<void>",
+        required: true,
+      },
+    ],
+    examples: [
+      {
+        label: "destructive",
+        code: '<ConfirmDialog\n  trigger={<Button variant="destructive">Delete</Button>}\n  title="Delete project?"\n  description="This cannot be undone."\n  destructive\n  onConfirm={() => deleteProject(id)}\n/>',
+      },
+    ],
+    intent: {
+      use: [
+        "Guarding a destructive or irreversible action behind an explicit confirm step.",
+        "Keeping the client boundary in one leaf so server parents pass slot props only.",
+      ],
+      avoid: ["Non-blocking notices — use a toast. Multi-step flows — compose Dialog directly."],
+    },
+  },
+  {
+    name: "FormField",
+    description: "Labelled Input with optional description and error, accessibly wired.",
+    importPath: "@monorepo-boilerplate/ui",
+    sourcePath: "src/recipes/form-field.tsx",
+    tier: "Recipe",
+    renderEnvironment: "server",
+    props: [
+      {
+        name: "id",
+        type: "string",
+        required: true,
+        description: "Ties label, input, and messages.",
+      },
+      {
+        name: "label",
+        type: "ReactNode",
+        required: true,
+      },
+      {
+        name: "description",
+        type: "ReactNode",
+        required: false,
+      },
+      {
+        name: "error",
+        type: "ReactNode",
+        required: false,
+        description: "Sets aria-invalid.",
+      },
+      {
+        name: "...input",
+        type: 'Omit<ComponentPropsWithRef<"input">, "id">',
+        required: false,
+      },
+    ],
+    examples: [
+      {
+        label: "with error",
+        code: '<FormField\n  id="email"\n  label="Email"\n  type="email"\n  description="We never share it."\n  error="Enter a valid email."\n/>',
+      },
+    ],
+    intent: {
+      use: [
+        "Composing accessible form rows: label + input + helper/error in one unit.",
+        "Server-rendered forms — it needs no client hooks (pass an explicit id).",
+      ],
+      avoid: ["Non-text controls — compose Select/Checkbox with their own label instead."],
+    },
+  },
+  {
+    name: "Cta",
+    description: "Closing call-to-action panel on an elevated surface with an action slot.",
+    importPath: "@monorepo-boilerplate/ui",
+    sourcePath: "src/blocks/cta.tsx",
+    tier: "Block",
+    renderEnvironment: "server",
+    props: [
+      {
+        name: "title",
+        type: "ReactNode",
+        required: true,
+      },
+      {
+        name: "description",
+        type: "ReactNode",
+        required: false,
+      },
+      {
+        name: "actions",
+        type: "ReactNode",
+        required: false,
+        description: "Action controls slot.",
+      },
+      {
+        name: "className",
+        type: "string",
+        required: false,
+      },
+    ],
+    examples: [
+      {
+        label: "default",
+        code: '<Cta\n  title="Ready to build?"\n  description="Fork the template and start shipping."\n  actions={<Button>Use this template</Button>}\n/>',
+      },
+    ],
+    intent: {
+      use: ["Driving a single conversion near the end of a page (sign up, contact, start)."],
+      avoid: ["Competing CTAs — keep one primary action so the choice stays clear."],
+    },
+  },
+  {
+    name: "FeatureGrid",
+    description: "Responsive grid of feature cards driven by a features list.",
+    importPath: "@monorepo-boilerplate/ui",
+    sourcePath: "src/blocks/feature-grid.tsx",
+    tier: "Block",
+    renderEnvironment: "server",
+    props: [
+      {
+        name: "features",
+        type: "ReadonlyArray<{ title: string; description: ReactNode; icon?: ReactNode }>",
+        required: true,
+      },
+      {
+        name: "columns",
+        type: "2 | 3 | 4",
+        required: false,
+        default: "3",
+      },
+      {
+        name: "className",
+        type: "string",
+        required: false,
+      },
+    ],
+    examples: [
+      {
+        label: "three up",
+        code: '<FeatureGrid\n  features={[\n    { title: "Fast", description: "Turbopack dev server." },\n    { title: "Typed", description: "Strict TypeScript everywhere." },\n    { title: "Tested", description: "Vitest and Playwright wired in." },\n  ]}\n/>',
+      },
+    ],
+    intent: {
+      use: ["Summarizing 2–8 product capabilities in a scannable, responsive grid."],
+      avoid: ["Long comparison tables or data — use a table; keep features brief."],
+    },
+  },
+  {
+    name: "Hero",
+    description: "Centered page-intro section with title, copy, and action/media slots.",
+    importPath: "@monorepo-boilerplate/ui",
+    sourcePath: "src/blocks/hero.tsx",
+    tier: "Block",
+    renderEnvironment: "server",
+    props: [
+      {
+        name: "title",
+        type: "ReactNode",
+        required: true,
+      },
+      {
+        name: "description",
+        type: "ReactNode",
+        required: false,
+      },
+      {
+        name: "actions",
+        type: "ReactNode",
+        required: false,
+        description: "CTA controls slot.",
+      },
+      {
+        name: "media",
+        type: "ReactNode",
+        required: false,
+        description: "Supporting visual slot.",
+      },
+      {
+        name: "className",
+        type: "string",
+        required: false,
+      },
+    ],
+    examples: [
+      {
+        label: "with actions",
+        code: '<Hero\n  title="Ship faster"\n  description="An opinionated monorepo starter."\n  actions={<Button>Get started</Button>}\n/>',
+      },
+    ],
+    intent: {
+      use: ["Opening a landing or marketing page with a single, clear value proposition."],
+      avoid: ["Dense dashboards or app shells — a Hero is for marketing-style intros."],
+    },
+  },
 ];
