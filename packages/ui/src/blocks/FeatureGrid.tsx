@@ -25,7 +25,9 @@ export function FeatureGrid({ features, columns = DEFAULT_COLUMNS }: FeatureGrid
           {features.map((feature) => (
             <Card key={feature.id ?? feature.title} size="2">
               <Flex direction="column" gap="1">
-                <Heading size="3">{feature.title}</Heading>
+                <Heading as="h3" size="3">
+                  {feature.title}
+                </Heading>
                 <Text size="2" color="gray">
                   {feature.description}
                 </Text>

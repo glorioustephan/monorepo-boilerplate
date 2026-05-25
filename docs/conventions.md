@@ -19,7 +19,7 @@ apps/          user-facing deliverables (web)
 mcp-servers/   internal MCP servers (example, ui)
 services/      reserved for future backend services
 tooling/       config-only + build-time tooling (ts-config, oxc-config, test-config,
-               catalog-extractor, catalog-lint, annotations)
+               catalog-codegen, catalog-lint, annotations)
 packages/      real libraries (types, logger, ui, environment, providers, database, auth)
 docs/          this VitePress documentation site
 ```
@@ -36,30 +36,32 @@ you fork.
   HMR across package boundaries. Only the MCP servers build (via tsdown).
 - **Centralize dependency versions** in `pnpm-workspace.yaml` `catalog:`; reference as
   `"catalog:"`. Use `workspace:*` for internal deps.
-- **Style only with semantic tokens** in the UI kit (`bg-primary`, `text-foreground`, …) —
-  never raw palette or arbitrary values. `pnpm lint:tokens` enforces this.
+- **Color comes from Radix Themes props** (`color`/`variant`/`size`/`radius`), never Tailwind
+  color classes; Tailwind is for layout/spacing only. `@radix-ui/*` is importable **only** inside
+  `packages/ui` (`pnpm lint:catalog`); raw/arbitrary colors are banned (`pnpm lint:tokens`).
 
 ## Scripts
 
 Run from the repo root; Turborepo fans out and caches.
 
-| Command                                   | What it does                                               |
-| ----------------------------------------- | ---------------------------------------------------------- |
-| `pnpm dev`                                | run all dev servers (web + docs)                           |
-| `pnpm build`                              | build everything, incl. the docs dead-link check           |
-| `pnpm lint` / `pnpm format`               | oxlint / oxfmt over the repo                               |
-| `pnpm typecheck` / `pnpm test`            | `tsc --noEmit` / Vitest                                    |
-| `pnpm test:e2e`                           | Playwright (web)                                           |
-| `pnpm docs:dev` / `pnpm docs:build`       | VitePress dev server / build (dead-link gate)              |
-| `pnpm catalog:generate` / `catalog:check` | regenerate / verify the UI component catalog               |
-| `pnpm todos:generate`                     | refresh the [TODO digest](./todo.md) from code annotations |
+| Command                                | What it does                                               |
+| -------------------------------------- | ---------------------------------------------------------- |
+| `pnpm dev`                             | run all dev servers (web + docs)                           |
+| `pnpm build`                           | build everything, incl. the docs dead-link check           |
+| `pnpm lint` / `pnpm format`            | oxlint / oxfmt over the repo                               |
+| `pnpm typecheck` / `pnpm test`         | `tsc --noEmit` / Vitest                                    |
+| `pnpm test:e2e`                        | Playwright (web)                                           |
+| `pnpm docs:dev` / `pnpm docs:build`    | VitePress dev server / build (dead-link gate)              |
+| `pnpm ui:codegen` / `ui:codegen:check` | regenerate / verify the kit's generated component layer    |
+| `pnpm todos:generate`                  | refresh the [TODO digest](./todo.md) from code annotations |
 
 ## Adding things
 
 - **A package**: `/scaffold-package` — decide `apps/` vs `tooling/` vs `packages/`, extend the
   right `ts-config` preset, source-pointing `exports` for libraries.
-- **A UI component**: `/scaffold-ui-component` (or the `add-ui-component` skill) — pick a tier,
-  author a `*.catalog.ts` sidecar and an example, regenerate the catalog.
+- **A UI component**: `/scaffold-ui-component` (or the `add-ui-component` skill) — add a Radix
+  component via the manifest + `pnpm ui:codegen`, or hand-build a recipe/block/template composing
+  the kit's components (with example, story, and test).
 - **A provider**: copy `packages/providers/src/example` and add a subpath export.
 - **A documentation page**: `/scaffold-doc <slug> "<Title>" "<description>"` — see
   `.claude/reference/documentation.md` for frontmatter, sidebar registration, and link rules.

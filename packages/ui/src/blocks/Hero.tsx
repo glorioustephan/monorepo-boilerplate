@@ -17,7 +17,7 @@ export function Hero({ title, description, actions, align = "center" }: HeroProp
     <Section size="4">
       <Container size="3">
         <Flex direction="column" align={cross} gap="4">
-          <Heading size="9" align={align}>
+          <Heading as="h1" size="9" align={align}>
             {title}
           </Heading>
           {description ? (

@@ -16,7 +16,7 @@ export function Cta({ title, description, actions }: CtaProps) {
       <Container size="3">
         <Card size="4">
           <Flex direction="column" align="center" gap="3">
-            <Heading size="6" align="center">
+            <Heading as="h2" size="6" align="center">
               {title}
             </Heading>
             {description ? (
