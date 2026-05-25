@@ -6,26 +6,30 @@ can discover components while building UIs. It scrapes the kit at build time int
 
 ## How the catalog works
 
-- **Build time** (`scripts/build-catalog.ts`, run by `pnpm build` before tsdown): reads the
-  kit's atom manifest (`@monorepo-boilerplate/ui/primitives/atoms.manifest`) — and the
-  generated reference stories as verbatim examples — into catalog records, then writes
+- **Build time** (`scripts/build-catalog.ts`, run by `pnpm build` before tsdown): reads the kit's
+  component manifest (`@monorepo-boilerplate/ui/components/components.manifest`) + the authored
+  recipes/blocks/templates (JSDoc descriptions) + the reference stories/examples as verbatim
+  examples → catalog records; embeds each with **MiniLM** (`@huggingface/transformers`); then writes
   `catalog.db` (a `node:sqlite` DB: a `components` table, an FTS5 `components_fts` index, and a
-  reserved `vectors` table for the future semantic layer). `catalog.db` is gitignored.
-- **Runtime** (`src/catalog/db.ts`): opens `catalog.db` read-only and serves queries. Lexical
-  search is FTS5/bm25. `packages/ui` carries **no** catalog files — the kit is just a UI kit.
+  `vectors` table of embeddings). `catalog.db` is gitignored. If the model is unavailable the
+  vectors stay empty and the catalog degrades to lexical-only.
+- **Runtime** (`src/catalog/db.ts`): opens `catalog.db` read-only, loads records + vectors into
+  memory, and serves **hybrid search** — FTS5/bm25 fused with brute-force cosine over the MiniLM
+  vectors (the query is embedded lazily at search time, falling back to lexical if the model can't
+  load). `packages/ui` carries **no** catalog files — the kit is just a UI kit.
 - **node:sqlite** requires Node ≥22.5 with `--experimental-sqlite`; the server bin's shebang
   sets it, and the npm scripts use `NODE_OPTIONS=--experimental-sqlite`. If you invoke
   `node dist/index.mjs` directly, pass `--experimental-sqlite` (or set `NODE_OPTIONS`).
 
 ## Tools
 
-| Tool                           | Input                                         | Returns                                         |
-| ------------------------------ | --------------------------------------------- | ----------------------------------------------- |
-| `search_components`            | `query` (free text)                           | FTS5/bm25-ranked components (use this first)    |
-| `list_components`              | —                                             | every component (name, tier, description)       |
-| `get_component`                | `name`                                        | full record (variants, parts, verbatim example) |
-| `list_by_tier`                 | `tier` (Atom/Primitive/Recipe/Block/Template) | components in that tier                         |
-| `filter_by_render_environment` | `renderEnvironment` (server/client/universal) | components for that environment                 |
+| Tool                           | Input                                         | Returns                                              |
+| ------------------------------ | --------------------------------------------- | ---------------------------------------------------- |
+| `search_components`            | `query` (free text)                           | hybrid (FTS5 + MiniLM) ranked components (use first) |
+| `list_components`              | —                                             | every component (name, tier, description)            |
+| `get_component`                | `name`                                        | full record (variants, parts, verbatim example)      |
+| `list_by_tier`                 | `tier` (Component/Recipe/Block/Template)      | components in that tier                              |
+| `filter_by_render_environment` | `renderEnvironment` (server/client/universal) | components for that environment                      |
 
 ## Rules
 
@@ -36,8 +40,10 @@ can discover components while building UIs. It scrapes the kit at build time int
   `@monorepo-boilerplate/logger`. (The `--experimental-sqlite` warning goes to stderr — harmless.)
 - The catalog schema lives here (`src/catalog/schema.ts`), not in the kit. When the kit gains a
   component, `pnpm --filter @monorepo-boilerplate/mcp-ui build-catalog` refreshes the DB.
-- **Planned (not yet built):** MiniLM embeddings computed at build time into the `vectors` table,
-  with runtime hybrid retrieval (FTS5 lexical fused with brute-force cosine). See the TODO in
-  `scripts/build-catalog.ts`.
+- **Embeddings** (`src/catalog/embed.ts`): MiniLM via `@huggingface/transformers`, loaded by
+  **dynamic import** (lazy, with graceful fallback) and used at both build time (record vectors)
+  and runtime (query vector). `onnxruntime-node` is allowed to run its install script
+  (`pnpm-workspace.yaml` `allowBuilds`). Semantic recall is bounded by description quality — keep
+  component `usage`/JSDoc descriptive.
 - Inspect with: `npx @modelcontextprotocol/inspector node --experimental-sqlite dist/index.mjs`
   (after `pnpm build`).

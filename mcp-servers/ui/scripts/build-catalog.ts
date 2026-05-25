@@ -6,11 +6,12 @@
  *  - authored composites — recipes/blocks/templates: name from the file, tier from the folder,
  *    description from the component's JSDoc, example from `examples/<Name>.example.tsx`
  *
+ * Each record is also embedded with MiniLM into the `vectors` table, so the runtime can fuse FTS5
+ * lexical scores with brute-force cosine (hybrid retrieval). If the model is unavailable, vectors
+ * stay empty and the catalog degrades to lexical-only.
+ *
  * Run via `pnpm --filter @monorepo-boilerplate/mcp-ui build-catalog` (the package `build` runs it
  * before bundling). Build-time only — never imported by the server runtime.
- *
- * TODO(semantic): compute MiniLM embeddings here and populate the `vectors` table so the runtime
- * can fuse FTS5 lexical scores with brute-force cosine (hybrid retrieval).
  */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -19,6 +20,7 @@ import { fileURLToPath } from "node:url";
 import { components } from "@monorepo-boilerplate/ui/components/components.manifest";
 
 import { buildCatalog } from "../src/catalog/db";
+import { embed } from "../src/catalog/embed";
 import type { ComponentRecord, Tier } from "../src/catalog/schema";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -100,5 +102,19 @@ function scanComposites(): ComponentRecord[] {
 }
 
 const records = [...componentRecords, ...scanComposites()];
-buildCatalog(dbPath, records);
-process.stderr.write(`build-catalog: wrote ${records.length} components -> ${dbPath}\n`);
+
+// Embed each record (one at a time — batching mean-pools over padding). If the model is
+// unavailable (offline / not installed), vectors stay empty and the catalog is lexical-only.
+const vectors = new Map<string, Float32Array>();
+for (const record of records) {
+  // Embed clean semantic text (name + description); category/tier are noise for NL queries.
+  // Sequential on purpose — one model pipeline, one short string at a time (no concurrency win).
+  // oxlint-disable-next-line no-await-in-loop
+  const vector = await embed(`${record.name}. ${record.description}`);
+  if (vector) vectors.set(record.name, vector);
+}
+
+buildCatalog(dbPath, records, vectors);
+process.stderr.write(
+  `build-catalog: wrote ${records.length} components (${vectors.size} embedded) -> ${dbPath}\n`,
+);

@@ -9,6 +9,8 @@ packages:
 allowBuilds:
   esbuild: true
   lefthook: true
+  onnxruntime-node: true
+  protobufjs: true
   sharp: true
 
 # Centralized dependency versions. Reference with "catalog:" in any package.json.
@@ -62,6 +64,9 @@ catalog:
 
   # MCP
   "@modelcontextprotocol/sdk": ^1.29.0
+
+  # Embeddings (UI catalog semantic search; MiniLM via ONNX)
+  "@huggingface/transformers": ^4.2.0
 
   # Documentation site (VitePress)
   vitepress: ^1.6.4

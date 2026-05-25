@@ -44,7 +44,7 @@ export function createServer(): McpServer {
     {
       title: "Search UI components",
       description:
-        "Full-text search (FTS5/bm25) over the kit catalog — matches name, category, render environment, description, variants, and compound parts. Use this first when looking for a component to build a UI.",
+        "Hybrid search over the kit catalog — FTS5 lexical (name, category, render environment, description, variants, parts) fused with MiniLM semantic similarity. Handles both literal and conceptual queries; use this first when looking for a component to build a UI.",
       inputSchema: searchComponentsInputSchema,
     },
     async (args) => searchComponentsTool(args),

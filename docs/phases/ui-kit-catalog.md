@@ -12,8 +12,9 @@ description: How the @monorepo-boilerplate/ui component catalog works — tiers,
 > now lives in `mcp-servers/ui`** — a `node:sqlite` + FTS5 database built from the kit at build
 > time — so `packages/ui` ships no catalog files (no `*.catalog.ts`, no `registry.generated.ts`).
 > The current source of truth is `packages/ui/AGENTS.md` + `.claude/reference/tailwind.md`. The
-> historical U0–U8 design below is kept for context. (A MiniLM semantic-search layer over the
-> FTS5 catalog is the next planned enhancement.)
+> historical U0–U8 design below is kept for context. Search is **hybrid** — FTS5 lexical fused
+> with MiniLM (`@huggingface/transformers`) semantic similarity, with graceful fallback to
+> lexical-only when the model is unavailable.
 
 How `@monorepo-boilerplate/ui` became a tiered, machine-queryable **catalog** that
 the `mcp-ui` server surfaces to agents. This is the detail behind the roadmap's

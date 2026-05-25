@@ -6,6 +6,7 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 
 import { type Catalog, openCatalog } from "./catalog/db";
+import { embed } from "./catalog/embed";
 import { RENDER_ENVS, TIERS } from "./catalog/schema";
 
 // catalog.db lives at the package root; both `dist/index.mjs` and `src/index.ts` are
@@ -54,9 +55,11 @@ export const searchComponentsInputSchema = {
     .describe("Free-text query, e.g. 'modal confirm dialog' or 'server-safe form input'"),
 };
 
-/** `search_components` — components ranked by FTS5 (bm25) lexical relevance. */
-export function searchComponentsTool({ query }: { query: string }): CallToolResult {
-  return json(catalog().search(query));
+/** `search_components` — hybrid ranking: FTS5 lexical fused with MiniLM cosine (falls back to
+ *  lexical-only if the embedding model is unavailable). */
+export async function searchComponentsTool({ query }: { query: string }): Promise<CallToolResult> {
+  const queryVec = await embed(query);
+  return json(catalog().search(query, queryVec));
 }
 
 const tierSchema = z.enum(TIERS);

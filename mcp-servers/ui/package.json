@@ -17,6 +17,7 @@
     "test:unit": "NODE_OPTIONS=--experimental-sqlite vitest run"
   },
   "dependencies": {
+    "@huggingface/transformers": "catalog:",
     "@modelcontextprotocol/sdk": "catalog:",
     "@monorepo-boilerplate/logger": "workspace:*",
     "@monorepo-boilerplate/ui": "workspace:*",

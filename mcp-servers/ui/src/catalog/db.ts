@@ -1,10 +1,13 @@
 /**
- * node:sqlite catalog store. `buildCatalog` writes the DB at build time (FTS5 for
- * lexical search + a reserved `vectors` table for the future MiniLM semantic layer);
- * `openCatalog` opens it read-only at runtime and exposes query helpers.
+ * node:sqlite catalog store with hybrid retrieval.
  *
- * Requires Node ≥22.5 run with `--experimental-sqlite` (set on the server bin / via
- * NODE_OPTIONS).
+ * `buildCatalog` writes the DB at build time: a `components` table, an FTS5 index for lexical
+ * search, and a `vectors` table of MiniLM embeddings. `openCatalog` opens it read-only, loads the
+ * records + vectors into memory, and serves queries. `search` fuses FTS5 bm25 (lexical) with
+ * brute-force cosine over the vectors (semantic) when a query vector is supplied; otherwise it
+ * falls back to pure lexical ranking.
+ *
+ * Requires Node ≥22.5 run with `--experimental-sqlite`.
  */
 import { DatabaseSync } from "node:sqlite";
 
@@ -16,9 +19,25 @@ import {
   type Tier,
 } from "./schema";
 
-// Validate at the boundary so schema drift / a corrupt DB fails loudly with the offending field.
+interface LexHit {
+  readonly name: string;
+  readonly score: number;
+}
+
 const parseRecord = (data: unknown): ComponentRecord =>
   componentRecordSchema.parse(JSON.parse(String(data)));
+
+/** Cosine similarity of two L2-normalized vectors (== dot product). */
+function cosine(a: Float32Array, b: Float32Array): number {
+  let dot = 0;
+  for (let i = 0; i < a.length; i++) dot += (a[i] as number) * (b[i] as number);
+  return dot;
+}
+
+const vectorToBlob = (vector: Float32Array): Uint8Array =>
+  new Uint8Array(vector.buffer, vector.byteOffset, vector.byteLength);
+
+const blobToVector = (blob: Uint8Array): Float32Array => new Float32Array(blob.slice().buffer);
 
 /** Concatenated searchable text for the FTS5 index. */
 function searchText(record: ComponentRecord): string {
@@ -39,8 +58,12 @@ function searchText(record: ComponentRecord): string {
     .join(" ");
 }
 
-/** Create/overwrite the catalog database from the given records (atomic). */
-export function buildCatalog(dbPath: string, records: readonly ComponentRecord[]): void {
+/** Create/overwrite the catalog database (atomic). Vectors are optional (lexical-only without them). */
+export function buildCatalog(
+  dbPath: string,
+  records: readonly ComponentRecord[],
+  vectors?: ReadonlyMap<string, Float32Array>,
+): void {
   const db = new DatabaseSync(dbPath);
   db.exec(`
     DROP TABLE IF EXISTS components;
@@ -54,13 +77,14 @@ export function buildCatalog(dbPath: string, records: readonly ComponentRecord[]
       data TEXT NOT NULL
     );
     CREATE VIRTUAL TABLE components_fts USING fts5(name, text);
-    CREATE TABLE vectors (name TEXT PRIMARY KEY, embedding BLOB);
+    CREATE TABLE vectors (name TEXT PRIMARY KEY, embedding BLOB NOT NULL);
   `);
 
   const insComponent = db.prepare(
     `INSERT INTO components (name, tier, category, render_env, data) VALUES (?, ?, ?, ?, ?)`,
   );
   const insFts = db.prepare(`INSERT INTO components_fts (name, text) VALUES (?, ?)`);
+  const insVector = db.prepare(`INSERT INTO vectors (name, embedding) VALUES (?, ?)`);
   db.exec("BEGIN");
   try {
     for (const record of records) {
@@ -72,6 +96,8 @@ export function buildCatalog(dbPath: string, records: readonly ComponentRecord[]
         JSON.stringify(record),
       );
       insFts.run(record.name, searchText(record));
+      const vector = vectors?.get(record.name);
+      if (vector) insVector.run(record.name, vectorToBlob(vector));
     }
     db.exec("COMMIT");
   } catch (error) {
@@ -83,8 +109,8 @@ export function buildCatalog(dbPath: string, records: readonly ComponentRecord[]
 }
 
 export interface Catalog {
-  /** Lexical (FTS5/bm25) search, best matches first. */
-  search(query: string, limit?: number): ComponentRecord[];
+  /** Hybrid search: FTS5 lexical fused with cosine when `queryVec` is given, else lexical only. */
+  search(query: string, queryVec?: Float32Array, limit?: number): ComponentRecord[];
   get(name: string): ComponentRecord | undefined;
   list(): ComponentSummary[];
   listByTier(tier: Tier): ComponentRecord[];
@@ -100,41 +126,87 @@ function toFtsQuery(raw: string): string | undefined {
   return tokens.map((token) => `"${token}"*`).join(" OR ");
 }
 
+const WEIGHT_LEXICAL = 0.45;
+const WEIGHT_SEMANTIC = 0.55;
+const FUSED_FLOOR = 0.05; // drop near-zero hybrid matches
+
 export function openCatalog(dbPath: string): Catalog {
   const db = new DatabaseSync(dbPath, { readOnly: true });
 
-  // Prepare statements once — a long-lived stdio server reuses them across tool calls.
-  const searchStmt = db.prepare(
-    `SELECT c.data AS data, bm25(components_fts) AS score
-     FROM components_fts JOIN components c ON c.name = components_fts.name
-     WHERE components_fts MATCH ? ORDER BY score LIMIT ?`,
+  // Load records + vectors into memory once (the catalog is small); SQLite serves FTS5 MATCH.
+  const records: ComponentRecord[] = db
+    .prepare(`SELECT data FROM components ORDER BY tier, name`)
+    .all()
+    .map((row) => parseRecord(row.data));
+  const byName = new Map(records.map((record) => [record.name.toLowerCase(), record]));
+  const vectors = new Map<string, Float32Array>(
+    db
+      .prepare(`SELECT name, embedding FROM vectors`)
+      .all()
+      .map((row): [string, Float32Array] => [
+        String(row.name),
+        blobToVector(row.embedding as Uint8Array),
+      ]),
   );
-  const getStmt = db.prepare(`SELECT data FROM components WHERE name = ? COLLATE NOCASE`);
-  const listStmt = db.prepare(`SELECT data FROM components ORDER BY tier, name`);
-  const byTierStmt = db.prepare(`SELECT data FROM components WHERE tier = ? ORDER BY name`);
-  const byEnvStmt = db.prepare(`SELECT data FROM components WHERE render_env = ? ORDER BY name`);
+  const ftsStmt = db.prepare(
+    `SELECT components_fts.name AS name, bm25(components_fts) AS score
+     FROM components_fts WHERE components_fts MATCH ? ORDER BY score LIMIT ?`,
+  );
+
+  function lexicalHits(query: string, limit: number): LexHit[] {
+    const match = toFtsQuery(query);
+    if (!match) return [];
+    return ftsStmt
+      .all(match, limit)
+      .map((row) => ({ name: String(row.name), score: Number(row.score) }));
+  }
 
   return {
-    search(query, limit = 20) {
-      const match = toFtsQuery(query);
-      if (!match) return [];
-      return searchStmt.all(match, limit).map((row) => parseRecord(row.data));
+    search(query, queryVec, limit = 20) {
+      const lex = lexicalHits(query, 50);
+
+      // Lexical-only: no query vector or no stored vectors.
+      if (!queryVec || vectors.size === 0) {
+        return lex
+          .slice(0, limit)
+          .map((hit) => byName.get(hit.name.toLowerCase()))
+          .filter((record): record is ComponentRecord => record !== undefined);
+      }
+
+      // Normalize bm25 (more-negative = better) to 0..1 across the lexical hits.
+      const lexNorm = new Map<string, number>();
+      if (lex.length > 0) {
+        const scores = lex.map((hit) => -hit.score);
+        const min = Math.min(...scores);
+        const max = Math.max(...scores);
+        for (const hit of lex) {
+          lexNorm.set(hit.name, max === min ? 1 : (-hit.score - min) / (max - min));
+        }
+      }
+
+      return records
+        .map((record) => {
+          const vector = vectors.get(record.name);
+          const semantic = vector ? Math.max(0, cosine(queryVec, vector)) : 0;
+          const lexical = lexNorm.get(record.name) ?? 0;
+          return { record, score: WEIGHT_SEMANTIC * semantic + WEIGHT_LEXICAL * lexical };
+        })
+        .filter((scored) => scored.score > FUSED_FLOOR)
+        .toSorted((a, b) => b.score - a.score)
+        .slice(0, limit)
+        .map((scored) => scored.record);
     },
     get(name) {
-      const row = getStmt.get(name);
-      return row ? parseRecord(row.data) : undefined;
+      return byName.get(name.toLowerCase());
     },
     list() {
-      return listStmt.all().map((row) => {
-        const { name, tier, description } = parseRecord(row.data);
-        return { name, tier, description };
-      });
+      return records.map(({ name, tier, description }) => ({ name, tier, description }));
     },
     listByTier(tier) {
-      return byTierStmt.all(tier).map((row) => parseRecord(row.data));
+      return records.filter((record) => record.tier === tier);
     },
     filterByRenderEnv(renderEnv) {
-      return byEnvStmt.all(renderEnv).map((row) => parseRecord(row.data));
+      return records.filter((record) => record.renderEnv === renderEnv);
     },
     close() {
       db.close();

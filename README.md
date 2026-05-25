@@ -132,8 +132,8 @@ component layer (`components/`, sub-foldered by category, from `components.manif
 `pnpm ui:codegen`) plus authored `recipes/` → `blocks/` → `templates/`. Color comes from Radix
 props; `pnpm lint:catalog` makes `@radix-ui/*` importable **only** inside `packages/ui`, so the
 kit stays the one front door. The component **catalog** (search/retrieval for agents) is owned by
-the **`mcp-ui`** MCP server, which scrapes the kit at build time into a `node:sqlite` + FTS5
-database. Theme switching (light/dark, accent, gray, radius, scaling) is live via the kit's
+the **`mcp-ui`** MCP server, which scrapes the kit at build time into a `node:sqlite` database and
+serves **hybrid search** — FTS5 lexical fused with MiniLM semantic similarity. Theme switching (light/dark, accent, gray, radius, scaling) is live via the kit's
 `ThemeProvider`/`ThemeSwitcher`; explore every component themed in Storybook
 (`pnpm --filter @monorepo-boilerplate/ui storybook`).
 
