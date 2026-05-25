@@ -6,7 +6,8 @@ argument-hint: [<path>|--staged]
 Document recently-written code and refresh the TODO digest. Scope is `$ARGUMENTS`:
 a path limits work to that directory/file, `--staged` limits it to staged changes,
 and no argument means the current uncommitted diff (`git diff --name-only HEAD`).
-Read `.claude/reference/typescript.md` (the JSDoc rules) before writing.
+Read `.claude/reference/typescript.md` (the JSDoc rules) before writing code comments,
+and `.claude/reference/documentation.md` before touching any `docs/` page.
 
 Steps:
 
@@ -26,5 +27,11 @@ Steps:
      where token groups are defined.
 3. **Do not invent semantics.** If a symbol's intent is unclear, leave a
    `// TODO(#…): clarify` rather than guessing — it will surface in the next digest.
-4. **Verify**: `pnpm typecheck && pnpm lint`. Report the files documented and the
-   current `docs/todo.md` count.
+4. **Groom docs pages** for any `.md` in scope under `docs/` (skip `docs/todo.md` — it is
+   machine-owned; never edit between its generated markers). Per
+   `.claude/reference/documentation.md`: ensure `title`/`description` frontmatter is present,
+   the page is registered in `docs/.vitepress/config.ts`, and internal links keep their `.md`
+   extension. If you changed any link or added a page, run `pnpm docs:build` to confirm no dead
+   links. Summarize, don't duplicate, `AGENTS.md`/`.claude/reference/` content.
+5. **Verify**: `pnpm typecheck && pnpm lint` (and `pnpm docs:build` if docs changed). Report the
+   files documented, any docs groomed, and the current `docs/todo.md` count.

@@ -1,3 +1,8 @@
+---
+title: UI Kit Catalog
+description: How the @monorepo-boilerplate/ui component catalog works — tiers, codegen, examples, and mcp-ui.
+---
+
 # UI-Kit Expansion — the AI-consumable component catalog
 
 How `@monorepo-boilerplate/ui` became a tiered, machine-queryable **catalog** that

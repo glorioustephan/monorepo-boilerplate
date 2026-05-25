@@ -1,3 +1,8 @@
+---
+title: TODO Digest
+description: Auto-generated follow-up markers harvested from source comments. Do not edit the generated block.
+---
+
 # TODO
 
 Follow-up markers harvested from code comments by `pnpm todos:generate` (run

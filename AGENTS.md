@@ -34,6 +34,8 @@ packages/    real libraries (ship code; consumed from source)
   providers/   third-party API clients + webhook handlers + resilience utils
   database/    Drizzle ORM data layer (schema, queries, migrations)
   auth/        optional provider-agnostic signed-session primitives
+docs/          VitePress documentation site (@monorepo-boilerplate/docs); the browsable
+               doc home. Conventions stay canonical here in AGENTS.md + .claude/reference/.
 ```
 
 All packages share the `@monorepo-boilerplate/*` namespace. `apps/` = products,
@@ -60,23 +62,26 @@ All packages share the `@monorepo-boilerplate/*` namespace. `apps/` = products,
 - TypeScript style → `.claude/reference/typescript.md`
 - React 19 / RSC / Compiler → `.claude/reference/react.md`
 - Next.js 16 → `.claude/reference/nextjs.md`
+- Tailwind v4 / token contract → `.claude/reference/tailwind.md`
+- Documentation (VitePress site) → `.claude/reference/documentation.md`
 
 ## Scripts (`command:segment:subsegment`)
 
 Run from the repo root; Turborepo fans out and caches.
 
-| Command                               | What it does                              |
-| ------------------------------------- | ----------------------------------------- |
-| `pnpm dev`                            | run all dev servers                       |
-| `pnpm build`                          | build everything (cached)                 |
-| `pnpm lint` / `pnpm lint:fix`         | oxlint over the repo (nested configs)     |
-| `pnpm format` / `pnpm format:check`   | oxfmt write / check                       |
-| `pnpm typecheck`                      | `tsc --noEmit` per package                |
-| `pnpm test` / `pnpm test:unit`        | Vitest                                    |
-| `pnpm test:e2e`                       | Playwright (web)                          |
-| `pnpm env:doctor`                     | validate environment variables            |
-| `pnpm changeset`                      | record a versioned change                 |
-| `pnpm todos:generate` / `todos:check` | harvest code annotations → `docs/todo.md` |
+| Command                               | What it does                                |
+| ------------------------------------- | ------------------------------------------- |
+| `pnpm dev`                            | run all dev servers                         |
+| `pnpm build`                          | build everything (cached)                   |
+| `pnpm lint` / `pnpm lint:fix`         | oxlint over the repo (nested configs)       |
+| `pnpm format` / `pnpm format:check`   | oxfmt write / check                         |
+| `pnpm typecheck`                      | `tsc --noEmit` per package                  |
+| `pnpm test` / `pnpm test:unit`        | Vitest                                      |
+| `pnpm test:e2e`                       | Playwright (web)                            |
+| `pnpm docs:dev` / `pnpm docs:build`   | VitePress docs dev / build (dead-link gate) |
+| `pnpm env:doctor`                     | validate environment variables              |
+| `pnpm changeset`                      | record a versioned change                   |
+| `pnpm todos:generate` / `todos:check` | harvest code annotations → `docs/todo.md`   |
 
 Verify a change end-to-end with: `pnpm lint && pnpm typecheck && pnpm test && pnpm build`.
 
@@ -88,6 +93,8 @@ Verify a change end-to-end with: `pnpm lint && pnpm typecheck && pnpm test && pn
   extending the right `ts-config` preset, and source-pointing `exports` if it's a library.
 - **A UI component**: follow the `add-ui-component` skill; match the `Button` pattern.
 - **A provider**: copy `packages/providers/src/example` and add a subpath export.
+- **A documentation page**: run `/scaffold-doc <slug> "<Title>" "<description>"` — creates the
+  page and registers it in the sidebar. See `.claude/reference/documentation.md`.
 
 ## Conventions that bite
 

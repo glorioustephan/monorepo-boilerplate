@@ -4,6 +4,7 @@ packages:
   - "services/*"
   - "tooling/*"
   - "packages/*"
+  - "docs"
 
 allowBuilds:
   esbuild: true
@@ -52,6 +53,10 @@ catalog:
 
   # MCP
   "@modelcontextprotocol/sdk": ^1.29.0
+
+  # Documentation site (VitePress)
+  vitepress: ^1.6.4
+  vue: ^3.5.34
 
   # Catalog tooling (build-time only; never in packages/ui runtime)
   ts-morph: ^28.0.0

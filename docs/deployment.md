@@ -1,3 +1,8 @@
+---
+title: Deployment & Release
+description: Deploy the web app to Vercel, containerize the MCP server, and cut releases with Changesets.
+---
+
 # Deployment & release
 
 ## Web app → Vercel

@@ -10,7 +10,8 @@ Steps:
 
 1. **Verify** (reuse `/verify`): `pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build`.
    If `format:check` fails, run `pnpm format` and continue. Stop on any other gate
-   failure and report it clearly.
+   failure and report it clearly. (`pnpm build` includes the VitePress docs build, so a
+   dead documentation link fails this step.)
 2. **Harvest TODOs**: `pnpm todos:generate`, then stage `docs/todo.md`. Note the
    count and any ⚠ items missing an issue link.
 3. **Audit**: run `/audit --branch` and surface its findings. These are advisory —

@@ -6,6 +6,9 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "docs:dev": "turbo run dev --filter=@monorepo-boilerplate/docs",
+    "docs:build": "turbo run build --filter=@monorepo-boilerplate/docs",
+    "docs:preview": "turbo run preview --filter=@monorepo-boilerplate/docs",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "lint:tokens": "tsx tooling/catalog-lint/src/check-tokens.ts",

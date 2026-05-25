@@ -1,3 +1,8 @@
+---
+title: Roadmap
+description: Planned phases for growing the monorepo boilerplate from working scaffold to complete.
+---
+
 # Roadmap
 
 The plan for taking `@monorepo-boilerplate` from "working scaffold" to a complete,
@@ -133,7 +138,7 @@ system on top of the provided architecture.
 ## UI-Kit Expansion track (U0–U8) ✅
 
 The Phase 6 seams above were grown into a full, AI-consumable **component catalog**.
-Detail: [`docs/phases/ui-kit-catalog.md`](./docs/phases/ui-kit-catalog.md).
+Detail: [UI Kit Catalog](./phases/ui-kit-catalog.md).
 
 - [x] **U0** — MCP servers moved to `mcp-servers/`; `services/` reserved; root `.mcp.json`.
 - [x] **U1** — semantic token contract + theming + `lint:tokens` bypass guard.

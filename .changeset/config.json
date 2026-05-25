@@ -10,6 +10,7 @@
   "ignore": [
     "@monorepo-boilerplate/web",
     "@monorepo-boilerplate/mcp-example",
-    "@monorepo-boilerplate/mcp-ui"
+    "@monorepo-boilerplate/mcp-ui",
+    "@monorepo-boilerplate/docs"
   ]
 }

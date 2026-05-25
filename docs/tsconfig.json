@@ -1,0 +1,5 @@
+{
+  "extends": "@monorepo-boilerplate/ts-config/node.json",
+  "//": "tsc skips dot-directories during wildcard expansion, so list config.ts explicitly.",
+  "include": [".vitepress/config.ts", ".vitepress/**/*.ts", ".vitepress/**/*.vue"]
+}

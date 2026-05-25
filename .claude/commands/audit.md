@@ -13,7 +13,8 @@ Steps:
 
 1. **Load the rubric**: read `AGENTS.md` and the relevant
    `.claude/reference/{typescript,react,nextjs,tailwind}.md`. Also read the
-   nearest package `AGENTS.md` for files in scope.
+   nearest package `AGENTS.md` for files in scope. When the diff touches `docs/`,
+   also read `.claude/reference/documentation.md`.
 2. **Get the diff** from `$ARGUMENTS`:
    - `--staged` → `git diff --staged`
    - `--branch` → `git diff main...HEAD` (the whole branch)
@@ -36,6 +37,10 @@ Steps:
    - **Doc drift** — claims in `AGENTS.md`/reference that the diff makes untrue
      (a renamed/removed script still documented, a convention now contradicted).
      Recommend the doc edit, not just the code fix.
+   - **Docs site hygiene** (for changes under `docs/`, per `documentation.md`) — a
+     page missing `title`/`description` frontmatter, a new page not registered in
+     `docs/.vitepress/config.ts`, an internal link missing its `.md` extension, or a
+     relative link to `AGENTS.md`/`.claude/**` that won't resolve in the built site.
 5. **Report** findings grouped by severity, each as `file:line` + a one-line
    concrete fix. End with a short verdict: is this lean and on-convention, or does
    it need work before committing? Suggest `/document` if docs are the main gap.
