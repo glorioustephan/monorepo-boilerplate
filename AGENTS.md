@@ -23,6 +23,7 @@ tooling/       config-only + build-time tooling (ship nothing at runtime)
   ts-config/   TypeScript presets (base/node/react-library/next)
   oxc-config/  oxlint presets + oxfmt config
   test-config/ Vitest + Playwright presets
+  annotations/ harvests code TODO/FIXME/@deprecated markers → docs/todo.md
 packages/    real libraries (ship code; consumed from source)
   types/       cross-cutting shared types + error taxonomy (keep small)
   logger/      zero-dep structured logger (stderr-safe for the MCP servers)
@@ -62,17 +63,18 @@ All packages share the `@monorepo-boilerplate/*` namespace. `apps/` = products,
 
 Run from the repo root; Turborepo fans out and caches.
 
-| Command                             | What it does                          |
-| ----------------------------------- | ------------------------------------- |
-| `pnpm dev`                          | run all dev servers                   |
-| `pnpm build`                        | build everything (cached)             |
-| `pnpm lint` / `pnpm lint:fix`       | oxlint over the repo (nested configs) |
-| `pnpm format` / `pnpm format:check` | oxfmt write / check                   |
-| `pnpm typecheck`                    | `tsc --noEmit` per package            |
-| `pnpm test` / `pnpm test:unit`      | Vitest                                |
-| `pnpm test:e2e`                     | Playwright (web)                      |
-| `pnpm env:doctor`                   | validate environment variables        |
-| `pnpm changeset`                    | record a versioned change             |
+| Command                               | What it does                              |
+| ------------------------------------- | ----------------------------------------- |
+| `pnpm dev`                            | run all dev servers                       |
+| `pnpm build`                          | build everything (cached)                 |
+| `pnpm lint` / `pnpm lint:fix`         | oxlint over the repo (nested configs)     |
+| `pnpm format` / `pnpm format:check`   | oxfmt write / check                       |
+| `pnpm typecheck`                      | `tsc --noEmit` per package                |
+| `pnpm test` / `pnpm test:unit`        | Vitest                                    |
+| `pnpm test:e2e`                       | Playwright (web)                          |
+| `pnpm env:doctor`                     | validate environment variables            |
+| `pnpm changeset`                      | record a versioned change                 |
+| `pnpm todos:generate` / `todos:check` | harvest code annotations → `docs/todo.md` |
 
 Verify a change end-to-end with: `pnpm lint && pnpm typecheck && pnpm test && pnpm build`.
 
