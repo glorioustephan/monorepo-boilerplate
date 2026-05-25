@@ -3,12 +3,12 @@
  * kit's component manifest + authored composites at build time into a node:sqlite
  * database; queried at runtime. Owned by the MCP server, not the kit.
  */
-import { z } from "zod";
+import { z } from 'zod';
 
-export const TIERS = ["Component", "Recipe", "Block", "Template"] as const;
+export const TIERS = ['Component', 'Recipe', 'Block', 'Template'] as const;
 export type Tier = (typeof TIERS)[number];
 
-export const RENDER_ENVS = ["server", "client", "universal"] as const;
+export const RENDER_ENVS = ['server', 'client', 'universal'] as const;
 export type RenderEnv = (typeof RENDER_ENVS)[number];
 
 export interface ComponentVariant {

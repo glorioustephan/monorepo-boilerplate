@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`. Compound parts: Root, Trigger, Content.
  */
-export { HoverCard } from "@radix-ui/themes";
+export { HoverCard } from '@radix-ui/themes';

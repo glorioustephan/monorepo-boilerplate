@@ -1,8 +1,8 @@
 ---
 layout: home
 hero:
-  name: "@monorepo-boilerplate"
-  text: "Turborepo + pnpm monorepo template"
+  name: '@monorepo-boilerplate'
+  text: 'Turborepo + pnpm monorepo template'
   tagline: Next.js 16, React 19, an MCP server, and a tiered UI component catalog — wired for humans and AI agents alike.
   actions:
     - theme: brand

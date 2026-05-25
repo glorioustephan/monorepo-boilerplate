@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Strong, type StrongProps } from "@radix-ui/themes";
+export { Strong, type StrongProps } from '@radix-ui/themes';

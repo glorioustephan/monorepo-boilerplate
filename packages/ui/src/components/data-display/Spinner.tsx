@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Spinner, type SpinnerProps } from "@radix-ui/themes";
+export { Spinner, type SpinnerProps } from '@radix-ui/themes';

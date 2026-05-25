@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Kbd, type KbdProps } from "@radix-ui/themes";
+export { Kbd, type KbdProps } from '@radix-ui/themes';

@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Blockquote, type BlockquoteProps } from "@radix-ui/themes";
+export { Blockquote, type BlockquoteProps } from '@radix-ui/themes';

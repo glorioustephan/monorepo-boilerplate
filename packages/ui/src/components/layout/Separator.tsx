@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Separator, type SeparatorProps } from "@radix-ui/themes";
+export { Separator, type SeparatorProps } from '@radix-ui/themes';

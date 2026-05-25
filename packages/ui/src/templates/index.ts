@@ -1,1 +1,1 @@
-export { LandingTemplate, type LandingTemplateProps } from "./LandingTemplate";
+export { LandingTemplate, type LandingTemplateProps } from './LandingTemplate';

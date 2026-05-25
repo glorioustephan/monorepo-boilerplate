@@ -1,6 +1,6 @@
-import { cookies } from "next/headers";
+import { cookies } from 'next/headers';
 
-import { SESSION_COOKIE, sessionCodec, type SessionData } from "./session";
+import { SESSION_COOKIE, sessionCodec, type SessionData } from './session';
 
 export type { SessionData };
 export { SESSION_COOKIE, sessionCodec };

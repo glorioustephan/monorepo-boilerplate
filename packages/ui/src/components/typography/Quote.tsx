@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Quote, type QuoteProps } from "@radix-ui/themes";
+export { Quote, type QuoteProps } from '@radix-ui/themes';

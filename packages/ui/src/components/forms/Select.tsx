@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`. Compound parts: Root, Trigger, Content, Item, Group, Label, Separator.
  */
-export { Select } from "@radix-ui/themes";
+export { Select } from '@radix-ui/themes';

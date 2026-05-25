@@ -14,7 +14,7 @@
  * are relative to THIS file, so scanning works from any consumer (cross-app HMR) — don't
  * move them.
  */
-@import "./themes/accents.css";
+@import './themes/accents.css';
 
 @source "./components";
 @source "./blocks";

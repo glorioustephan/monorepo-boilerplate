@@ -1,6 +1,6 @@
 name: Bug report
 description: Report something that isn't working as expected.
-labels: ["bug"]
+labels: ['bug']
 body:
   - type: textarea
     id: what-happened
@@ -13,7 +13,7 @@ body:
     id: package
     attributes:
       label: Affected package / app
-      placeholder: "e.g. apps/web, packages/ui"
+      placeholder: 'e.g. apps/web, packages/ui'
   - type: textarea
     id: repro
     attributes:
@@ -27,4 +27,4 @@ body:
     id: env
     attributes:
       label: Environment
-      placeholder: "Node, pnpm, OS versions (`node -v`, `pnpm -v`)"
+      placeholder: 'Node, pnpm, OS versions (`node -v`, `pnpm -v`)'

@@ -1,8 +1,8 @@
-import { readdirSync, statSync } from "node:fs";
-import { extname, join } from "node:path";
+import { readdirSync, statSync } from 'node:fs';
+import { extname, join } from 'node:path';
 
-import { components } from "@monorepo-boilerplate/ui/components/components.manifest";
-import { Project, type SourceFile, SyntaxKind, ts } from "ts-morph";
+import { components } from '@monorepo-boilerplate/ui/components/components.manifest';
+import { Project, type SourceFile, SyntaxKind, ts } from 'ts-morph';
 
 /**
  * Catalog enforcement — rules oxlint can't express, pushing all UI through the kit:
@@ -20,9 +20,9 @@ import { Project, type SourceFile, SyntaxKind, ts } from "ts-morph";
  */
 
 export type CatalogRule =
-  | "no-radix-outside-kit"
-  | "no-raw-html-with-catalog-equivalent"
-  | "require-ui-import";
+  | 'no-radix-outside-kit'
+  | 'no-raw-html-with-catalog-equivalent'
+  | 'require-ui-import';
 
 export interface CatalogViolation {
   readonly file: string;
@@ -38,36 +38,36 @@ const COMPONENT_NAMES = new Set(components.map((spec) => spec.name));
 
 // Raw intrinsic element → kit atom.
 const RAW_ELEMENT_EQUIVALENTS: Record<string, string> = {
-  button: "Button",
-  input: "TextField",
-  select: "Select",
-  textarea: "TextArea",
+  button: 'Button',
+  input: 'TextField',
+  select: 'Select',
+  textarea: 'TextArea',
 };
 
 // Styling primitives the kit re-exports; apps should not import them directly.
-const KIT_STYLING_MODULES = new Set(["class-variance-authority", "clsx", "tailwind-merge"]);
+const KIT_STYLING_MODULES = new Set(['class-variance-authority', 'clsx', 'tailwind-merge']);
 
-const SOURCE_EXT = new Set([".ts", ".tsx"]);
-const SKIP_DIRS = new Set(["node_modules", "dist", ".next", ".turbo", "coverage"]);
+const SOURCE_EXT = new Set(['.ts', '.tsx']);
+const SKIP_DIRS = new Set(['node_modules', 'dist', '.next', '.turbo', 'coverage']);
 
 function firstLine(text: string): string {
-  return text.split("\n")[0]?.trim() ?? "";
+  return text.split('\n')[0]?.trim() ?? '';
 }
 
-const toPosix = (path: string): string => path.replaceAll("\\", "/");
-const isKitFile = (path: string): boolean => toPosix(path).includes("packages/ui/");
+const toPosix = (path: string): string => path.replaceAll('\\', '/');
+const isKitFile = (path: string): boolean => toPosix(path).includes('packages/ui/');
 const isAppSurface = (path: string): boolean => {
   const p = toPosix(path);
-  return p.includes("/apps/") || p.startsWith("apps/");
+  return p.includes('/apps/') || p.startsWith('apps/');
 };
 
 /** True for any import that reaches into Radix Themes / the Radix primitives package. */
 function isRadixImport(specifier: string): boolean {
   return (
-    specifier === "@radix-ui/themes" ||
-    specifier.startsWith("@radix-ui/themes/") ||
-    specifier === "radix-ui" ||
-    specifier.startsWith("radix-ui/")
+    specifier === '@radix-ui/themes' ||
+    specifier.startsWith('@radix-ui/themes/') ||
+    specifier === 'radix-ui' ||
+    specifier.startsWith('radix-ui/')
   );
 }
 
@@ -85,7 +85,7 @@ export function checkSourceFile(sourceFile: SourceFile): CatalogViolation[] {
       violations.push({
         file,
         line: importDecl.getStartLineNumber(),
-        rule: "no-radix-outside-kit",
+        rule: 'no-radix-outside-kit',
         message: `import UI from @monorepo-boilerplate/ui — Radix ("${specifier}") is encapsulated by the kit and must not be imported outside packages/ui`,
         snippet: firstLine(importDecl.getText()),
       });
@@ -94,7 +94,7 @@ export function checkSourceFile(sourceFile: SourceFile): CatalogViolation[] {
       violations.push({
         file,
         line: importDecl.getStartLineNumber(),
-        rule: "require-ui-import",
+        rule: 'require-ui-import',
         message: `import cn/components from @monorepo-boilerplate/ui instead of "${specifier}" directly`,
         snippet: firstLine(importDecl.getText()),
       });
@@ -113,7 +113,7 @@ export function checkSourceFile(sourceFile: SourceFile): CatalogViolation[] {
         violations.push({
           file,
           line: element.getStartLineNumber(),
-          rule: "no-raw-html-with-catalog-equivalent",
+          rule: 'no-raw-html-with-catalog-equivalent',
           message: `use <${equivalent}> from @monorepo-boilerplate/ui instead of a raw <${tag}>`,
           snippet: firstLine(element.getText()),
         });
@@ -142,7 +142,7 @@ function walk(root: string): string[] {
     }
     if (isDirectory) {
       if (!SKIP_DIRS.has(name)) out.push(...walk(full));
-    } else if (SOURCE_EXT.has(extname(name)) && !name.endsWith(".d.ts")) {
+    } else if (SOURCE_EXT.has(extname(name)) && !name.endsWith('.d.ts')) {
       out.push(full);
     }
   }
@@ -159,7 +159,7 @@ function collectFiles(paths: readonly string[]): string[] {
       continue;
     }
     if (isDir) files.push(...walk(path));
-    else if (SOURCE_EXT.has(extname(path)) && !path.endsWith(".d.ts")) files.push(path);
+    else if (SOURCE_EXT.has(extname(path)) && !path.endsWith('.d.ts')) files.push(path);
   }
   return files;
 }
@@ -182,7 +182,7 @@ export function findCatalogViolations(paths: readonly string[]): CatalogViolatio
 
 // Product/runtime code: apps, libraries, services, MCP servers. The kit (packages/ui) is
 // filtered out per-file; build-time tooling never ships UI, so it's out of scope.
-const DEFAULT_ROOTS = ["apps", "packages", "mcp-servers", "services"];
+const DEFAULT_ROOTS = ['apps', 'packages', 'mcp-servers', 'services'];
 
 function main(): void {
   const args = process.argv.slice(2);

@@ -34,7 +34,7 @@ export default async function Page({
   const { id } = await params;
   const { q } = await searchParams;
   const cookieStore = await cookies();
-  const token = cookieStore.get("token");
+  const token = cookieStore.get('token');
 }
 ```
 
@@ -75,11 +75,11 @@ export default async function UserCard({ id }: { id: string }) {
 ```ts
 // next.config.ts
 transpilePackages: [
-  "@monorepo-boilerplate/auth",
-  "@monorepo-boilerplate/environment",
-  "@monorepo-boilerplate/providers",
-  "@monorepo-boilerplate/types",
-  "@monorepo-boilerplate/ui",
+  '@monorepo-boilerplate/auth',
+  '@monorepo-boilerplate/environment',
+  '@monorepo-boilerplate/providers',
+  '@monorepo-boilerplate/types',
+  '@monorepo-boilerplate/ui',
 ];
 ```
 
@@ -95,8 +95,8 @@ transpilePackages: [
 - App owns `src/app/globals.css` — the single Tailwind entry point:
 
 ```css
-@import "tailwindcss";
-@import "@monorepo-boilerplate/ui/styles.css"; /* tokens + @source for kit classes */
+@import 'tailwindcss';
+@import '@monorepo-boilerplate/ui/styles.css'; /* tokens + @source for kit classes */
 ```
 
 - PostCSS plugin: `@tailwindcss/postcss` (no `tailwind.config.ts` needed in v4)
@@ -108,7 +108,7 @@ transpilePackages: [
 ## 7. Environment Variables
 
 ```ts
-import { env } from "@/env"; // always — typed, validated at startup
+import { env } from '@/env'; // always — typed, validated at startup
 
 env.DATABASE_URL; // server-only
 env.NEXT_PUBLIC_API_URL; // available client-side
@@ -125,9 +125,9 @@ env.NEXT_PUBLIC_API_URL; // available client-side
 - Next 16: fetch is **uncached by default** — opt in deliberately:
 
 ```ts
-fetch(url, { cache: "force-cache" }); // static, indefinite
+fetch(url, { cache: 'force-cache' }); // static, indefinite
 fetch(url, { next: { revalidate: 60 } }); // ISR-style, seconds
-fetch(url, { cache: "no-store" }); // always dynamic (explicit)
+fetch(url, { cache: 'no-store' }); // always dynamic (explicit)
 ```
 
 - Use `unstable_cache` for non-fetch data sources (DB queries)
@@ -140,7 +140,7 @@ fetch(url, { cache: "no-store" }); // always dynamic (explicit)
 
 ```ts
 // Static
-export const metadata: Metadata = { title: "Page", description: "..." };
+export const metadata: Metadata = { title: 'Page', description: '...' };
 
 // Dynamic
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -163,7 +163,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 - **Heavy client libraries**: dynamic import to keep initial bundle lean:
 
 ```ts
-const Chart = dynamic(() => import("@/components/Chart"), { ssr: false });
+const Chart = dynamic(() => import('@/components/Chart'), { ssr: false });
 ```
 
 - **Streaming**: wrap slow data behind `<Suspense fallback={<Skeleton />}>` so fast content renders first

@@ -1,4 +1,4 @@
-import { ANNOTATION_TAGS, type Annotation, type AnnotationTag } from "./scan";
+import { ANNOTATION_TAGS, type Annotation, type AnnotationTag } from './scan';
 
 /**
  * Renders harvested annotations into the `docs/todo.md` markdown. The generated
@@ -8,48 +8,48 @@ import { ANNOTATION_TAGS, type Annotation, type AnnotationTag } from "./scan";
  * `todos:check` can diff it in CI.
  */
 
-export const BEGIN_MARKER = "<!-- BEGIN GENERATED:annotations -->";
-export const END_MARKER = "<!-- END GENERATED:annotations -->";
+export const BEGIN_MARKER = '<!-- BEGIN GENERATED:annotations -->';
+export const END_MARKER = '<!-- END GENERATED:annotations -->';
 
 const HEADING: Record<AnnotationTag, string> = {
-  TODO: "TODO",
-  FIXME: "FIXME",
-  HACK: "HACK",
-  XXX: "XXX",
-  BUG: "BUG",
-  "@deprecated": "Deprecated",
+  TODO: 'TODO',
+  FIXME: 'FIXME',
+  HACK: 'HACK',
+  XXX: 'XXX',
+  BUG: 'BUG',
+  '@deprecated': 'Deprecated',
 };
 
 // Tags where a missing `(#123)` issue link is worth flagging (the repo convention).
-const LINK_EXPECTED = new Set<AnnotationTag>(["TODO", "FIXME"]);
+const LINK_EXPECTED = new Set<AnnotationTag>(['TODO', 'FIXME']);
 
 function byFileThenLine(a: Annotation, b: Annotation): number {
   return a.file === b.file ? a.line - b.line : a.file.localeCompare(b.file);
 }
 
 function renderItem(annotation: Annotation): string {
-  const flag = LINK_EXPECTED.has(annotation.tag) && !annotation.hasIssueLink ? "⚠ " : "";
+  const flag = LINK_EXPECTED.has(annotation.tag) && !annotation.hasIssueLink ? '⚠ ' : '';
   return `- ${flag}\`${annotation.file}:${annotation.line}\` — ${annotation.text}`;
 }
 
 /** Render the generated block body (everything between the markers). */
 export function renderAnnotationsBlock(annotations: readonly Annotation[]): string {
-  if (annotations.length === 0) return "_No outstanding annotations._";
+  if (annotations.length === 0) return '_No outstanding annotations._';
 
   const unlinked = annotations.filter((a) => LINK_EXPECTED.has(a.tag) && !a.hasIssueLink).length;
   const summary =
     `_${annotations.length} annotation(s)` +
-    (unlinked > 0 ? `, ${unlinked} ⚠ missing an issue link (\`TODO(#123)\`)` : "") +
-    "._";
+    (unlinked > 0 ? `, ${unlinked} ⚠ missing an issue link (\`TODO(#123)\`)` : '') +
+    '._';
 
   const sections: string[] = [];
   for (const tag of ANNOTATION_TAGS) {
     const items = annotations.filter((a) => a.tag === tag).toSorted(byFileThenLine);
     if (items.length === 0) continue;
-    sections.push(`## ${HEADING[tag]} (${items.length})\n\n${items.map(renderItem).join("\n")}`);
+    sections.push(`## ${HEADING[tag]} (${items.length})\n\n${items.map(renderItem).join('\n')}`);
   }
 
-  return `${summary}\n\n${sections.join("\n\n")}`;
+  return `${summary}\n\n${sections.join('\n\n')}`;
 }
 
 const DEFAULT_PREAMBLE = `# TODO

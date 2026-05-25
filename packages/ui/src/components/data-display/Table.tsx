@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`. Compound parts: Root, Header, Body, Row, ColumnHeaderCell, RowHeaderCell, Cell.
  */
-export { Table } from "@radix-ui/themes";
+export { Table } from '@radix-ui/themes';

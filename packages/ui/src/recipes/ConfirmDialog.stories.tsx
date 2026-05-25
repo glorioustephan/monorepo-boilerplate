@@ -1,14 +1,14 @@
-import { Button } from "@monorepo-boilerplate/ui";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Button } from '@monorepo-boilerplate/ui';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import ConfirmDialogExample from "../../examples/ConfirmDialog.example";
-import { ConfirmDialog } from "./ConfirmDialog";
+import ConfirmDialogExample from '../../examples/ConfirmDialog.example';
+import { ConfirmDialog } from './ConfirmDialog';
 
 const meta = {
-  title: "Recipes/ConfirmDialog",
+  title: 'Recipes/ConfirmDialog',
   component: ConfirmDialog,
-  args: { trigger: <Button>Delete</Button>, title: "Delete?" },
-  parameters: { layout: "padded" },
+  args: { trigger: <Button>Delete</Button>, title: 'Delete?' },
+  parameters: { layout: 'padded' },
 } satisfies Meta<typeof ConfirmDialog>;
 
 export default meta;

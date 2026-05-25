@@ -1,4 +1,4 @@
-import { Button, Hero } from "@monorepo-boilerplate/ui";
+import { Button, Hero } from '@monorepo-boilerplate/ui';
 
 /** Hero introduces a page with a headline, supporting copy, and actions. */
 export default function HeroExample() {

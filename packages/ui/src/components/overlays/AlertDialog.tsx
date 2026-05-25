@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`. Compound parts: Root, Trigger, Content, Title, Description, Action, Cancel.
  */
-export { AlertDialog } from "@radix-ui/themes";
+export { AlertDialog } from '@radix-ui/themes';

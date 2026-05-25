@@ -1,7 +1,7 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual } from 'node:crypto';
 
-import { AppError } from "@monorepo-boilerplate/types";
-import type { z } from "zod";
+import { AppError } from '@monorepo-boilerplate/types';
+import type { z } from 'zod';
 
 export interface WebhookVerification {
   readonly payload: string;
@@ -15,7 +15,7 @@ export function verifyWebhookSignature({
   signature,
   secret,
 }: WebhookVerification): boolean {
-  const expected = createHmac("sha256", secret).update(payload).digest("hex");
+  const expected = createHmac('sha256', secret).update(payload).digest('hex');
   const expectedBytes = Buffer.from(expected);
   const actualBytes = Buffer.from(signature);
   return expectedBytes.length === actualBytes.length && timingSafeEqual(expectedBytes, actualBytes);
@@ -28,12 +28,12 @@ export function verifyWebhookSignature({
  */
 export function parseSignedWebhook<T>(args: WebhookVerification, schema: z.ZodType<T>): T {
   if (!verifyWebhookSignature(args)) {
-    throw new AppError("Invalid webhook signature", { code: "UNAUTHORIZED" });
+    throw new AppError('Invalid webhook signature', { code: 'UNAUTHORIZED' });
   }
   const parsed = schema.safeParse(JSON.parse(args.payload));
   if (!parsed.success) {
-    throw new AppError("Invalid webhook payload", {
-      code: "VALIDATION",
+    throw new AppError('Invalid webhook payload', {
+      code: 'VALIDATION',
       details: { issues: parsed.error.issues },
     });
   }

@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Card, type CardProps } from "@radix-ui/themes";
+export { Card, type CardProps } from '@radix-ui/themes';

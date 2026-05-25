@@ -1,5 +1,5 @@
-import react from "@vitejs/plugin-react";
-import { defineConfig } from "vitest/config";
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vitest/config';
 
 /**
  * Vitest preset for Node-only packages (no DOM). Merge into a package's
@@ -8,9 +8,9 @@ import { defineConfig } from "vitest/config";
 export const nodePreset = defineConfig({
   test: {
     globals: true,
-    environment: "node",
+    environment: 'node',
     passWithNoTests: true,
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
   },
 });
 
@@ -22,8 +22,8 @@ export const reactPreset = defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: "jsdom",
+    environment: 'jsdom',
     passWithNoTests: true,
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
   },
 });

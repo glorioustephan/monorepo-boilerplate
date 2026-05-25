@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Inset, type InsetProps } from "@radix-ui/themes";
+export { Inset, type InsetProps } from '@radix-ui/themes';

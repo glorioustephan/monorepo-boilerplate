@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`. Compound parts: Root, Link.
  */
-export { TabNav } from "@radix-ui/themes";
+export { TabNav } from '@radix-ui/themes';

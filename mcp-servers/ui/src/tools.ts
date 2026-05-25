@@ -1,17 +1,17 @@
-import { existsSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { existsSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { z } from "zod";
+import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import { z } from 'zod';
 
-import { type Catalog, openCatalog } from "./catalog/db";
-import { embed } from "./catalog/embed";
-import { RENDER_ENVS, TIERS } from "./catalog/schema";
+import { type Catalog, openCatalog } from './catalog/db';
+import { embed } from './catalog/embed';
+import { RENDER_ENVS, TIERS } from './catalog/schema';
 
 // catalog.db lives at the package root; both `dist/index.mjs` and `src/index.ts` are
 // one level below it. Opened lazily so the module imports even if the DB is absent.
-const DB_PATH = resolve(dirname(fileURLToPath(import.meta.url)), "../catalog.db");
+const DB_PATH = resolve(dirname(fileURLToPath(import.meta.url)), '../catalog.db');
 
 let catalogSingleton: Catalog | undefined;
 function catalog(): Catalog {
@@ -27,7 +27,7 @@ function catalog(): Catalog {
 }
 
 function json(data: unknown): CallToolResult {
-  return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+  return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
 }
 
 /** `list_components` — names + descriptions of every catalogued component. */
@@ -36,14 +36,14 @@ export function listComponentsTool(): CallToolResult {
 }
 
 export const getComponentInputSchema = {
-  name: z.string().min(1).describe("Component name, e.g. Button"),
+  name: z.string().min(1).describe('Component name, e.g. Button'),
 };
 
 /** `get_component` — full metadata (variants, parts, example) for one component. */
 export function getComponentTool({ name }: { name: string }): CallToolResult {
   const record = catalog().get(name);
   if (!record) {
-    return { content: [{ type: "text", text: `Unknown component: ${name}` }], isError: true };
+    return { content: [{ type: 'text', text: `Unknown component: ${name}` }], isError: true };
   }
   return json(record);
 }
@@ -65,7 +65,7 @@ export async function searchComponentsTool({ query }: { query: string }): Promis
 const tierSchema = z.enum(TIERS);
 
 export const listByTierInputSchema = {
-  tier: tierSchema.describe("Catalog tier to list"),
+  tier: tierSchema.describe('Catalog tier to list'),
 };
 
 /** `list_by_tier` — every component in one taxonomy tier. */

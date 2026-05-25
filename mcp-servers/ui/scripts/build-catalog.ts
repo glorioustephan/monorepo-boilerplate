@@ -13,45 +13,45 @@
  * Run via `pnpm --filter @monorepo-boilerplate/mcp-ui build-catalog` (the package `build` runs it
  * before bundling). Build-time only — never imported by the server runtime.
  */
-import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import { components } from "@monorepo-boilerplate/ui/components/components.manifest";
+import { components } from '@monorepo-boilerplate/ui/components/components.manifest';
 
-import { buildCatalog } from "../src/catalog/db";
-import { embed } from "../src/catalog/embed";
-import type { ComponentRecord, Tier } from "../src/catalog/schema";
+import { buildCatalog } from '../src/catalog/db';
+import { embed } from '../src/catalog/embed';
+import type { ComponentRecord, Tier } from '../src/catalog/schema';
 
-const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const uiSrc = resolve(packageRoot, "../../packages/ui/src");
-const examplesDir = resolve(uiSrc, "../examples");
-const dbPath = join(packageRoot, "catalog.db");
+const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const uiSrc = resolve(packageRoot, '../../packages/ui/src');
+const examplesDir = resolve(uiSrc, '../examples');
+const dbPath = join(packageRoot, 'catalog.db');
 
-const categorySlug = (category: string): string => category.toLowerCase().replaceAll(" ", "-");
+const categorySlug = (category: string): string => category.toLowerCase().replaceAll(' ', '-');
 
 const readExample = (path: string): string | undefined =>
-  existsSync(path) ? readFileSync(path, "utf8") : undefined;
+  existsSync(path) ? readFileSync(path, 'utf8') : undefined;
 
 // --- Generated Radix re-exports (from the manifest) ---
 const componentRecords: ComponentRecord[] = components.map((spec) => ({
   name: spec.name,
-  tier: "Component",
+  tier: 'Component',
   category: spec.category,
   renderEnv: spec.renderEnv,
   description: spec.usage,
   variants: spec.axes?.map((axis) => ({ prop: axis.prop, values: axis.values })),
   parts: spec.parts,
   example: readExample(
-    join(uiSrc, "components", categorySlug(spec.category), `${spec.name}.stories.tsx`),
+    join(uiSrc, 'components', categorySlug(spec.category), `${spec.name}.stories.tsx`),
   ),
 }));
 
 // --- Authored composites (recipes / blocks / templates) ---
 const COMPOSITE_TIERS: ReadonlyArray<{ dir: string; tier: Tier }> = [
-  { dir: "recipes", tier: "Recipe" },
-  { dir: "blocks", tier: "Block" },
-  { dir: "templates", tier: "Template" },
+  { dir: 'recipes', tier: 'Recipe' },
+  { dir: 'blocks', tier: 'Block' },
+  { dir: 'templates', tier: 'Template' },
 ];
 
 /** The JSDoc block immediately preceding `export function <name>`, flattened to one line. */
@@ -63,10 +63,10 @@ function componentDoc(source: string, name: string): string | undefined {
   if (!match?.[1]) return undefined;
   return (
     match[1]
-      .split("\n")
-      .map((line) => line.replace(/^\s*\*\s?/, "").trim())
+      .split('\n')
+      .map((line) => line.replace(/^\s*\*\s?/, '').trim())
       .filter(Boolean)
-      .join(" ")
+      .join(' ')
       .trim() || undefined
   );
 }
@@ -77,17 +77,18 @@ function scanComposites(): ComponentRecord[] {
     const full = join(uiSrc, dir);
     if (!existsSync(full)) continue;
     for (const file of readdirSync(full)) {
-      if (!file.endsWith(".tsx") || file.endsWith(".stories.tsx") || file.endsWith(".test.tsx")) {
+      if (!file.endsWith('.tsx') || file.endsWith('.stories.tsx') || file.endsWith('.test.tsx')) {
         continue;
       }
-      const name = file.replace(/\.tsx$/, "");
-      const source = readFileSync(join(full, file), "utf8");
+      const name = file.replace(/\.tsx$/, '');
+      const source = readFileSync(join(full, file), 'utf8');
       // No "use client" and no server-only directive ⇒ universal (renders in RSC or client).
-      const renderEnv = source.includes('"use client"')
-        ? "client"
-        : source.includes('"use server"')
-          ? "server"
-          : "universal";
+      // Quote-agnostic so it survives single- or double-quote formatting.
+      const renderEnv = /^\s*['"]use client['"]/m.test(source)
+        ? 'client'
+        : /^\s*['"]use server['"]/m.test(source)
+          ? 'server'
+          : 'universal';
       records.push({
         name,
         tier,

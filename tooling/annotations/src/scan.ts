@@ -1,5 +1,5 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { basename, extname, join } from "node:path";
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { basename, extname, join } from 'node:path';
 
 /**
  * Annotation harvester. Scans source across every language in the repo for
@@ -21,15 +21,15 @@ export interface Annotation {
   readonly hasIssueLink: boolean;
 }
 
-export type AnnotationTag = "TODO" | "FIXME" | "HACK" | "XXX" | "BUG" | "@deprecated";
+export type AnnotationTag = 'TODO' | 'FIXME' | 'HACK' | 'XXX' | 'BUG' | '@deprecated';
 
 export const ANNOTATION_TAGS: readonly AnnotationTag[] = [
-  "TODO",
-  "FIXME",
-  "HACK",
-  "XXX",
-  "BUG",
-  "@deprecated",
+  'TODO',
+  'FIXME',
+  'HACK',
+  'XXX',
+  'BUG',
+  '@deprecated',
 ];
 
 // Tag union as an alternation. `@deprecated` is matched case-insensitively and
@@ -39,38 +39,38 @@ const TAG_PATTERN = /(?:\b(TODO|FIXME|HACK|XXX|BUG)\b|(@deprecated))/i;
 
 // Comment leaders by language family. A marker only counts when one of these
 // appears at or before it on the line.
-const SLASH = ["//", "/*", "*"];
-const HASH = ["#"];
-const DASH = ["--", "/*", "*"];
+const SLASH = ['//', '/*', '*'];
+const HASH = ['#'];
+const DASH = ['--', '/*', '*'];
 
 const EXT_LEADERS: Record<string, readonly string[]> = {
-  ".ts": SLASH,
-  ".tsx": SLASH,
-  ".js": SLASH,
-  ".jsx": SLASH,
-  ".mjs": SLASH,
-  ".cjs": SLASH,
-  ".css": ["/*", "*"],
-  ".scss": SLASH,
-  ".sql": DASH,
-  ".sh": HASH,
-  ".bash": HASH,
-  ".zsh": HASH,
-  ".yml": HASH,
-  ".yaml": HASH,
-  ".toml": HASH,
+  '.ts': SLASH,
+  '.tsx': SLASH,
+  '.js': SLASH,
+  '.jsx': SLASH,
+  '.mjs': SLASH,
+  '.cjs': SLASH,
+  '.css': ['/*', '*'],
+  '.scss': SLASH,
+  '.sql': DASH,
+  '.sh': HASH,
+  '.bash': HASH,
+  '.zsh': HASH,
+  '.yml': HASH,
+  '.yaml': HASH,
+  '.toml': HASH,
 };
 
-const SKIP_DIRS = new Set(["node_modules", "dist", ".next", ".turbo", "coverage", ".git"]);
+const SKIP_DIRS = new Set(['node_modules', 'dist', '.next', '.turbo', 'coverage', '.git']);
 
 // The harvested output itself — never scan it, or its own entries re-harvest.
-const OUTPUT_FILE = "docs/todo.md";
+const OUTPUT_FILE = 'docs/todo.md';
 
 /** Resolve the comment leaders for a path, or `undefined` if it isn't scannable. */
 function leadersFor(path: string): readonly string[] | undefined {
   const name = basename(path);
-  if (name === "Dockerfile" || name.startsWith("Dockerfile.")) return HASH;
-  if (name === ".env" || name.startsWith(".env.")) return HASH;
+  if (name === 'Dockerfile' || name.startsWith('Dockerfile.')) return HASH;
+  if (name === '.env' || name.startsWith('.env.')) return HASH;
   return EXT_LEADERS[extname(name)];
 }
 
@@ -92,7 +92,7 @@ function walk(root: string): string[] {
     }
     if (isDirectory) {
       if (!SKIP_DIRS.has(name)) out.push(...walk(full));
-    } else if (leadersFor(full) && !name.endsWith(".d.ts")) {
+    } else if (leadersFor(full) && !name.endsWith('.d.ts')) {
       out.push(full);
     }
   }
@@ -111,7 +111,7 @@ function collectFiles(paths: readonly string[]): string[] {
     if (isDir) files.push(...walk(path));
     else if (leadersFor(path)) files.push(path);
   }
-  return files.filter((f) => f.replaceAll("\\", "/") !== OUTPUT_FILE);
+  return files.filter((f) => f.replaceAll('\\', '/') !== OUTPUT_FILE);
 }
 
 function scanLine(
@@ -132,18 +132,18 @@ function scanLine(
   if (!inComment) return undefined;
 
   const raw = (match[1] ?? match[2]) as string;
-  const tag = (raw.startsWith("@") ? "@deprecated" : raw.toUpperCase()) as AnnotationTag;
+  const tag = (raw.startsWith('@') ? '@deprecated' : raw.toUpperCase()) as AnnotationTag;
 
   // The message after the tag: drop a trailing block-comment close and leading
   // separators (`: `, `) `, `- `), but keep a `(#123)` issue link intact.
   const message = line
     .slice(tagIndex + raw.length)
-    .replace(/\*\/\s*$/, "")
-    .replace(/^[\s:-]+/, "")
+    .replace(/\*\/\s*$/, '')
+    .replace(/^[\s:-]+/, '')
     .trim();
   const text = message.length > 0 ? message : tag;
 
-  const hasIssueLink = new RegExp(`${raw}\\s*\\(#\\d+\\)`, "i").test(line);
+  const hasIssueLink = new RegExp(`${raw}\\s*\\(#\\d+\\)`, 'i').test(line);
 
   return { file, line: index + 1, tag, text, hasIssueLink };
 }
@@ -155,11 +155,11 @@ function scanFiles(files: readonly string[]): Annotation[] {
     if (!leaders) continue;
     let content: string;
     try {
-      content = readFileSync(file, "utf8");
+      content = readFileSync(file, 'utf8');
     } catch {
       continue;
     }
-    content.split("\n").forEach((line, index) => {
+    content.split('\n').forEach((line, index) => {
       const annotation = scanLine(file, line, index, leaders);
       if (annotation) annotations.push(annotation);
     });

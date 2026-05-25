@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 /*
  * Kit theme provider. Composition (per Radix's next-themes integration):
@@ -11,8 +11,8 @@
  * the class. The accent/gray/radius/scaling axes are held in React state, persisted
  * to localStorage, and exposed via `useThemeControls()` for the ThemeSwitcher.
  */
-import { Theme } from "@radix-ui/themes";
-import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
+import { Theme } from '@radix-ui/themes';
+import { ThemeProvider as NextThemesProvider, useTheme } from 'next-themes';
 import {
   type ComponentProps,
   createContext,
@@ -20,7 +20,7 @@ import {
   useContext,
   useEffect,
   useState,
-} from "react";
+} from 'react';
 
 import {
   type AccentColor,
@@ -31,15 +31,15 @@ import {
   type Scaling,
   THEME_STORAGE_KEY,
   type ThemeControls,
-} from "./theme-controls";
+} from './theme-controls';
 
 /** Radix's accent type doesn't include our custom accents; cast through this on the prop. */
-type RadixAccent = NonNullable<ComponentProps<typeof Theme>["accentColor"]>;
+type RadixAccent = NonNullable<ComponentProps<typeof Theme>['accentColor']>;
 
 interface ThemeControlsContextValue extends ThemeControls {
   readonly appearance: Appearance;
   /** The appearance actually applied once `system` is resolved ("light" | "dark"). */
-  readonly resolvedAppearance: "light" | "dark" | undefined;
+  readonly resolvedAppearance: 'light' | 'dark' | undefined;
   setAccentColor: (value: AccentColor) => void;
   setGrayColor: (value: GrayColor) => void;
   setRadius: (value: Radius) => void;
@@ -52,12 +52,12 @@ const ThemeControlsContext = createContext<ThemeControlsContextValue | undefined
 /** Read the runtime theme controls. Throws if used outside `<ThemeProvider>`. */
 export function useThemeControls(): ThemeControlsContextValue {
   const ctx = useContext(ThemeControlsContext);
-  if (!ctx) throw new Error("useThemeControls must be used within <ThemeProvider>");
+  if (!ctx) throw new Error('useThemeControls must be used within <ThemeProvider>');
   return ctx;
 }
 
 function readStored(): ThemeControls {
-  if (typeof window === "undefined") return DEFAULT_THEME_CONTROLS;
+  if (typeof window === 'undefined') return DEFAULT_THEME_CONTROLS;
   try {
     const raw = window.localStorage.getItem(THEME_STORAGE_KEY);
     if (!raw) return DEFAULT_THEME_CONTROLS;
@@ -87,9 +87,9 @@ function ThemeControlsProvider({ children }: { children: ReactNode }) {
 
   const value: ThemeControlsContextValue = {
     ...controls,
-    appearance: (theme as Appearance | undefined) ?? "system",
+    appearance: (theme as Appearance | undefined) ?? 'system',
     resolvedAppearance:
-      resolvedTheme === "dark" ? "dark" : resolvedTheme === "light" ? "light" : undefined,
+      resolvedTheme === 'dark' ? 'dark' : resolvedTheme === 'light' ? 'light' : undefined,
     setAccentColor: (accentColor) => setControls((c) => ({ ...c, accentColor })),
     setGrayColor: (grayColor) => setControls((c) => ({ ...c, grayColor })),
     setRadius: (radius) => setControls((c) => ({ ...c, radius })),
@@ -123,7 +123,7 @@ export interface ThemeProviderProps {
 }
 
 /** Wrap the app once near the root. Requires `suppressHydrationWarning` on `<html>`. */
-export function ThemeProvider({ children, defaultAppearance = "system" }: ThemeProviderProps) {
+export function ThemeProvider({ children, defaultAppearance = 'system' }: ThemeProviderProps) {
   return (
     <NextThemesProvider
       attribute="class"

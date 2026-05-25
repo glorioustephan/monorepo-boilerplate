@@ -1,4 +1,4 @@
-import { AppError } from "@monorepo-boilerplate/types";
+import { AppError } from '@monorepo-boilerplate/types';
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -36,7 +36,7 @@ export async function retry<T>(fn: () => Promise<T>, options: RetryOptions = {})
   }
   /* eslint-enable no-await-in-loop */
   // Unreachable: the loop either returns or throws.
-  throw new AppError("retry exhausted", { code: "INTERNAL" });
+  throw new AppError('retry exhausted', { code: 'INTERNAL' });
 }
 
 /**
@@ -49,7 +49,7 @@ export async function retry<T>(fn: () => Promise<T>, options: RetryOptions = {})
 export async function withTimeout<T>(
   fn: (signal: AbortSignal) => Promise<T>,
   ms: number,
-  label = "operation",
+  label = 'operation',
 ): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), ms);
@@ -57,7 +57,7 @@ export async function withTimeout<T>(
     return await fn(controller.signal);
   } catch (error) {
     if (controller.signal.aborted) {
-      throw new AppError(`${label} timed out after ${ms}ms`, { code: "TIMEOUT", cause: error });
+      throw new AppError(`${label} timed out after ${ms}ms`, { code: 'TIMEOUT', cause: error });
     }
     throw error;
   } finally {

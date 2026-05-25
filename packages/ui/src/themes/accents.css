@@ -14,7 +14,7 @@
  * approximated here with color-mix so the single brand hue stays the source of truth.
  */
 
-:where([data-accent-color="brand"]) {
+:where([data-accent-color='brand']) {
   --brand-hue: 195;
 
   --accent-1: oklch(0.993 0.004 var(--brand-hue));
@@ -49,8 +49,8 @@
   --accent-track: var(--accent-9);
 }
 
-:where(.dark, .dark-theme) :where([data-accent-color="brand"]),
-:where(.dark, .dark-theme)[data-accent-color="brand"] {
+:where(.dark, .dark-theme) :where([data-accent-color='brand']),
+:where(.dark, .dark-theme)[data-accent-color='brand'] {
   --accent-1: oklch(0.18 0.018 var(--brand-hue));
   --accent-2: oklch(0.21 0.022 var(--brand-hue));
   --accent-3: oklch(0.26 0.035 var(--brand-hue));

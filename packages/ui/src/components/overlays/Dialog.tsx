@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`. Compound parts: Root, Trigger, Content, Title, Description, Close.
  */
-export { Dialog } from "@radix-ui/themes";
+export { Dialog } from '@radix-ui/themes';

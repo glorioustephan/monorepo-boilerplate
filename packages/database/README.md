@@ -30,8 +30,8 @@ never require a database connection.
 ## Usage
 
 ```ts
-import { getDatabase, getUserByEmail } from "@monorepo-boilerplate/database";
+import { getDatabase, getUserByEmail } from '@monorepo-boilerplate/database';
 
 const db = getDatabase();
-const user = await getUserByEmail(db, "demo@example.com");
+const user = await getUserByEmail(db, 'demo@example.com');
 ```

@@ -1,5 +1,5 @@
 ---
-"@monorepo-boilerplate/ui": minor
+'@monorepo-boilerplate/ui': minor
 ---
 
 Expand the UI kit into an AI-consumable component catalog. Add Recipe-tier

@@ -1,4 +1,4 @@
-import { Button, ConfirmDialog } from "@monorepo-boilerplate/ui";
+import { Button, ConfirmDialog } from '@monorepo-boilerplate/ui';
 
 /** ConfirmDialog gates a destructive action behind a confirm/cancel prompt. */
 export default function ConfirmDialogExample() {

@@ -61,7 +61,7 @@ caught automatically.
   in switch/if-else over the discriminant.
 - **Branded types** for domain identifiers that must not be interchanged:
   ```ts
-  type UserId = string & { readonly __brand: "UserId" };
+  type UserId = string & { readonly __brand: 'UserId' };
   ```
 - Avoid `enum`; prefer `as const` objects or string literal unions. Numeric enums are banned. _(enforced)_
 - No `namespace` or `module` declarations. _(enforced)_
@@ -87,7 +87,7 @@ caught automatically.
 - **Never use `any` in new code.** Use `unknown` for untrusted input, then narrow with type guards. _(enforced for explicit `any`)_
   ```ts
   function parse(raw: unknown): User {
-    if (!isUser(raw)) throw new Error("invalid");
+    if (!isUser(raw)) throw new Error('invalid');
     return raw;
   }
   ```
@@ -111,8 +111,8 @@ The following override ts.dev rules that predate isolatedModules/bundlers:
    type syntax. This **directly overrides** ts.dev's old "do not use import type" guidance.
 
    ```ts
-   import { type User, fetchUser } from "./user-service"; // correct
-   import type { User } from "./user-service"; // also fine for type-only files
+   import { type User, fetchUser } from './user-service'; // correct
+   import type { User } from './user-service'; // also fine for type-only files
    ```
 
 2. **Default exports are allowed where the framework requires them.**
@@ -159,7 +159,7 @@ The following override ts.dev rules that predate isolatedModules/bundlers:
 - Do not use `Function`, `Object`, or `String` (capital) as types. _(enforced)_
 - Use `satisfies` to validate a value against a type without widening it:
   ```ts
-  const config = { port: 3000, host: "localhost" } satisfies ServerConfig;
+  const config = { port: 3000, host: 'localhost' } satisfies ServerConfig;
   ```
 
 ---

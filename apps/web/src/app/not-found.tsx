@@ -1,5 +1,5 @@
-import { Button } from "@monorepo-boilerplate/ui";
-import Link from "next/link";
+import { Button } from '@monorepo-boilerplate/ui';
+import Link from 'next/link';
 
 export default function NotFound() {
   return (

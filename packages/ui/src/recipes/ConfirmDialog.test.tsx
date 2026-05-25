@@ -1,17 +1,17 @@
-import { fireEvent, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
-import { Button } from "../components";
-import { renderWithTheme } from "../test-utils";
-import { ConfirmDialog } from "./ConfirmDialog";
+import { Button } from '../components';
+import { renderWithTheme } from '../test-utils';
+import { ConfirmDialog } from './ConfirmDialog';
 
-describe("ConfirmDialog", () => {
-  it("renders the trigger", () => {
+describe('ConfirmDialog', () => {
+  it('renders the trigger', () => {
     renderWithTheme(<ConfirmDialog trigger={<Button>Delete</Button>} title="Delete?" />);
-    expect(screen.getByRole("button", { name: "Delete" })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
   });
 
-  it("opens the alert dialog and fires onConfirm", async () => {
+  it('opens the alert dialog and fires onConfirm', async () => {
     let confirmed = false;
     renderWithTheme(
       <ConfirmDialog
@@ -23,8 +23,8 @@ describe("ConfirmDialog", () => {
         }}
       />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Delete" }));
-    const confirm = await screen.findByRole("button", { name: "Delete now" });
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    const confirm = await screen.findByRole('button', { name: 'Delete now' });
     fireEvent.click(confirm);
     expect(confirmed).toBe(true);
   });

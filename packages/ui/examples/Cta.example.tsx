@@ -1,4 +1,4 @@
-import { Button, Cta } from "@monorepo-boilerplate/ui";
+import { Button, Cta } from '@monorepo-boilerplate/ui';
 
 /** Cta closes a page with a focused call to action. */
 export default function CtaExample() {

@@ -1,14 +1,14 @@
-import { Button } from "@monorepo-boilerplate/ui";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Button } from '@monorepo-boilerplate/ui';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import HeroExample from "../../examples/Hero.example";
-import { Hero } from "./Hero";
+import HeroExample from '../../examples/Hero.example';
+import { Hero } from './Hero';
 
 const meta = {
-  title: "Blocks/Hero",
+  title: 'Blocks/Hero',
   component: Hero,
-  args: { title: "Hero" },
-  parameters: { layout: "fullscreen" },
+  args: { title: 'Hero' },
+  parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof Hero>;
 
 export default meta;

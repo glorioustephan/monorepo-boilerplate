@@ -1,7 +1,7 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { createJsonClient } from "../http";
-import { retry } from "../resilience";
+import { createJsonClient } from '../http';
+import { retry } from '../resilience';
 
 const exampleUserSchema = z.object({
   id: z.string(),
@@ -26,7 +26,7 @@ export interface ExampleProvider {
  */
 export function createExampleProvider(options: ExampleProviderOptions): ExampleProvider {
   const client = createJsonClient({
-    baseUrl: options.baseUrl ?? "https://api.example.com",
+    baseUrl: options.baseUrl ?? 'https://api.example.com',
     headers: { authorization: `Bearer ${options.apiKey}` },
   });
 

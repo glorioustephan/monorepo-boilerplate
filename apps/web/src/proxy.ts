@@ -1,6 +1,6 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from 'next/server';
 
-import { SESSION_COOKIE, sessionCodec } from "@/lib/session";
+import { SESSION_COOKIE, sessionCodec } from '@/lib/session';
 
 // Next.js 16 "proxy" convention (formerly "middleware"). Protects routes by
 // verifying the signed session cookie; unauthenticated requests are redirected
@@ -11,12 +11,12 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
   if (!session) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = '/';
     return NextResponse.redirect(url);
   }
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/account/:path*"],
+  matcher: ['/account/:path*'],
 };

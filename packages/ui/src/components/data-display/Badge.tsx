@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Badge, type BadgeProps } from "@radix-ui/themes";
+export { Badge, type BadgeProps } from '@radix-ui/themes';

@@ -8,19 +8,19 @@
  * search. transformers writes only to stderr, so it's safe in the stdio MCP server.
  */
 
-export const EMBED_MODEL = "Xenova/all-MiniLM-L6-v2";
+export const EMBED_MODEL = 'Xenova/all-MiniLM-L6-v2';
 export const EMBED_DIM = 384;
 
 type Extractor = (
   text: string,
-  opts: { pooling: "mean"; normalize: boolean },
+  opts: { pooling: 'mean'; normalize: boolean },
 ) => Promise<{ data: Float32Array }>;
 
 let extractorPromise: Promise<Extractor> | undefined;
 
 async function getExtractor(): Promise<Extractor> {
-  const { pipeline } = await import("@huggingface/transformers");
-  return (await pipeline("feature-extraction", EMBED_MODEL)) as unknown as Extractor;
+  const { pipeline } = await import('@huggingface/transformers');
+  return (await pipeline('feature-extraction', EMBED_MODEL)) as unknown as Extractor;
 }
 
 /**
@@ -30,7 +30,7 @@ async function getExtractor(): Promise<Extractor> {
 export async function embed(text: string): Promise<Float32Array | undefined> {
   try {
     extractorPromise ??= getExtractor();
-    const out = await (await extractorPromise)(text, { pooling: "mean", normalize: true });
+    const out = await (await extractorPromise)(text, { pooling: 'mean', normalize: true });
     return out.data;
   } catch {
     return undefined;

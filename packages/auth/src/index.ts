@@ -8,28 +8,28 @@
  * for base64url). The Next proxy runs on the Node runtime, so it can import this.
  */
 
-import { timingSafeEqual } from "node:crypto";
+import { timingSafeEqual } from 'node:crypto';
 
 const encoder = new TextEncoder();
 
 function toBase64Url(input: string): string {
-  return Buffer.from(input, "utf8").toString("base64url");
+  return Buffer.from(input, 'utf8').toString('base64url');
 }
 
 function fromBase64Url(input: string): string {
-  return Buffer.from(input, "base64url").toString("utf8");
+  return Buffer.from(input, 'base64url').toString('utf8');
 }
 
 async function sign(secret: string, data: string): Promise<string> {
   const key = await crypto.subtle.importKey(
-    "raw",
+    'raw',
     encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
+    { name: 'HMAC', hash: 'SHA-256' },
     false,
-    ["sign"],
+    ['sign'],
   );
-  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(data));
-  return Buffer.from(new Uint8Array(signature)).toString("base64url");
+  const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(data));
+  return Buffer.from(new Uint8Array(signature)).toString('base64url');
 }
 
 function safeEqual(a: string, b: string): boolean {
@@ -46,9 +46,9 @@ interface SealedEnvelope {
 }
 
 function isSealedEnvelope(value: unknown): value is SealedEnvelope {
-  if (typeof value !== "object" || value === null) return false;
+  if (typeof value !== 'object' || value === null) return false;
   const record = value as Record<string, unknown>;
-  return typeof record.exp === "number" && typeof record.data === "object" && record.data !== null;
+  return typeof record.exp === 'number' && typeof record.data === 'object' && record.data !== null;
 }
 
 export interface SessionCodecOptions {
@@ -80,7 +80,7 @@ export function createSessionCodec<T extends Record<string, unknown>>(
     },
 
     async unseal(token: string): Promise<T | null> {
-      const [payloadB64, signature] = token.split(".");
+      const [payloadB64, signature] = token.split('.');
       if (!payloadB64 || !signature) return null;
 
       const expected = await sign(secret, payloadB64);

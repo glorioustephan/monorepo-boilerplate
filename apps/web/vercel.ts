@@ -1,4 +1,4 @@
-import type { VercelConfig } from "@vercel/config/v1";
+import type { VercelConfig } from '@vercel/config/v1';
 
 /**
  * Typed Vercel project config (replaces vercel.json). Set this app's directory
@@ -6,14 +6,14 @@ import type { VercelConfig } from "@vercel/config/v1";
  * rewrites, crons, or function settings as needed.
  */
 const config: VercelConfig = {
-  framework: "nextjs",
+  framework: 'nextjs',
   headers: [
     {
-      source: "/(.*)",
+      source: '/(.*)',
       headers: [
-        { key: "X-Content-Type-Options", value: "nosniff" },
-        { key: "X-Frame-Options", value: "DENY" },
-        { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'X-Frame-Options', value: 'DENY' },
+        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       ],
     },
   ],

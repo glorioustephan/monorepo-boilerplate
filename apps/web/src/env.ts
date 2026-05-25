@@ -1,6 +1,6 @@
-import { createEnv } from "@monorepo-boilerplate/environment";
+import { createEnv } from '@monorepo-boilerplate/environment';
 
-import { clientSchema, serverSchema } from "./env.schema";
+import { clientSchema, serverSchema } from './env.schema';
 
 /**
  * Typed, validated environment for the web app. The schema lives in

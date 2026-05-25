@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@monorepo-boilerplate/ui";
-import { useEffect } from "react";
+import { Button } from '@monorepo-boilerplate/ui';
+import { useEffect } from 'react';
 
 interface ErrorProps {
   error: Error & { digest?: string };

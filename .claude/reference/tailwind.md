@@ -12,11 +12,11 @@ Tailwind v4 is CSS-first — there is **no `tailwind.config.js`**.
 
 - Apps own their Tailwind + Radix entry (`apps/web/src/app/globals.css`):
   ```css
-  @import "tailwindcss";
-  @import "@radix-ui/themes/tokens.css";
-  @import "@radix-ui/themes/components.css";
-  @import "@radix-ui/themes/utilities.css";
-  @import "@monorepo-boilerplate/ui/styles.css";
+  @import 'tailwindcss';
+  @import '@radix-ui/themes/tokens.css';
+  @import '@radix-ui/themes/components.css';
+  @import '@radix-ui/themes/utilities.css';
+  @import '@monorepo-boilerplate/ui/styles.css';
   ```
   PostCSS via `@tailwindcss/postcss`. The Radix CSS is imported in the **app** (which declares
   `@radix-ui/themes` as a direct dependency) so it resolves under both `next build` (Turbopack)

@@ -1,6 +1,6 @@
-import { Card } from "@monorepo-boilerplate/ui";
+import { Card } from '@monorepo-boilerplate/ui';
 
-import { getSession } from "@/lib/auth";
+import { getSession } from '@/lib/auth';
 
 // Reachable only with a valid session — the proxy redirects otherwise. The
 // null branch is defensive.

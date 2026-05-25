@@ -9,7 +9,7 @@
  *
  * Requires Node ≥22.5 run with `--experimental-sqlite`.
  */
-import { DatabaseSync } from "node:sqlite";
+import { DatabaseSync } from 'node:sqlite';
 
 import {
   type ComponentRecord,
@@ -17,7 +17,7 @@ import {
   type ComponentSummary,
   type RenderEnv,
   type Tier,
-} from "./schema";
+} from './schema';
 
 interface LexHit {
   readonly name: string;
@@ -42,9 +42,9 @@ const blobToVector = (blob: Uint8Array): Float32Array => new Float32Array(blob.s
 /** Concatenated searchable text for the FTS5 index. */
 function searchText(record: ComponentRecord): string {
   const variants = (record.variants ?? [])
-    .map((variant) => `${variant.prop} ${variant.values.join(" ")}`)
-    .join(" ");
-  const parts = (record.parts ?? []).join(" ");
+    .map((variant) => `${variant.prop} ${variant.values.join(' ')}`)
+    .join(' ');
+  const parts = (record.parts ?? []).join(' ');
   return [
     record.name,
     record.tier,
@@ -55,7 +55,7 @@ function searchText(record: ComponentRecord): string {
     parts,
   ]
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 }
 
 /** Create/overwrite the catalog database (atomic). Vectors are optional (lexical-only without them). */
@@ -85,7 +85,7 @@ export function buildCatalog(
   );
   const insFts = db.prepare(`INSERT INTO components_fts (name, text) VALUES (?, ?)`);
   const insVector = db.prepare(`INSERT INTO vectors (name, embedding) VALUES (?, ?)`);
-  db.exec("BEGIN");
+  db.exec('BEGIN');
   try {
     for (const record of records) {
       insComponent.run(
@@ -99,9 +99,9 @@ export function buildCatalog(
       const vector = vectors?.get(record.name);
       if (vector) insVector.run(record.name, vectorToBlob(vector));
     }
-    db.exec("COMMIT");
+    db.exec('COMMIT');
   } catch (error) {
-    db.exec("ROLLBACK");
+    db.exec('ROLLBACK');
     throw error;
   } finally {
     db.close();
@@ -123,7 +123,7 @@ export interface Catalog {
 function toFtsQuery(raw: string): string | undefined {
   const tokens = raw.toLowerCase().match(/[a-z0-9]+/g);
   if (!tokens || tokens.length === 0) return undefined;
-  return tokens.map((token) => `"${token}"*`).join(" OR ");
+  return tokens.map((token) => `"${token}"*`).join(' OR ');
 }
 
 const WEIGHT_LEXICAL = 0.45;

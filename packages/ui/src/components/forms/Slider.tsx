@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Slider, type SliderProps } from "@radix-ui/themes";
+export { Slider, type SliderProps } from '@radix-ui/themes';

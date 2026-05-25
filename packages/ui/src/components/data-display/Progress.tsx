@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Progress, type ProgressProps } from "@radix-ui/themes";
+export { Progress, type ProgressProps } from '@radix-ui/themes';

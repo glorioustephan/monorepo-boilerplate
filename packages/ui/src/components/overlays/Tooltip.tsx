@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Tooltip, type TooltipProps } from "@radix-ui/themes";
+export { Tooltip, type TooltipProps } from '@radix-ui/themes';

@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`. Compound parts: Root, Item.
  */
-export { CheckboxGroup } from "@radix-ui/themes";
+export { CheckboxGroup } from '@radix-ui/themes';

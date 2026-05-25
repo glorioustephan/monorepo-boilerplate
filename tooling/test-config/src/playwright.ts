@@ -1,4 +1,4 @@
-import { defineConfig, devices, type PlaywrightTestConfig } from "@playwright/test";
+import { defineConfig, devices, type PlaywrightTestConfig } from '@playwright/test';
 
 export interface PlaywrightPresetOptions {
   /** URL the dev/preview server is served from during tests. */
@@ -14,16 +14,16 @@ export interface PlaywrightPresetOptions {
 export function createPlaywrightConfig(options: PlaywrightPresetOptions): PlaywrightTestConfig {
   const { baseURL, webServerCommand } = options;
   return defineConfig({
-    testDir: "./e2e",
+    testDir: './e2e',
     fullyParallel: true,
     forbidOnly: Boolean(process.env.CI),
     retries: process.env.CI ? 2 : 0,
-    reporter: process.env.CI ? "github" : "list",
+    reporter: process.env.CI ? 'github' : 'list',
     use: {
       baseURL,
-      trace: "on-first-retry",
+      trace: 'on-first-retry',
     },
-    projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+    projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
     webServer: {
       command: webServerCommand,
       url: baseURL,

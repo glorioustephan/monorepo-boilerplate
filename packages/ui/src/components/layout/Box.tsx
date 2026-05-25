@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Box, type BoxProps } from "@radix-ui/themes";
+export { Box, type BoxProps } from '@radix-ui/themes';

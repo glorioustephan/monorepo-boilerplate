@@ -8,7 +8,7 @@
  *   server (stdout there is the JSON-RPC channel). Override with `destination`.
  */
 
-export type LogLevel = "debug" | "info" | "warn" | "error";
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 const LEVEL_WEIGHT: Record<LogLevel, number> = {
   debug: 10,
@@ -42,10 +42,10 @@ export interface LoggerOptions {
 function resolveLevel(explicit?: LogLevel): LogLevel {
   if (explicit) return explicit;
   const fromEnv = process.env.LOG_LEVEL;
-  if (fromEnv === "debug" || fromEnv === "info" || fromEnv === "warn" || fromEnv === "error") {
+  if (fromEnv === 'debug' || fromEnv === 'info' || fromEnv === 'warn' || fromEnv === 'error') {
     return fromEnv;
   }
-  return "info";
+  return 'info';
 }
 
 function format(
@@ -59,14 +59,14 @@ function format(
   if (json) {
     return `${JSON.stringify({ time, level, name, message, ...fields })}\n`;
   }
-  const suffix = Object.keys(fields).length > 0 ? ` ${JSON.stringify(fields)}` : "";
+  const suffix = Object.keys(fields).length > 0 ? ` ${JSON.stringify(fields)}` : '';
   return `${time} ${level.toUpperCase().padEnd(5)} [${name}] ${message}${suffix}\n`;
 }
 
 /** Create a named logger. */
 export function createLogger(name: string, options: LoggerOptions = {}): Logger {
   const minWeight = LEVEL_WEIGHT[resolveLevel(options.level)];
-  const json = options.json ?? process.env.NODE_ENV === "production";
+  const json = options.json ?? process.env.NODE_ENV === 'production';
   const destination = options.destination ?? process.stderr;
   const base = options.base ?? {};
 
@@ -76,10 +76,10 @@ export function createLogger(name: string, options: LoggerOptions = {}): Logger 
   }
 
   return {
-    debug: (message, fields) => emit("debug", message, fields),
-    info: (message, fields) => emit("info", message, fields),
-    warn: (message, fields) => emit("warn", message, fields),
-    error: (message, fields) => emit("error", message, fields),
+    debug: (message, fields) => emit('debug', message, fields),
+    info: (message, fields) => emit('info', message, fields),
+    warn: (message, fields) => emit('warn', message, fields),
+    error: (message, fields) => emit('error', message, fields),
     child: (fields) => createLogger(name, { ...options, base: { ...base, ...fields } }),
   };
 }

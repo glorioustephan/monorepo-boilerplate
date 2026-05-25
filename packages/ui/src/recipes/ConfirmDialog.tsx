@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
 // ConfirmDialog itself uses no hooks, but its `onConfirm` function prop can't cross the RSC
 // serialization boundary, so it's only usable from Client Components — the directive makes
 // that boundary explicit.
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-import { AlertDialog, Button, type ButtonProps, Flex } from "../components";
+import { AlertDialog, Button, type ButtonProps, Flex } from '../components';
 
 export interface ConfirmDialogProps {
   /** Element that opens the dialog (e.g. a `<Button>`). */
@@ -17,7 +17,7 @@ export interface ConfirmDialogProps {
   /** Called when the user confirms. */
   readonly onConfirm?: () => void;
   /** Accent color of the confirm button (default "red" for destructive intent). */
-  readonly confirmColor?: ButtonProps["color"];
+  readonly confirmColor?: ButtonProps['color'];
 }
 
 /**
@@ -28,10 +28,10 @@ export function ConfirmDialog({
   trigger,
   title,
   description,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
+  confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
   onConfirm,
-  confirmColor = "red",
+  confirmColor = 'red',
 }: ConfirmDialogProps) {
   return (
     <AlertDialog.Root>

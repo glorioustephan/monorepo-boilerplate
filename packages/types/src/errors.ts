@@ -5,15 +5,15 @@
  */
 
 export type ErrorCode =
-  | "VALIDATION"
-  | "UNAUTHORIZED"
-  | "FORBIDDEN"
-  | "NOT_FOUND"
-  | "CONFLICT"
-  | "RATE_LIMITED"
-  | "TIMEOUT"
-  | "PROVIDER_ERROR"
-  | "INTERNAL";
+  | 'VALIDATION'
+  | 'UNAUTHORIZED'
+  | 'FORBIDDEN'
+  | 'NOT_FOUND'
+  | 'CONFLICT'
+  | 'RATE_LIMITED'
+  | 'TIMEOUT'
+  | 'PROVIDER_ERROR'
+  | 'INTERNAL';
 
 const DEFAULT_STATUS: Record<ErrorCode, number> = {
   VALIDATION: 400,
@@ -41,8 +41,8 @@ export class AppError extends Error {
 
   constructor(message: string, options: AppErrorOptions = {}) {
     super(message, options.cause !== undefined ? { cause: options.cause } : undefined);
-    this.name = "AppError";
-    this.code = options.code ?? "INTERNAL";
+    this.name = 'AppError';
+    this.code = options.code ?? 'INTERNAL';
     this.status = options.status ?? DEFAULT_STATUS[this.code];
     this.details = options.details;
   }
@@ -56,5 +56,5 @@ export function isAppError(value: unknown): value is AppError {
 export function toAppError(value: unknown): AppError {
   if (isAppError(value)) return value;
   if (value instanceof Error) return new AppError(value.message, { cause: value });
-  return new AppError("Unknown error", { details: { value } });
+  return new AppError('Unknown error', { details: { value } });
 }

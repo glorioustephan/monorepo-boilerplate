@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`. Compound parts: Root, Trigger, Content, Close, Anchor.
  */
-export { Popover } from "@radix-ui/themes";
+export { Popover } from '@radix-ui/themes';

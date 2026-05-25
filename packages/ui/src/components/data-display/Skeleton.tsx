@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Skeleton, type SkeletonProps } from "@radix-ui/themes";
+export { Skeleton, type SkeletonProps } from '@radix-ui/themes';

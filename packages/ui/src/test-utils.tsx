@@ -1,6 +1,6 @@
-import { Theme } from "@radix-ui/themes";
-import { render, type RenderOptions, type RenderResult } from "@testing-library/react";
-import type { ReactElement, ReactNode } from "react";
+import { Theme } from '@radix-ui/themes';
+import { render, type RenderOptions, type RenderResult } from '@testing-library/react';
+import type { ReactElement, ReactNode } from 'react';
 
 /**
  * Render a kit component inside a Radix `<Theme>`, matching how it renders in the
@@ -9,7 +9,7 @@ import type { ReactElement, ReactNode } from "react";
  */
 export function renderWithTheme(
   ui: ReactElement,
-  options?: Omit<RenderOptions, "wrapper">,
+  options?: Omit<RenderOptions, 'wrapper'>,
 ): RenderResult {
   return render(ui, {
     wrapper: ({ children }: { children: ReactNode }) => <Theme>{children}</Theme>,

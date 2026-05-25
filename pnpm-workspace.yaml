@@ -1,10 +1,10 @@
 packages:
-  - "apps/*"
-  - "mcp-servers/*"
-  - "services/*"
-  - "tooling/*"
-  - "packages/*"
-  - "docs"
+  - 'apps/*'
+  - 'mcp-servers/*'
+  - 'services/*'
+  - 'tooling/*'
+  - 'packages/*'
+  - 'docs'
 
 allowBuilds:
   esbuild: true
@@ -17,7 +17,7 @@ allowBuilds:
 # Bump a version here once and it applies across the whole monorepo.
 catalog:
   # Framework
-  "@vercel/config": ^0.5.0
+  '@vercel/config': ^0.5.0
   next: ^16.2.6
   react: ^19.2.6
   react-dom: ^19.2.6
@@ -26,47 +26,47 @@ catalog:
 
   # Language + types
   typescript: ^6.0.3
-  "@types/node": ^25.9.1
-  "@types/react": ^19.2.0
-  "@types/react-dom": ^19.2.0
+  '@types/node': ^25.9.1
+  '@types/react': ^19.2.0
+  '@types/react-dom': ^19.2.0
 
   # Tooling
   turbo: ^2.9.14
   oxlint: ^1.66.0
   oxfmt: ^0.51.0
   lefthook: ^2.1.8
-  "@changesets/cli": ^2.31.0
-  "@commitlint/cli": ^21.0.1
-  "@commitlint/config-conventional": ^21.0.1
+  '@changesets/cli': ^2.31.0
+  '@commitlint/cli': ^21.0.1
+  '@commitlint/config-conventional': ^21.0.1
   tsx: ^4.22.3
   tsdown: ^0.22.0
 
   # Validation / env
   zod: ^4.4.3
-  "@t3-oss/env-nextjs": ^0.13.11
+  '@t3-oss/env-nextjs': ^0.13.11
 
   # Styling
   tailwindcss: ^4.3.0
-  "@tailwindcss/postcss": ^4.3.0
-  "@tailwindcss/vite": ^4.3.0
+  '@tailwindcss/postcss': ^4.3.0
+  '@tailwindcss/vite': ^4.3.0
   clsx: ^2.1.1
   tailwind-merge: ^3.6.0
   class-variance-authority: ^0.7.1
   lucide-react: ^1.16.0
   radix-ui: ^1.4.3
-  "@radix-ui/themes": ^3.3.0
+  '@radix-ui/themes': ^3.3.0
 
   # Storybook (component workshop; lives in packages/ui)
   storybook: ^10.4.1
-  "@storybook/react-vite": ^10.4.1
-  "@storybook/addon-docs": ^10.4.1
+  '@storybook/react-vite': ^10.4.1
+  '@storybook/addon-docs': ^10.4.1
   vite: ^8.0.14
 
   # MCP
-  "@modelcontextprotocol/sdk": ^1.29.0
+  '@modelcontextprotocol/sdk': ^1.29.0
 
   # Embeddings (UI catalog semantic search; MiniLM via ONNX)
-  "@huggingface/transformers": ^4.2.0
+  '@huggingface/transformers': ^4.2.0
 
   # Documentation site (VitePress)
   vitepress: ^1.6.4
@@ -82,9 +82,9 @@ catalog:
 
   # Testing
   vitest: ^4.1.7
-  "@vitejs/plugin-react": ^6.0.2
-  "@playwright/test": ^1.60.0
+  '@vitejs/plugin-react': ^6.0.2
+  '@playwright/test': ^1.60.0
   jsdom: ^29.1.1
-  "@testing-library/react": ^16.3.2
-  "@testing-library/dom": ^10.4.1
-  "@testing-library/jest-dom": ^6.9.1
+  '@testing-library/react': ^16.3.2
+  '@testing-library/dom': ^10.4.1
+  '@testing-library/jest-dom': ^6.9.1

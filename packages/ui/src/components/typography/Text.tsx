@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Text, type TextProps } from "@radix-ui/themes";
+export { Text, type TextProps } from '@radix-ui/themes';

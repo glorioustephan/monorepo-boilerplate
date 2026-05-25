@@ -1,11 +1,11 @@
-import { mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, join, relative, resolve } from 'node:path';
 
-import { components } from "@monorepo-boilerplate/ui/components/components.manifest";
+import { components } from '@monorepo-boilerplate/ui/components/components.manifest';
 
-import { BANNER, renderAll } from "./generate";
+import { BANNER, renderAll } from './generate';
 
-const OUT_DIR = resolve("packages/ui/src/components");
+const OUT_DIR = resolve('packages/ui/src/components');
 const files = renderAll(components);
 const bannerHead = BANNER.slice(0, 40);
 
@@ -15,7 +15,7 @@ function generatedOnDisk(dir: string): string[] {
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
     if (statSync(full).isDirectory()) out.push(...generatedOnDisk(full));
-    else if (name.endsWith(".tsx") || (dir === OUT_DIR && name === "index.ts")) {
+    else if (name.endsWith('.tsx') || (dir === OUT_DIR && name === 'index.ts')) {
       out.push(relative(OUT_DIR, full));
     }
   }
@@ -24,7 +24,7 @@ function generatedOnDisk(dir: string): string[] {
 
 const wasGenerated = (rel: string): boolean => {
   try {
-    return readFileSync(join(OUT_DIR, rel), "utf8").startsWith(bannerHead);
+    return readFileSync(join(OUT_DIR, rel), 'utf8').startsWith(bannerHead);
   } catch {
     return false;
   }
@@ -39,7 +39,7 @@ for (const rel of generatedOnDisk(OUT_DIR)) {
 for (const [rel, contents] of Object.entries(files)) {
   const full = join(OUT_DIR, rel);
   mkdirSync(dirname(full), { recursive: true });
-  writeFileSync(full, contents, "utf8");
+  writeFileSync(full, contents, 'utf8');
 }
 
 process.stderr.write(

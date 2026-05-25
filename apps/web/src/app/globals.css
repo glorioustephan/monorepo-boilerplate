@@ -10,8 +10,8 @@
  * Cascade: Radix Themes is UNLAYERED; Tailwind v4 is layered. Unlayered wins, so Radix
  * owns component styling and Tailwind contributes only layout/spacing on non-Radix elements.
  */
-@import "tailwindcss";
-@import "@radix-ui/themes/tokens.css";
-@import "@radix-ui/themes/components.css";
-@import "@radix-ui/themes/utilities.css";
-@import "@monorepo-boilerplate/ui/styles.css";
+@import 'tailwindcss';
+@import '@radix-ui/themes/tokens.css';
+@import '@radix-ui/themes/components.css';
+@import '@radix-ui/themes/utilities.css';
+@import '@monorepo-boilerplate/ui/styles.css';

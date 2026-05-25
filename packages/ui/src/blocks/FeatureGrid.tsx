@@ -1,4 +1,4 @@
-import { Card, Container, Flex, Grid, type GridProps, Heading, Section, Text } from "../components";
+import { Card, Container, Flex, Grid, type GridProps, Heading, Section, Text } from '../components';
 
 export interface Feature {
   readonly title: string;
@@ -10,11 +10,11 @@ export interface Feature {
 export interface FeatureGridProps {
   readonly features: readonly Feature[];
   /** Responsive column count (defaults to 1 → 2 → 3 across breakpoints). */
-  readonly columns?: GridProps["columns"];
+  readonly columns?: GridProps['columns'];
 }
 
 // Stable reference so the default prop doesn't break referential equality per render.
-const DEFAULT_COLUMNS: GridProps["columns"] = { initial: "1", sm: "2", md: "3" };
+const DEFAULT_COLUMNS: GridProps['columns'] = { initial: '1', sm: '2', md: '3' };
 
 /** FeatureGrid — a responsive grid of feature cards. */
 export function FeatureGrid({ features, columns = DEFAULT_COLUMNS }: FeatureGridProps) {

@@ -1,23 +1,23 @@
-import { AppError, type ErrorCode } from "@monorepo-boilerplate/types";
-import type { z } from "zod";
+import { AppError, type ErrorCode } from '@monorepo-boilerplate/types';
+import type { z } from 'zod';
 
 /** Map an upstream HTTP status to the closest AppError code. */
 function codeForStatus(status: number): ErrorCode {
   switch (status) {
     case 400:
-      return "VALIDATION";
+      return 'VALIDATION';
     case 401:
-      return "UNAUTHORIZED";
+      return 'UNAUTHORIZED';
     case 403:
-      return "FORBIDDEN";
+      return 'FORBIDDEN';
     case 404:
-      return "NOT_FOUND";
+      return 'NOT_FOUND';
     case 409:
-      return "CONFLICT";
+      return 'CONFLICT';
     case 429:
-      return "RATE_LIMITED";
+      return 'RATE_LIMITED';
     default:
-      return status >= 500 ? "PROVIDER_ERROR" : "INTERNAL";
+      return status >= 500 ? 'PROVIDER_ERROR' : 'INTERNAL';
   }
 }
 

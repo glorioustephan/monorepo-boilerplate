@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-import { Card, Container, Flex, Heading, Section, Text } from "../components";
+import { Card, Container, Flex, Heading, Section, Text } from '../components';
 
 export interface CtaProps {
   readonly title: ReactNode;

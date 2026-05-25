@@ -1,6 +1,6 @@
-import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
+import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react';
 
-import { Flex, Text } from "../components";
+import { Flex, Text } from '../components';
 
 export interface FieldProps {
   /** Visible label text. */
@@ -19,8 +19,8 @@ export interface FieldProps {
 
 interface ControlProps {
   id?: string;
-  "aria-describedby"?: string;
-  "aria-invalid"?: boolean;
+  'aria-describedby'?: string;
+  'aria-invalid'?: boolean;
 }
 
 /**
@@ -33,15 +33,15 @@ interface ControlProps {
 export function Field({ label, htmlFor, children, description, error, required }: FieldProps) {
   const descriptionId = description ? `${htmlFor}-description` : undefined;
   const errorId = error ? `${htmlFor}-error` : undefined;
-  const describedBy = [descriptionId, errorId].filter(Boolean).join(" ") || undefined;
+  const describedBy = [descriptionId, errorId].filter(Boolean).join(' ') || undefined;
 
   // Inject id + ARIA into the single control child. Conditional spreads avoid overwriting
   // caller-set attributes with `undefined` when no description/error applies.
   const control = isValidElement(children)
     ? cloneElement(children as ReactElement<ControlProps>, {
         id: htmlFor,
-        ...(describedBy ? { "aria-describedby": describedBy } : {}),
-        ...(error ? { "aria-invalid": true } : {}),
+        ...(describedBy ? { 'aria-describedby': describedBy } : {}),
+        ...(error ? { 'aria-invalid': true } : {}),
       })
     : children;
 
@@ -49,7 +49,7 @@ export function Field({ label, htmlFor, children, description, error, required }
     <Flex direction="column" gap="1">
       <Text as="label" htmlFor={htmlFor} size="2" weight="medium">
         {label}
-        {required ? " *" : ""}
+        {required ? ' *' : ''}
       </Text>
       {control}
       {description ? (

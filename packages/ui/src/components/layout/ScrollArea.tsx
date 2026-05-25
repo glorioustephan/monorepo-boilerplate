@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { ScrollArea, type ScrollAreaProps } from "@radix-ui/themes";
+export { ScrollArea, type ScrollAreaProps } from '@radix-ui/themes';

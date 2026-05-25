@@ -1,5 +1,5 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { extname, join } from "node:path";
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { extname, join } from 'node:path';
 
 /**
  * Raw-color guard. Color in the kit and apps comes from Radix Themes — component
@@ -14,25 +14,25 @@ import { extname, join } from "node:path";
 export interface TokenViolation {
   readonly file: string;
   readonly line: number;
-  readonly rule: "arbitrary-color" | "palette-color";
+  readonly rule: 'arbitrary-color' | 'palette-color';
   readonly snippet: string;
 }
 
 const COLOR_UTILITY =
-  "(?:bg|text|border|ring|ring-offset|fill|stroke|from|via|to|decoration|accent|caret|divide|outline|shadow)";
+  '(?:bg|text|border|ring|ring-offset|fill|stroke|from|via|to|decoration|accent|caret|divide|outline|shadow)';
 
 // `bg-[#fff]`, `text-[oklch(...)]`, `ring-[rgb(...)]`, …
-const ARBITRARY_COLOR = new RegExp(`${COLOR_UTILITY}-\\[(?:#|rgb|hsl|oklch|oklab|color\\()`, "i");
+const ARBITRARY_COLOR = new RegExp(`${COLOR_UTILITY}-\\[(?:#|rgb|hsl|oklch|oklab|color\\()`, 'i');
 
 // Raw Tailwind palette families with a numeric shade — bypasses semantic tokens.
 const PALETTE =
-  "(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)";
+  '(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)';
 const PALETTE_COLOR = new RegExp(
   `\\b${COLOR_UTILITY}-${PALETTE}-(?:50|100|200|300|400|500|600|700|800|900|950)\\b`,
 );
 
-const SOURCE_EXT = new Set([".ts", ".tsx"]);
-const SKIP_DIRS = new Set(["node_modules", "dist", ".next", ".turbo", "coverage"]);
+const SOURCE_EXT = new Set(['.ts', '.tsx']);
+const SKIP_DIRS = new Set(['node_modules', 'dist', '.next', '.turbo', 'coverage']);
 
 function walk(root: string): string[] {
   const out: string[] = [];
@@ -52,7 +52,7 @@ function walk(root: string): string[] {
     }
     if (isDirectory) {
       if (!SKIP_DIRS.has(name)) out.push(...walk(full));
-    } else if (SOURCE_EXT.has(extname(name)) && !name.endsWith(".d.ts")) {
+    } else if (SOURCE_EXT.has(extname(name)) && !name.endsWith('.d.ts')) {
       out.push(full);
     }
   }
@@ -62,9 +62,9 @@ function walk(root: string): string[] {
 // Only UI/app source carries className/JSX. Tooling (incl. this checker's own
 // fixtures), config, and tests elsewhere are out of scope for token rules.
 function isDesignSurface(path: string): boolean {
-  const p = path.replaceAll("\\", "/");
-  if (p.includes("/tooling/") || p.startsWith("tooling/")) return false;
-  return p.includes("packages/ui/") || p.includes("/apps/") || p.startsWith("apps/");
+  const p = path.replaceAll('\\', '/');
+  if (p.includes('/tooling/') || p.startsWith('tooling/')) return false;
+  return p.includes('packages/ui/') || p.includes('/apps/') || p.startsWith('apps/');
 }
 
 function collectFiles(paths: readonly string[]): string[] {
@@ -85,12 +85,12 @@ function collectFiles(paths: readonly string[]): string[] {
 function scanFiles(files: readonly string[]): TokenViolation[] {
   const violations: TokenViolation[] = [];
   for (const file of files) {
-    const lines = readFileSync(file, "utf8").split("\n");
+    const lines = readFileSync(file, 'utf8').split('\n');
     lines.forEach((line, index) => {
       if (ARBITRARY_COLOR.test(line)) {
-        violations.push({ file, line: index + 1, rule: "arbitrary-color", snippet: line.trim() });
+        violations.push({ file, line: index + 1, rule: 'arbitrary-color', snippet: line.trim() });
       } else if (PALETTE_COLOR.test(line)) {
-        violations.push({ file, line: index + 1, rule: "palette-color", snippet: line.trim() });
+        violations.push({ file, line: index + 1, rule: 'palette-color', snippet: line.trim() });
       }
     });
   }
@@ -102,7 +102,7 @@ export function findTokenViolations(paths: readonly string[]): TokenViolation[] 
   return scanFiles(collectFiles(paths));
 }
 
-const DEFAULT_ROOTS = ["packages/ui/src", "apps/web/src"];
+const DEFAULT_ROOTS = ['packages/ui/src', 'apps/web/src'];
 
 function main(): void {
   const args = process.argv.slice(2);
@@ -112,9 +112,9 @@ function main(): void {
 
   for (const v of violations) {
     const fix =
-      v.rule === "arbitrary-color"
-        ? "drop the arbitrary color — use a Radix Themes `color`/`variant` prop instead"
-        : "drop the raw palette color — use a Radix Themes `color`/`variant` prop instead";
+      v.rule === 'arbitrary-color'
+        ? 'drop the arbitrary color — use a Radix Themes `color`/`variant` prop instead'
+        : 'drop the raw palette color — use a Radix Themes `color`/`variant` prop instead';
     process.stderr.write(`${v.file}:${v.line}: [${v.rule}] ${fix}\n    ${v.snippet}\n`);
   }
   if (violations.length > 0) {

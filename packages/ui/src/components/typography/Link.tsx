@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Link, type LinkProps } from "@radix-ui/themes";
+export { Link, type LinkProps } from '@radix-ui/themes';

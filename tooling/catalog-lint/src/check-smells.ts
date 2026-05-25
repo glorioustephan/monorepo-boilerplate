@@ -1,5 +1,5 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { basename, extname, join } from "node:path";
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { basename, extname, join } from 'node:path';
 
 /**
  * Code-smell check. A focused, heuristic scan for the patterns LLM-generated
@@ -11,12 +11,12 @@ import { basename, extname, join } from "node:path";
  */
 
 export type SmellRule =
-  | "not-implemented"
-  | "placeholder-body"
-  | "empty-catch"
-  | "console-log"
-  | "explicit-any"
-  | "missing-jsdoc";
+  | 'not-implemented'
+  | 'placeholder-body'
+  | 'empty-catch'
+  | 'console-log'
+  | 'explicit-any'
+  | 'missing-jsdoc';
 
 export interface Smell {
   readonly file: string;
@@ -35,13 +35,13 @@ const EXPLICIT_ANY = /(?::\s*any\b|\bas\s+any\b)/;
 const EXPORT_DECL =
   /^export\s+(?:default\s+)?(?:async\s+)?(?:abstract\s+)?(?:function|const|let|class|interface|type|enum)\s+[A-Za-z_$]/;
 
-const SOURCE_EXT = new Set([".ts", ".tsx"]);
-const SKIP_DIRS = new Set(["node_modules", "dist", ".next", ".turbo", "coverage", ".git"]);
+const SOURCE_EXT = new Set(['.ts', '.tsx']);
+const SKIP_DIRS = new Set(['node_modules', 'dist', '.next', '.turbo', 'coverage', '.git']);
 
 // Generated output and test files aren't hand-authored product code — the smell
 // rules (esp. missing-jsdoc) don't apply to them.
 function isScannable(name: string): boolean {
-  if (name.endsWith(".d.ts") || name.endsWith(".generated.ts")) return false;
+  if (name.endsWith('.d.ts') || name.endsWith('.generated.ts')) return false;
   if (/\.(?:test|spec)\.tsx?$/.test(name)) return false;
   return SOURCE_EXT.has(extname(name));
 }
@@ -97,21 +97,21 @@ function previousNonBlank(lines: readonly string[], index: number): string | und
 
 function scanFile(file: string): Smell[] {
   const smells: Smell[] = [];
-  const lines = readFileSync(file, "utf8").split("\n");
+  const lines = readFileSync(file, 'utf8').split('\n');
   const push = (rule: SmellRule, index: number, line: string): void => {
     smells.push({ file, line: index + 1, rule, snippet: line.trim() });
   };
 
   lines.forEach((line, index) => {
-    if (NOT_IMPLEMENTED.test(line)) push("not-implemented", index, line);
-    if (PLACEHOLDER_BODY.test(line)) push("placeholder-body", index, line);
-    if (EMPTY_CATCH.test(line)) push("empty-catch", index, line);
-    if (CONSOLE_LOG.test(line)) push("console-log", index, line);
-    if (EXPLICIT_ANY.test(line)) push("explicit-any", index, line);
+    if (NOT_IMPLEMENTED.test(line)) push('not-implemented', index, line);
+    if (PLACEHOLDER_BODY.test(line)) push('placeholder-body', index, line);
+    if (EMPTY_CATCH.test(line)) push('empty-catch', index, line);
+    if (CONSOLE_LOG.test(line)) push('console-log', index, line);
+    if (EXPLICIT_ANY.test(line)) push('explicit-any', index, line);
     if (EXPORT_DECL.test(line)) {
       const prev = previousNonBlank(lines, index);
-      const documented = prev?.trimEnd().endsWith("*/") ?? false;
-      if (!documented) push("missing-jsdoc", index, line);
+      const documented = prev?.trimEnd().endsWith('*/') ?? false;
+      if (!documented) push('missing-jsdoc', index, line);
     }
   });
   return smells;
@@ -123,17 +123,17 @@ export function findSmells(paths: readonly string[]): Smell[] {
 }
 
 const HINTS: Record<SmellRule, string> = {
-  "not-implemented": "replace the placeholder stub with a real implementation",
-  "placeholder-body": "fill in the elided body — no `// ...` placeholders",
-  "empty-catch": "handle the error or rethrow; never swallow it silently",
-  "console-log": "use the @monorepo-boilerplate/logger (stderr-safe) instead of console.log",
-  "explicit-any": "avoid `any` — use `unknown` with a guard, or a precise type",
-  "missing-jsdoc": "add a /** JSDoc */ describing what/why for this export",
+  'not-implemented': 'replace the placeholder stub with a real implementation',
+  'placeholder-body': 'fill in the elided body — no `// ...` placeholders',
+  'empty-catch': 'handle the error or rethrow; never swallow it silently',
+  'console-log': 'use the @monorepo-boilerplate/logger (stderr-safe) instead of console.log',
+  'explicit-any': 'avoid `any` — use `unknown` with a guard, or a precise type',
+  'missing-jsdoc': 'add a /** JSDoc */ describing what/why for this export',
 };
 
 // Product + library source. Meta dirs (`tooling/`) are excluded so this checker
 // doesn't flag its own pattern strings.
-const DEFAULT_ROOTS = ["apps", "packages", "mcp-servers", "services"];
+const DEFAULT_ROOTS = ['apps', 'packages', 'mcp-servers', 'services'];
 
 function main(): void {
   const args = process.argv.slice(2);

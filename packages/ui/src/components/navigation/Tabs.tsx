@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`. Compound parts: Root, List, Trigger, Content.
  */
-export { Tabs } from "@radix-ui/themes";
+export { Tabs } from '@radix-ui/themes';

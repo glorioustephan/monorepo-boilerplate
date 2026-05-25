@@ -4,18 +4,18 @@ pre-commit:
   parallel: true
   commands:
     format:
-      glob: "*.{js,jsx,ts,tsx,json,jsonc,css,md,mdx,yaml,yml}"
+      glob: '*.{js,jsx,ts,tsx,json,jsonc,css,md,mdx,yaml,yml}'
       run: pnpm exec oxfmt --write {staged_files}
       stage_fixed: true
     lint:
-      glob: "*.{js,jsx,ts,tsx}"
+      glob: '*.{js,jsx,ts,tsx}'
       run: pnpm exec oxlint --fix {staged_files}
       stage_fixed: true
     tokens:
-      glob: "*.{ts,tsx}"
+      glob: '*.{ts,tsx}'
       run: pnpm exec tsx tooling/catalog-lint/src/check-tokens.ts {staged_files}
     catalog:
-      glob: "apps/**/*.{ts,tsx}"
+      glob: 'apps/**/*.{ts,tsx}'
       run: pnpm exec tsx tooling/catalog-lint/src/check-catalog.ts {staged_files}
     todos:
       # Regenerate the TODO digest from code and include it in the commit, so

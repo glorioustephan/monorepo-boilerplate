@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-import { Cta } from "../blocks/Cta";
-import { type Feature, FeatureGrid } from "../blocks/FeatureGrid";
-import { Hero } from "../blocks/Hero";
+import { Cta } from '../blocks/Cta';
+import { type Feature, FeatureGrid } from '../blocks/FeatureGrid';
+import { Hero } from '../blocks/Hero';
 
 export interface LandingTemplateProps {
   readonly title: ReactNode;

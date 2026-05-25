@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Heading, type HeadingProps } from "@radix-ui/themes";
+export { Heading, type HeadingProps } from '@radix-ui/themes';

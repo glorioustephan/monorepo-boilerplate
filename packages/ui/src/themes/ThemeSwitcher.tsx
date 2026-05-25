@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 /*
  * Runtime theme switcher. Drives the same axes as Radix's ThemePanel —
@@ -6,9 +6,9 @@
  * through `useThemeControls()`. Built from Radix Themes controls so it inherits
  * the active theme. Itself a catalogued kit component (see theme-switcher.catalog.ts).
  */
-import { Flex, SegmentedControl, Select, Text } from "../components";
+import { Flex, SegmentedControl, Select, Text } from '../components';
 
-import { cn } from "../lib/cn";
+import { cn } from '../lib/cn';
 import {
   type AccentColor,
   ACCENT_COLORS,
@@ -19,10 +19,10 @@ import {
   RADIUS_OPTIONS,
   type Scaling,
   SCALING_OPTIONS,
-} from "./theme-controls";
-import { useThemeControls } from "./ThemeProvider";
+} from './theme-controls';
+import { useThemeControls } from './ThemeProvider';
 
-const APPEARANCE_OPTIONS: readonly Appearance[] = ["light", "dark", "system"];
+const APPEARANCE_OPTIONS: readonly Appearance[] = ['light', 'dark', 'system'];
 
 function titleCase(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
@@ -42,11 +42,11 @@ function ControlField({ label, children }: { label: string; children: React.Reac
 
 export interface ThemeSwitcherProps {
   /** Lay the controls out in a row (default) or a column. */
-  readonly orientation?: "horizontal" | "vertical";
+  readonly orientation?: 'horizontal' | 'vertical';
   readonly className?: string;
 }
 
-export function ThemeSwitcher({ orientation = "horizontal", className }: ThemeSwitcherProps) {
+export function ThemeSwitcher({ orientation = 'horizontal', className }: ThemeSwitcherProps) {
   const {
     appearance,
     accentColor,
@@ -62,8 +62,8 @@ export function ThemeSwitcher({ orientation = "horizontal", className }: ThemeSw
 
   return (
     <Flex
-      align={orientation === "horizontal" ? "end" : "stretch"}
-      direction={orientation === "horizontal" ? "row" : "column"}
+      align={orientation === 'horizontal' ? 'end' : 'stretch'}
+      direction={orientation === 'horizontal' ? 'row' : 'column'}
       gap="4"
       wrap="wrap"
       className={cn(className)}

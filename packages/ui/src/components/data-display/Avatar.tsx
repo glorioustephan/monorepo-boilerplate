@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Avatar, type AvatarProps } from "@radix-ui/themes";
+export { Avatar, type AvatarProps } from '@radix-ui/themes';

@@ -1,14 +1,14 @@
-import { TextField } from "@monorepo-boilerplate/ui";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import { TextField } from '@monorepo-boilerplate/ui';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import FieldExample from "../../examples/Field.example";
-import { Field } from "./Field";
+import FieldExample from '../../examples/Field.example';
+import { Field } from './Field';
 
 const meta = {
-  title: "Recipes/Field",
+  title: 'Recipes/Field',
   component: Field,
-  args: { label: "Email", htmlFor: "email", children: <TextField.Root /> },
-  parameters: { layout: "padded" },
+  args: { label: 'Email', htmlFor: 'email', children: <TextField.Root /> },
+  parameters: { layout: 'padded' },
 } satisfies Meta<typeof Field>;
 
 export default meta;

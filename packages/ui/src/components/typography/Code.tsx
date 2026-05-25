@@ -5,4 +5,4 @@
  *
  * Radix Themes component — re-exported from `@radix-ui/themes`.
  */
-export { Code, type CodeProps } from "@radix-ui/themes";
+export { Code, type CodeProps } from '@radix-ui/themes';

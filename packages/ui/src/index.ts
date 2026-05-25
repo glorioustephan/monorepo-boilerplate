@@ -6,15 +6,15 @@
 // - This file currently exports the theme layer + cn; atoms/composites are appended
 //   as those layers land.
 
-export { cn } from "./lib/cn";
+export { cn } from './lib/cn';
 
 // Components — generated from components/components.manifest.ts (thin Radix Themes re-exports).
-export * from "./components";
+export * from './components';
 
 // Authored composition layers, built on the components above.
-export * from "./recipes";
-export * from "./blocks";
-export * from "./templates";
+export * from './recipes';
+export * from './blocks';
+export * from './templates';
 
 export {
   type AccentColor,
@@ -27,6 +27,6 @@ export {
   RADIUS_OPTIONS,
   type Scaling,
   SCALING_OPTIONS,
-} from "./themes/theme-controls";
-export { ThemeProvider, type ThemeProviderProps, useThemeControls } from "./themes/ThemeProvider";
-export { ThemeSwitcher, type ThemeSwitcherProps } from "./themes/ThemeSwitcher";
+} from './themes/theme-controls';
+export { ThemeProvider, type ThemeProviderProps, useThemeControls } from './themes/ThemeProvider';
+export { ThemeSwitcher, type ThemeSwitcherProps } from './themes/ThemeSwitcher';

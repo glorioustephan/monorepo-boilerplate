@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import FeatureGridExample from "../../examples/FeatureGrid.example";
-import { FeatureGrid } from "./FeatureGrid";
+import FeatureGridExample from '../../examples/FeatureGrid.example';
+import { FeatureGrid } from './FeatureGrid';
 
 const meta = {
-  title: "Blocks/FeatureGrid",
+  title: 'Blocks/FeatureGrid',
   component: FeatureGrid,
   args: { features: [] },
-  parameters: { layout: "fullscreen" },
+  parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof FeatureGrid>;
 
 export default meta;
