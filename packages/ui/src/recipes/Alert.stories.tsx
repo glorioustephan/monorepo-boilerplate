@@ -1,4 +1,4 @@
-import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { CheckCircledIcon, InfoCircledIcon } from '@radix-ui/react-icons';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import AlertExample from '../../examples/Alert.example';
@@ -31,6 +31,14 @@ export const ErrorWithDismiss: Story = {
   render: () => (
     <Alert color="red" title="Something went wrong" onDismiss={() => undefined}>
       We could not process your request. Please try again later.
+    </Alert>
+  ),
+};
+
+export const SingleLineDismiss: Story = {
+  render: () => (
+    <Alert color="green" icon={<CheckCircledIcon />} onDismiss={() => undefined}>
+      Successfully uploaded.
     </Alert>
   ),
 };

@@ -54,34 +54,31 @@ export function Alert({
   className,
 }: AlertProps) {
   return (
-    <Callout.Root
-      color={color}
-      variant={variant}
-      className={cn(className)}
-      style={{ position: 'relative' }}
-    >
+    // `.mb-alert` overrides Callout's internal grid with a flex row (icon | content | dismiss)
+    // so actions stack below the message and the dismiss aligns to the first line.
+    <Callout.Root color={color} variant={variant} className={cn('mb-alert', className)}>
       {icon ? <Callout.Icon>{icon}</Callout.Icon> : undefined}
-      <Callout.Text>
+
+      <Flex direction="column" gap="1" flexGrow="1" minWidth="0">
         {title ? (
-          <Text as="span" weight="bold" mb="1" style={{ display: 'block' }}>
+          <Callout.Text size="2" weight="medium" highContrast>
             {title}
-          </Text>
+          </Callout.Text>
         ) : undefined}
-        {children}
-      </Callout.Text>
-      {actions ? (
-        <Box gridColumn={icon ? '2' : '1'} mt="2" pr={onDismiss ? '5' : undefined}>
-          <Flex gap="3" align="center" wrap="wrap">
+        <Callout.Text size="2">{children}</Callout.Text>
+        {actions ? (
+          <Flex gap="3" align="center" wrap="wrap" mt="2">
             {actions}
           </Flex>
-        </Box>
-      ) : undefined}
+        ) : undefined}
+      </Flex>
+
       {onDismiss ? (
-        <Box position="absolute" top="2" right="2">
+        <Box flexShrink="0" ml="auto">
           <IconButton
             size="1"
             variant="ghost"
-            color="gray"
+            color={color}
             aria-label={dismissLabel}
             onClick={onDismiss}
           >

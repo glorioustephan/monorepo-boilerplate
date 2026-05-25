@@ -219,6 +219,18 @@
 }
 
 /*
+ * Alert (src/recipes/Alert.tsx) — overrides Callout's icon|text grid with a flex row
+ * (icon | content | dismiss) so actions stack below the message and the dismiss control
+ * aligns to the first line (centered on one line, top-aligned on many). Layout only;
+ * the surface tint and colored text still come from Callout's own variant/color styles.
+ */
+.mb-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+/*
  * Combobox (src/recipes/Combobox.tsx) — anchors the autocomplete listbox under the input.
  * Layout only; the list surface/colors come from the Card it wraps.
  */
