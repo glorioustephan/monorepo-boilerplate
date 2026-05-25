@@ -8,9 +8,17 @@
  */
 import { DatabaseSync } from "node:sqlite";
 
-import type { ComponentRecord, ComponentSummary, RenderEnv, Tier } from "./schema";
+import {
+  type ComponentRecord,
+  componentRecordSchema,
+  type ComponentSummary,
+  type RenderEnv,
+  type Tier,
+} from "./schema";
 
-const parseRecord = (data: unknown): ComponentRecord => JSON.parse(String(data)) as ComponentRecord;
+// Validate at the boundary so schema drift / a corrupt DB fails loudly with the offending field.
+const parseRecord = (data: unknown): ComponentRecord =>
+  componentRecordSchema.parse(JSON.parse(String(data)));
 
 /** Concatenated searchable text for the FTS5 index. */
 function searchText(record: ComponentRecord): string {
@@ -31,7 +39,7 @@ function searchText(record: ComponentRecord): string {
     .join(" ");
 }
 
-/** Create/overwrite the catalog database from the given records. */
+/** Create/overwrite the catalog database from the given records (atomic). */
 export function buildCatalog(dbPath: string, records: readonly ComponentRecord[]): void {
   const db = new DatabaseSync(dbPath);
   db.exec(`
@@ -53,17 +61,25 @@ export function buildCatalog(dbPath: string, records: readonly ComponentRecord[]
     `INSERT INTO components (name, tier, category, render_env, data) VALUES (?, ?, ?, ?, ?)`,
   );
   const insFts = db.prepare(`INSERT INTO components_fts (name, text) VALUES (?, ?)`);
-  for (const record of records) {
-    insComponent.run(
-      record.name,
-      record.tier,
-      record.category,
-      record.renderEnv,
-      JSON.stringify(record),
-    );
-    insFts.run(record.name, searchText(record));
+  db.exec("BEGIN");
+  try {
+    for (const record of records) {
+      insComponent.run(
+        record.name,
+        record.tier,
+        record.category,
+        record.renderEnv,
+        JSON.stringify(record),
+      );
+      insFts.run(record.name, searchText(record));
+    }
+    db.exec("COMMIT");
+  } catch (error) {
+    db.exec("ROLLBACK");
+    throw error;
+  } finally {
+    db.close();
   }
-  db.close();
 }
 
 export interface Catalog {
@@ -76,7 +92,8 @@ export interface Catalog {
   close(): void;
 }
 
-/** Turn free text into a safe FTS5 prefix-OR query, or undefined if it has no terms. */
+/** Turn free text into a safe FTS5 prefix-OR query, or undefined if it has no terms.
+ *  Tokens are `[a-z0-9]+` by construction, so no quote-escaping is needed. */
 function toFtsQuery(raw: string): string | undefined {
   const tokens = raw.toLowerCase().match(/[a-z0-9]+/g);
   if (!tokens || tokens.length === 0) return undefined;
@@ -86,43 +103,38 @@ function toFtsQuery(raw: string): string | undefined {
 export function openCatalog(dbPath: string): Catalog {
   const db = new DatabaseSync(dbPath, { readOnly: true });
 
+  // Prepare statements once — a long-lived stdio server reuses them across tool calls.
+  const searchStmt = db.prepare(
+    `SELECT c.data AS data, bm25(components_fts) AS score
+     FROM components_fts JOIN components c ON c.name = components_fts.name
+     WHERE components_fts MATCH ? ORDER BY score LIMIT ?`,
+  );
+  const getStmt = db.prepare(`SELECT data FROM components WHERE name = ? COLLATE NOCASE`);
+  const listStmt = db.prepare(`SELECT data FROM components ORDER BY tier, name`);
+  const byTierStmt = db.prepare(`SELECT data FROM components WHERE tier = ? ORDER BY name`);
+  const byEnvStmt = db.prepare(`SELECT data FROM components WHERE render_env = ? ORDER BY name`);
+
   return {
     search(query, limit = 20) {
       const match = toFtsQuery(query);
       if (!match) return [];
-      return db
-        .prepare(
-          `SELECT c.data AS data, bm25(components_fts) AS score
-           FROM components_fts JOIN components c ON c.name = components_fts.name
-           WHERE components_fts MATCH ? ORDER BY score LIMIT ?`,
-        )
-        .all(match, limit)
-        .map((row) => parseRecord(row.data));
+      return searchStmt.all(match, limit).map((row) => parseRecord(row.data));
     },
     get(name) {
-      const row = db.prepare(`SELECT data FROM components WHERE name = ? COLLATE NOCASE`).get(name);
+      const row = getStmt.get(name);
       return row ? parseRecord(row.data) : undefined;
     },
     list() {
-      return db
-        .prepare(`SELECT data FROM components ORDER BY tier, name`)
-        .all()
-        .map((row) => {
-          const { name, tier, description } = parseRecord(row.data);
-          return { name, tier, description };
-        });
+      return listStmt.all().map((row) => {
+        const { name, tier, description } = parseRecord(row.data);
+        return { name, tier, description };
+      });
     },
     listByTier(tier) {
-      return db
-        .prepare(`SELECT data FROM components WHERE tier = ? ORDER BY name`)
-        .all(tier)
-        .map((row) => parseRecord(row.data));
+      return byTierStmt.all(tier).map((row) => parseRecord(row.data));
     },
     filterByRenderEnv(renderEnv) {
-      return db
-        .prepare(`SELECT data FROM components WHERE render_env = ? ORDER BY name`)
-        .all(renderEnv)
-        .map((row) => parseRecord(row.data));
+      return byEnvStmt.all(renderEnv).map((row) => parseRecord(row.data));
     },
     close() {
       db.close();

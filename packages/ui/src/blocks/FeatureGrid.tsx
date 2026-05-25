@@ -3,6 +3,8 @@ import { Card, Container, Flex, Grid, type GridProps, Heading, Section, Text } f
 export interface Feature {
   readonly title: string;
   readonly description: string;
+  /** Stable key; falls back to `title` when omitted. */
+  readonly id?: string;
 }
 
 export interface FeatureGridProps {
@@ -21,7 +23,7 @@ export function FeatureGrid({ features, columns = DEFAULT_COLUMNS }: FeatureGrid
       <Container size="4">
         <Grid columns={columns} gap="4">
           {features.map((feature) => (
-            <Card key={feature.title} size="2">
+            <Card key={feature.id ?? feature.title} size="2">
               <Flex direction="column" gap="1">
                 <Heading size="3">{feature.title}</Heading>
                 <Text size="2" color="gray">

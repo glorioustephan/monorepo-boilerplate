@@ -1,4 +1,4 @@
-import { Button } from "@radix-ui/themes";
+import { Button } from "@monorepo-boilerplate/ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import HeroExample from "../../examples/Hero.example";

@@ -28,7 +28,7 @@ export function LandingTemplate({
     <>
       <Hero title={title} description={description} actions={actions} />
       <FeatureGrid features={features} />
-      <Cta title={cta.title} description={cta.description} actions={cta.actions} />
+      <Cta {...cta} />
     </>
   );
 }

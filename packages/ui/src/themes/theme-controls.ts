@@ -16,13 +16,15 @@ export const ACCENT_COLORS = [
 ] as const;
 export type AccentColor = (typeof ACCENT_COLORS)[number];
 
-export const GRAY_COLORS = themePropDefs.grayColor.values;
+// Snapshot Radix's value tuples into this module (spread + `as const`) so the derived
+// unions stay literal even if a future Radix version widens the upstream type to string[].
+export const GRAY_COLORS = [...themePropDefs.grayColor.values] as const;
 export type GrayColor = (typeof GRAY_COLORS)[number];
 
-export const RADIUS_OPTIONS = themePropDefs.radius.values;
+export const RADIUS_OPTIONS = [...themePropDefs.radius.values] as const;
 export type Radius = (typeof RADIUS_OPTIONS)[number];
 
-export const SCALING_OPTIONS = themePropDefs.scaling.values;
+export const SCALING_OPTIONS = [...themePropDefs.scaling.values] as const;
 export type Scaling = (typeof SCALING_OPTIONS)[number];
 
 /** Light/dark/system — `system` follows the OS preference (next-themes `enableSystem`). */

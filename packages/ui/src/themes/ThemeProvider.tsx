@@ -130,6 +130,7 @@ export function ThemeProvider({ children, defaultAppearance = "system" }: ThemeP
       defaultTheme={defaultAppearance}
       enableSystem
       disableTransitionOnChange
+      storageKey="mb-appearance"
     >
       <ThemeControlsProvider>{children}</ThemeControlsProvider>
     </NextThemesProvider>

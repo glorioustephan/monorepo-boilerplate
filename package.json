@@ -16,7 +16,7 @@
     "lint:tokens": "tsx tooling/catalog-lint/src/check-tokens.ts",
     "lint:catalog": "tsx tooling/catalog-lint/src/check-catalog.ts",
     "ui:codegen": "tsx tooling/catalog-codegen/src/cli.ts && oxfmt --write packages/ui/src/components",
-    "ui:codegen:check": "pnpm ui:codegen && git diff --exit-code -- packages/ui/src/components",
+    "ui:codegen:check": "pnpm ui:codegen && test -z \"$(git status --porcelain -- packages/ui/src/components)\"",
     "lint:smells": "tsx tooling/catalog-lint/src/check-smells.ts",
     "todos:generate": "tsx tooling/annotations/src/cli.ts --write docs/todo.md && oxfmt --write docs/todo.md",
     "todos:check": "pnpm todos:generate && git diff --exit-code -- docs/todo.md",

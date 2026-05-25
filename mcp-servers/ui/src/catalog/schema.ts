@@ -1,8 +1,9 @@
 /**
  * Catalog record shape — what the MCP server stores and serves. Built from the UI
- * kit's atom manifest (and, later, scraped composites) at build time into a
- * node:sqlite database; queried at runtime. Owned by the MCP server, not the kit.
+ * kit's component manifest + authored composites at build time into a node:sqlite
+ * database; queried at runtime. Owned by the MCP server, not the kit.
  */
+import { z } from "zod";
 
 export const TIERS = ["Component", "Recipe", "Block", "Template"] as const;
 export type Tier = (typeof TIERS)[number];
@@ -34,3 +35,15 @@ export interface ComponentSummary {
   readonly tier: Tier;
   readonly description: string;
 }
+
+/** Runtime validator for a row's JSON `data` column — fails loudly on schema drift. */
+export const componentRecordSchema = z.object({
+  name: z.string(),
+  tier: z.enum(TIERS),
+  category: z.string(),
+  renderEnv: z.enum(RENDER_ENVS),
+  description: z.string(),
+  variants: z.array(z.object({ prop: z.string(), values: z.array(z.string()) })).optional(),
+  parts: z.array(z.string()).optional(),
+  example: z.string().optional(),
+});

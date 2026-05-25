@@ -80,11 +80,17 @@ function scanComposites(): ComponentRecord[] {
       }
       const name = file.replace(/\.tsx$/, "");
       const source = readFileSync(join(full, file), "utf8");
+      // No "use client" and no server-only directive ⇒ universal (renders in RSC or client).
+      const renderEnv = source.includes('"use client"')
+        ? "client"
+        : source.includes('"use server"')
+          ? "server"
+          : "universal";
       records.push({
         name,
         tier,
         category: tier,
-        renderEnv: source.includes('"use client"') ? "client" : "server",
+        renderEnv,
         description: componentDoc(source, name) ?? `${name} (${tier})`,
         example: readExample(join(examplesDir, `${name}.example.tsx`)),
       });

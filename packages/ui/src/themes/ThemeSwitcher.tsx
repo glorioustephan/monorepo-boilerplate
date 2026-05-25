@@ -6,7 +6,7 @@
  * through `useThemeControls()`. Built from Radix Themes controls so it inherits
  * the active theme. Itself a catalogued kit component (see theme-switcher.catalog.ts).
  */
-import { Flex, SegmentedControl, Select, Text } from "@radix-ui/themes";
+import { Flex, SegmentedControl, Select, Text } from "../components";
 
 import { cn } from "../lib/cn";
 import {
@@ -28,8 +28,8 @@ function titleCase(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-/** A labelled control row. */
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+/** A labelled control row (local layout helper — not the exported `Field` recipe). */
+function ControlField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <Flex direction="column" gap="1">
       <Text as="label" size="1" color="gray" weight="medium">
@@ -68,7 +68,7 @@ export function ThemeSwitcher({ orientation = "horizontal", className }: ThemeSw
       wrap="wrap"
       className={cn(className)}
     >
-      <Field label="Appearance">
+      <ControlField label="Appearance">
         <SegmentedControl.Root
           value={appearance}
           onValueChange={(value) => setAppearance(value as Appearance)}
@@ -80,9 +80,9 @@ export function ThemeSwitcher({ orientation = "horizontal", className }: ThemeSw
             </SegmentedControl.Item>
           ))}
         </SegmentedControl.Root>
-      </Field>
+      </ControlField>
 
-      <Field label="Accent">
+      <ControlField label="Accent">
         <Select.Root
           value={accentColor}
           onValueChange={(value) => setAccentColor(value as AccentColor)}
@@ -97,9 +97,9 @@ export function ThemeSwitcher({ orientation = "horizontal", className }: ThemeSw
             ))}
           </Select.Content>
         </Select.Root>
-      </Field>
+      </ControlField>
 
-      <Field label="Gray">
+      <ControlField label="Gray">
         <Select.Root
           value={grayColor}
           onValueChange={(value) => setGrayColor(value as GrayColor)}
@@ -114,9 +114,9 @@ export function ThemeSwitcher({ orientation = "horizontal", className }: ThemeSw
             ))}
           </Select.Content>
         </Select.Root>
-      </Field>
+      </ControlField>
 
-      <Field label="Radius">
+      <ControlField label="Radius">
         <Select.Root value={radius} onValueChange={(value) => setRadius(value as Radius)} size="1">
           <Select.Trigger />
           <Select.Content>
@@ -127,9 +127,9 @@ export function ThemeSwitcher({ orientation = "horizontal", className }: ThemeSw
             ))}
           </Select.Content>
         </Select.Root>
-      </Field>
+      </ControlField>
 
-      <Field label="Scaling">
+      <ControlField label="Scaling">
         <Select.Root
           value={scaling}
           onValueChange={(value) => setScaling(value as Scaling)}
@@ -144,7 +144,7 @@ export function ThemeSwitcher({ orientation = "horizontal", className }: ThemeSw
             ))}
           </Select.Content>
         </Select.Root>
-      </Field>
+      </ControlField>
     </Flex>
   );
 }

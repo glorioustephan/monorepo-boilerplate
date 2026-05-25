@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,7 +14,14 @@ const DB_PATH = resolve(dirname(fileURLToPath(import.meta.url)), "../catalog.db"
 
 let catalogSingleton: Catalog | undefined;
 function catalog(): Catalog {
-  catalogSingleton ??= openCatalog(DB_PATH);
+  if (!catalogSingleton) {
+    if (!existsSync(DB_PATH)) {
+      throw new Error(
+        `Catalog DB not found at ${DB_PATH} — run \`pnpm --filter @monorepo-boilerplate/mcp-ui build-catalog\`.`,
+      );
+    }
+    catalogSingleton = openCatalog(DB_PATH);
+  }
   return catalogSingleton;
 }
 

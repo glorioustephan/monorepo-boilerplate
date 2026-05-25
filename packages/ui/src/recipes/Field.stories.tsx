@@ -1,4 +1,4 @@
-import { TextField } from "@radix-ui/themes";
+import { TextField } from "@monorepo-boilerplate/ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import FieldExample from "../../examples/Field.example";

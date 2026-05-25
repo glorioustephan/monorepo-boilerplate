@@ -1,5 +1,8 @@
 "use client";
 
+// ConfirmDialog itself uses no hooks, but its `onConfirm` function prop can't cross the RSC
+// serialization boundary, so it's only usable from Client Components — the directive makes
+// that boundary explicit.
 import type { ReactNode } from "react";
 
 import { AlertDialog, Button, type ButtonProps, Flex } from "../components";

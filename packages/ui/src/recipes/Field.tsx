@@ -26,18 +26,22 @@ interface ControlProps {
 /**
  * Field — a labelled form control with optional description and error text, wired for
  * accessibility: the label's `htmlFor`, and the control's `id` / `aria-describedby` /
- * `aria-invalid` (injected into the child). Compose any kit input as the child.
+ * `aria-invalid` (injected into the child). `children` must be a **single** React element
+ * control; Field owns its `id` (set to `htmlFor`) and only adds ARIA attributes when relevant
+ * (it won't clobber caller-set `aria-describedby`/`aria-invalid` when there's no description/error).
  */
 export function Field({ label, htmlFor, children, description, error, required }: FieldProps) {
   const descriptionId = description ? `${htmlFor}-description` : undefined;
   const errorId = error ? `${htmlFor}-error` : undefined;
   const describedBy = [descriptionId, errorId].filter(Boolean).join(" ") || undefined;
 
+  // Inject id + ARIA into the single control child. Conditional spreads avoid overwriting
+  // caller-set attributes with `undefined` when no description/error applies.
   const control = isValidElement(children)
     ? cloneElement(children as ReactElement<ControlProps>, {
         id: htmlFor,
-        "aria-describedby": describedBy,
-        "aria-invalid": error ? true : undefined,
+        ...(describedBy ? { "aria-describedby": describedBy } : {}),
+        ...(error ? { "aria-invalid": true } : {}),
       })
     : children;
 

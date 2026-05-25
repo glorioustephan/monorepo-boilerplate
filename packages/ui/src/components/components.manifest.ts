@@ -10,6 +10,17 @@
 
 export type RenderEnv = "server" | "client" | "universal";
 
+/** Functional grouping — drives the `components/<slug>/` sub-folder + Storybook nav + catalog facet. */
+export const CATEGORIES = [
+  "Layout",
+  "Typography",
+  "Forms",
+  "Data Display",
+  "Overlays",
+  "Navigation",
+] as const;
+export type Category = (typeof CATEGORIES)[number];
+
 /** A variant axis rendered as its own matrix story (one row per value). */
 export interface ComponentAxis {
   readonly prop: string;
@@ -21,8 +32,8 @@ export interface ComponentSpec {
   readonly name: string;
   /** Export name in `@radix-ui/themes` (defaults to `name`). */
   readonly radixName?: string;
-  /** Storybook group + catalog category, e.g. "Layout". */
-  readonly category: string;
+  /** Storybook group + catalog category + `components/<slug>/` sub-folder. */
+  readonly category: Category;
   /** Where the atom can render (catalog metadata). */
   readonly renderEnv: RenderEnv;
   /** One-line when-to-use guidance (emitted as JSDoc; seeds the catalog description). */

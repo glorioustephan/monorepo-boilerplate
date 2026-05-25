@@ -10,16 +10,22 @@ const categorySlug = (spec: ComponentSpec): string =>
 /** Path of a component's generated files, relative to src/components (no extension). */
 const relPath = (spec: ComponentSpec): string => `${categorySlug(spec)}/${spec.name}`;
 
-function capitalize(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1);
+/** Story export name from an axis prop; guards against names that aren't valid identifiers. */
+function storyName(prop: string): string {
+  const name = prop.charAt(0).toUpperCase() + prop.slice(1);
+  if (!/^[A-Z][A-Za-z0-9]*$/.test(name)) {
+    throw new Error(`Axis prop "${prop}" produces an invalid story export name "${name}"`);
+  }
+  return name;
 }
 
-/** A single rendered instance: `<Name sampleProps prop={value}>sample</Name>` or self-closing. */
+/** A single rendered instance: `<Name sampleProps prop={value}>sample</Name>` or self-closing.
+ *  Stories use the kit's export name (they import from `@monorepo-boilerplate/ui`). */
 function instance(spec: ComponentSpec, attrs: string): string {
-  const rn = radixOf(spec);
+  const tag = spec.name;
   const allAttrs = [spec.sampleProps, attrs].filter(Boolean).join(" ");
-  const open = allAttrs ? `${rn} ${allAttrs}` : rn;
-  return spec.sample === undefined ? `<${open} />` : `<${open}>${spec.sample}</${rn}>`;
+  const open = allAttrs ? `${tag} ${allAttrs}` : tag;
+  return spec.sample === undefined ? `<${open} />` : `<${open}>${spec.sample}</${tag}>`;
 }
 
 /** Generated re-export module for one component. */
@@ -47,24 +53,23 @@ export function renderModule(spec: ComponentSpec): string {
 
 /** Generated reference story for one component: a Default plus one matrix per declared axis. */
 export function renderStory(spec: ComponentSpec): string {
-  const rn = radixOf(spec);
+  const name = spec.name;
   const hasAxes = (spec.axes ?? []).length > 0;
-  // `Flex` lays out the matrix rows — only imported when there are axes; dedupe when
-  // the component under test IS Flex.
-  const named = [...new Set(hasAxes ? [rn, "Flex"] : [rn])].join(", ");
-  const imports = `import { ${named} } from "@radix-ui/themes";\nimport type { Meta, StoryObj } from "@storybook/react-vite";\n`;
+  // Stories import from the kit (not Radix directly) so the catalog serves examples that
+  // teach the right import. `Flex` lays out matrix rows; dedupe when the component IS Flex.
+  const named = [...new Set(hasAxes ? [name, "Flex"] : [name])].join(", ");
+  const imports = `import { ${named} } from "@monorepo-boilerplate/ui";\nimport type { Meta, StoryObj } from "@storybook/react-vite";\n`;
 
   const argsLine = spec.metaArgs ? `  args: ${spec.metaArgs},\n` : "";
-  const head = `const meta = {\n  title: "${spec.category}/${spec.name}",\n  component: ${rn},\n${argsLine}  parameters: { layout: "padded" },\n} satisfies Meta<typeof ${rn}>;\n\nexport default meta;\n\ntype Story = StoryObj<typeof meta>;\n`;
+  const head = `const meta = {\n  title: "${spec.category}/${name}",\n  component: ${name},\n${argsLine}  parameters: { layout: "padded" },\n} satisfies Meta<typeof ${name}>;\n\nexport default meta;\n\ntype Story = StoryObj<typeof meta>;\n`;
 
   const defaultStory = `export const Default: Story = {\n  render: () => ${instance(spec, "")},\n};\n`;
 
   const axisStories = (spec.axes ?? []).map((axis) => {
-    const storyName = capitalize(axis.prop);
     const values = JSON.stringify(axis.values);
     const cell = instance(spec, `key={value} ${axis.prop}={value}`);
     return (
-      `export const ${storyName}: Story = {\n` +
+      `export const ${storyName(axis.prop)}: Story = {\n` +
       `  render: () => (\n` +
       `    <Flex gap="3" align="center" wrap="wrap">\n` +
       `      {(${values} as const).map((value) => ${cell})}\n` +
