@@ -31,7 +31,8 @@ export async function embed(text: string): Promise<Float32Array | undefined> {
   try {
     extractorPromise ??= getExtractor();
     const out = await (await extractorPromise)(text, { pooling: 'mean', normalize: true });
-    return out.data;
+    // Guard against a model/version returning an unexpected shape (would poison cosine with NaN).
+    return out.data.length === EMBED_DIM ? out.data : undefined;
   } catch {
     return undefined;
   }

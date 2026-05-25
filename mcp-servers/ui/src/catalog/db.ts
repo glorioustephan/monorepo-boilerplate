@@ -27,8 +27,9 @@ interface LexHit {
 const parseRecord = (data: unknown): ComponentRecord =>
   componentRecordSchema.parse(JSON.parse(String(data)));
 
-/** Cosine similarity of two L2-normalized vectors (== dot product). */
+/** Cosine similarity of two L2-normalized vectors (== dot product). 0 on a dimension mismatch. */
 function cosine(a: Float32Array, b: Float32Array): number {
+  if (a.length !== b.length) return 0;
   let dot = 0;
   for (let i = 0; i < a.length; i++) dot += (a[i] as number) * (b[i] as number);
   return dot;
@@ -118,12 +119,40 @@ export interface Catalog {
   close(): void;
 }
 
+// Common words that add only noise to prefix-OR FTS matching.
+const STOPWORDS = new Set([
+  'a',
+  'an',
+  'and',
+  'or',
+  'the',
+  'to',
+  'of',
+  'for',
+  'with',
+  'in',
+  'on',
+  'is',
+  'are',
+  'be',
+  'that',
+  'this',
+  'it',
+  'as',
+  'at',
+  'by',
+  'from',
+]);
+
 /** Turn free text into a safe FTS5 prefix-OR query, or undefined if it has no terms.
- *  Tokens are `[a-z0-9]+` by construction, so no quote-escaping is needed. */
+ *  Drops 1-char tokens and stopwords (unless that would leave nothing — then keep them so the
+ *  lexical-only fallback still degrades gracefully). Tokens are `[a-z0-9]+`, so no escaping needed. */
 function toFtsQuery(raw: string): string | undefined {
   const tokens = raw.toLowerCase().match(/[a-z0-9]+/g);
   if (!tokens || tokens.length === 0) return undefined;
-  return tokens.map((token) => `"${token}"*`).join(' OR ');
+  const meaningful = tokens.filter((token) => token.length > 1 && !STOPWORDS.has(token));
+  const used = meaningful.length > 0 ? meaningful : tokens;
+  return used.map((token) => `"${token}"*`).join(' OR ');
 }
 
 const WEIGHT_LEXICAL = 0.45;
@@ -148,8 +177,9 @@ export function openCatalog(dbPath: string): Catalog {
         blobToVector(row.embedding as Uint8Array),
       ]),
   );
+  // Weight the `name` column 10x over `text` so a name match dominates a description match.
   const ftsStmt = db.prepare(
-    `SELECT components_fts.name AS name, bm25(components_fts) AS score
+    `SELECT components_fts.name AS name, bm25(components_fts, 10.0, 1.0) AS score
      FROM components_fts WHERE components_fts MATCH ? ORDER BY score LIMIT ?`,
   );
 

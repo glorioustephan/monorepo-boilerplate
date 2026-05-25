@@ -23,6 +23,10 @@ can discover components while building UIs. It scrapes the kit at build time int
 
 ## Tools
 
+Every tool is a read-only catalog query (declared `readOnlyHint`/`idempotentHint`, `openWorldHint:
+false`) and returns **both** human-readable text **and** typed `structuredContent` validated against
+the tool's `outputSchema` — so MCP clients can consume results either way.
+
 | Tool                           | Input                                         | Returns                                              |
 | ------------------------------ | --------------------------------------------- | ---------------------------------------------------- |
 | `search_components`            | `query` (free text)                           | hybrid (FTS5 + MiniLM) ranked components (use first) |
@@ -33,9 +37,13 @@ can discover components while building UIs. It scrapes the kit at build time int
 
 ## Rules
 
-- Tools are pure functions in `src/tools.ts` over `src/catalog/db.ts` (the catalog is opened
-  lazily as a singleton from `../catalog.db`). `src/server.ts` registers them; `src/index.ts` is
-  the stdio wiring (carries the `--experimental-sqlite` shebang).
+- **Wiring** is dependency-injected, not singletons: `src/index.ts` resolves the DB path
+  (`../catalog.db`, depth-stable across `src` and the bundled `dist`), calls `loadCatalog`
+  (`src/catalog/load.ts` — throws an actionable error if the DB hasn't been built), then
+  `createServer(catalog)` (`src/server.ts`) which registers the tools built by `createTools(catalog)`
+  (`src/tools.ts`). `index.ts` also carries the `--experimental-sqlite` shebang and closes the
+  catalog on `SIGINT`/`SIGTERM`. Because the tools take an injected `Catalog`, they're unit-tested
+  with an in-memory fake (`src/tools.test.ts`).
 - **Never write to stdout** — that's the JSON-RPC channel; log to stderr via
   `@monorepo-boilerplate/logger`. (The `--experimental-sqlite` warning goes to stderr — harmless.)
 - The catalog schema lives here (`src/catalog/schema.ts`), not in the kit. When the kit gains a
@@ -45,5 +53,10 @@ can discover components while building UIs. It scrapes the kit at build time int
   and runtime (query vector). `onnxruntime-node` is allowed to run its install script
   (`pnpm-workspace.yaml` `allowBuilds`). Semantic recall is bounded by description quality — keep
   component `usage`/JSDoc descriptive.
+- **Tests** (`pnpm --filter @monorepo-boilerplate/mcp-ui test`): `catalog/db.test.ts` covers
+  build→open round-trips, lexical/hybrid ranking, and corruption; `catalog/scrape.test.ts` covers
+  the pure scrape helpers (`src/catalog/scrape.ts`, shared with `build-catalog`); `tools.test.ts`
+  exercises the tools over an injected fake catalog; `catalog/embed.test.ts` mocks the model to
+  verify the dimension guard and graceful fallback. No network/model download in unit tests.
 - Inspect with: `npx @modelcontextprotocol/inspector node --experimental-sqlite dist/index.mjs`
   (after `pnpm build`).

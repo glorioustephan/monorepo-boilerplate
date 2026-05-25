@@ -91,8 +91,10 @@ Verify a change end-to-end with: `pnpm lint && pnpm typecheck && pnpm test && pn
 - **A new package**: see the `scaffold-package` command/skill in `.claude/`. Decide
   `apps/` vs `tooling/` vs `packages/`; give it a `package.json`, a `tsconfig.json`
   extending the right `ts-config` preset, and source-pointing `exports` if it's a library.
-- **A UI component**: follow the `add-ui-component` skill — wrap the matching Radix Themes
-  component and ship the five files (wrapper, `*.catalog.ts`, example, `*.stories.tsx`, test).
+- **A UI component**: follow the `add-ui-component` skill (or `/scaffold-ui-component`). Either add
+  an entry to `packages/ui/src/components/components.manifest.ts` and run `pnpm ui:codegen` (for a
+  Radix Themes re-export), or hand-build a recipe/block/template composing the kit's components
+  (shipping `<Name>.tsx` + `examples/<Name>.example.tsx` + `<Name>.stories.tsx` + `<Name>.test.tsx`).
 - **A provider**: copy `packages/providers/src/example` and add a subpath export.
 - **A documentation page**: run `/scaffold-doc <slug> "<Title>" "<description>"` — creates the
   page and registers it in the sidebar. See `.claude/reference/documentation.md`.

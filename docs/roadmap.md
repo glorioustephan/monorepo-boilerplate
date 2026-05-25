@@ -109,11 +109,13 @@ The capstone: evolve `packages/ui` from a starter kit into a **full, themed comp
 library that exposes its own internal MCP server** — so AI agents can query component
 metadata, props, variants, and usage examples while building UIs.
 
-> **Seeded in this iteration:** a machine-readable component registry
-> (`packages/ui/src/registry.ts`), `mcp-servers/ui` exposing it via `list_components` /
-> `get_component` tools, and a starter component set (Button, Card, Input, Badge) on a
-> multi-theme Tailwind v4 base. The architecture and seams are in place; the items below
-> remain intentionally open-ended for adopters to grow into their own design system.
+> **Built out in this iteration:** the kit is a full **Radix Themes** vocabulary — a generated
+> Component layer (`packages/ui/src/components/` from `components.manifest.ts`) plus authored
+> recipes/blocks/templates — and `mcp-servers/ui` owns the catalog as a `node:sqlite` + FTS5
+> database with **hybrid (lexical + MiniLM) search**, exposing `search_components` /
+> `list_components` / `get_component` / `list_by_tier` / `filter_by_render_environment`. The
+> architecture and seams are in place; the items below remain intentionally open-ended for
+> adopters to grow into their own design system.
 
 This phase is deliberately **non-specific**: the boilerplate must stay usable
 out-of-the-box for _any_ UI approach, so we won't prescribe a particular design system.
@@ -137,22 +139,24 @@ system on top of the provided architecture.
 
 ## UI-Kit Expansion track (U0–U8) ✅
 
-The Phase 6 seams above were grown into a full, AI-consumable **component catalog**.
-Detail: [UI Kit Catalog](./phases/ui-kit-catalog.md).
+The Phase 6 seams above were grown into a full, AI-consumable **component catalog**, then
+**re-platformed onto Radix Themes** (the milestones below record the original path; the
+current architecture is in [UI Kit Catalog](./phases/ui-kit-catalog.md)).
 
 - [x] **U0** — MCP servers moved to `mcp-servers/`; `services/` reserved; root `.mcp.json`.
 - [x] **U1** — semantic token contract + theming + `lint:tokens` bypass guard.
-- [x] **U2** — catalog schema + codegen (`tooling/catalog-extractor` → committed
-      `registry.generated.ts` from source + typed `*.catalog.ts` sidecars).
-- [x] **U3** — interactive primitives via unified `radix-ui` (Dialog/Tooltip/Select).
+- [x] **U2** — catalog schema + codegen. _(Re-platformed: `tooling/catalog-codegen` now
+      generates the kit's Component re-export layer + reference stories from
+      `components.manifest.ts`; the catalog DB itself moved to `mcp-servers/ui`.)_
+- [x] **U3** — interactive components via **Radix Themes** (Dialog/Tooltip/Select/…).
 - [x] **U4** — Recipe (ConfirmDialog, FormField) and Block (Hero, Cta, FeatureGrid) tiers.
-- [x] **U5** — example corpus + RSC harness (`/ui/[component]`); "no example ⇒ not in catalog".
-- [x] **U6** — `mcp-ui` lexical search (`search_components`, tier/render-env filters).
-- [x] **U7** — `tooling/catalog-lint` AST enforcement (raw-HTML / require-ui-import) in
+- [x] **U5** — example corpus (stories/examples scraped verbatim) — "no example ⇒ no catalog signal".
+- [x] **U6** — `mcp-ui` **hybrid search** (FTS5 lexical fused with MiniLM cosine; tier/render-env filters).
+- [x] **U7** — `tooling/catalog-lint` AST enforcement (raw-HTML, Radix-encapsulation) in
       lefthook + CI + a `.claude` hook.
 - [x] **U8** — docs, `/scaffold-ui-component`, Changesets publish flow for `ui`, and the
-      **opt-in semantic layer documented** (ONNX MiniLM `embeddings.json` + brute-force JS
-      cosine fused with lexical) — intentionally not built by default to keep installs lean.
+      **semantic layer shipped** (MiniLM embeddings in `node:sqlite`, brute-force JS cosine
+      fused with lexical, with graceful fallback to lexical-only when the model is unavailable).
 
 ---
 

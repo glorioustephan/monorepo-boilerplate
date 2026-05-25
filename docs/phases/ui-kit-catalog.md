@@ -1,110 +1,96 @@
 ---
 title: UI Kit Catalog
-description: How the @monorepo-boilerplate/ui component catalog works — tiers, codegen, examples, and mcp-ui.
+description: How the @monorepo-boilerplate/ui kit and the mcp-ui catalog work — tiers, codegen, hybrid search, and enforcement.
 ---
 
-# UI-Kit Expansion — the AI-consumable component catalog
+# The UI kit and its AI-consumable catalog
 
-> **Superseded (re-platform).** The kit has since been rebuilt on **Radix Themes**: a
-> **generated** component layer (`src/components/<category>/` from `components.manifest.ts` via
-> `pnpm ui:codegen`) plus authored `recipes/`/`blocks/`/`templates/`, with color from Radix props
-> and `@radix-ui/*` encapsulated inside `packages/ui` (`pnpm lint:catalog`). The **catalog itself
-> now lives in `mcp-servers/ui`** — a `node:sqlite` + FTS5 database built from the kit at build
-> time — so `packages/ui` ships no catalog files (no `*.catalog.ts`, no `registry.generated.ts`).
-> The current source of truth is `packages/ui/AGENTS.md` + `.claude/reference/tailwind.md`. The
-> historical U0–U8 design below is kept for context. Search is **hybrid** — FTS5 lexical fused
-> with MiniLM (`@huggingface/transformers`) semantic similarity, with graceful fallback to
-> lexical-only when the model is unavailable.
+`@monorepo-boilerplate/ui` is the single, enforced UI vocabulary, built on **Radix Themes**. The
+**`mcp-ui` MCP server owns the catalog**: it scrapes the kit at build time into its own
+`node:sqlite` database and serves search/retrieval to agents at runtime. The kit ships **no**
+catalog files — it is just a UI kit. The canonical, code-adjacent source of truth is
+`packages/ui/AGENTS.md` and `mcp-servers/ui/AGENTS.md`; this page is the narrative companion.
 
-How `@monorepo-boilerplate/ui` became a tiered, machine-queryable **catalog** that
-the `mcp-ui` server surfaces to agents. This is the detail behind the roadmap's
-Phase 6 capstone; the track ran as phases **U0–U8**.
+## Tiers and categories
 
-## What the catalog is
+Two orthogonal axes describe every component:
 
-Every kit component is described by a typed record in
-`packages/ui/src/registry.generated.ts` (`ComponentMeta`): its `tier`,
-`renderEnvironment`, props, CVA `variants`, authored `intent` (`use`/`avoid`),
-runnable `examples`, and the path to its live example. Agents query this through
-`mcp-ui` instead of guessing component APIs.
+- **Tier** = origin / abstraction (the folder it lives in).
+- **Category** = function — Layout, Typography, Forms, Data Display, Overlays, Navigation — which
+  drives the `components/<category>/` sub-folder, the Storybook nav, and a catalog facet.
 
-The generated file is **committed and never hand-edited**. It is produced by
-`tooling/catalog-extractor` from two inputs:
+| Tier          | Location                | What it is                                                             |
+| ------------- | ----------------------- | ---------------------------------------------------------------------- |
+| **Component** | `src/components/<cat>/` | a thin re-export of a Radix Themes component, **generated**            |
+| **Recipe**    | `src/recipes/`          | a small composition for one UX pattern (e.g. `ConfirmDialog`, `Field`) |
+| **Block**     | `src/blocks/`           | a page section (`Hero`, `Cta`, `FeatureGrid`)                          |
+| **Template**  | `src/templates/`        | a full-page composition built from blocks                              |
 
-1. The component source (`*.tsx`) — the extractor infers `renderEnvironment` (from
-   `"use client"`/hook imports) and CVA `variants` via ts-morph.
-2. A co-located **sidecar** (`<name>.catalog.ts`) exporting `meta: CatalogSidecar` —
-   the hand-authored `name`, `tier`, `description`, `props`, `examples`, `intent`.
+## The generated Component layer
 
-Run `pnpm catalog:generate` to refresh; `pnpm catalog:check` fails CI if it drifts.
+`src/components/components.manifest.ts` is the **single source of truth** for the re-export layer:
+one entry per Radix Themes atom (`name`, `category`, `renderEnv`, `usage`, variant `axes`, and
+`compound`/`parts` for namespace components like `Dialog`). `pnpm ui:codegen`
+(`tooling/catalog-codegen`) reads it and emits, per entry:
 
-## Tiers
+- `<Name>.tsx` — the thin re-export, with a generated-file banner and JSDoc from `usage`.
+- `<Name>.stories.tsx` — a **variant-matrix** reference story, for non-compound atoms only.
 
-| Tier      | Location          | Rule                                                        |
-| --------- | ----------------- | ----------------------------------------------------------- |
-| Primitive | `src/components/` | one styled element or Radix wrapper (Button, Input, Dialog) |
-| Recipe    | `src/recipes/`    | a composition for one UX pattern; client only at the leaf   |
-| Block     | `src/blocks/`     | a page section; **Server Component, slot props not flags**  |
-| Template  | `apps/web`        | full-page composition (app-specific; lives as an app route) |
+Compound components (Dialog, Tabs, Select, Table, …) get a value-only re-export and a
+**hand-authored** story showing a real composition; the codegen's banner-safe prune deletes only
+files it generated, so hand-authored stories survive. `pnpm ui:codegen:check` regenerates and fails
+CI on drift. **Never edit generated files** — edit the manifest and regenerate.
 
-## The example corpus ("no example ⇒ not in catalog")
+## The catalog (`mcp-servers/ui`)
 
-Each component ships `packages/ui/examples/<slug>.example.tsx` — a plain, prop-less
-default export demonstrating its variants (`<slug>` is the kebab-cased name). The
-extractor **throws** if one is missing, so `catalog:check` enforces coverage in CI.
-The web app renders them through an RSC harness at `/ui/<slug>`
-(`apps/web/src/app/ui/[component]/page.tsx`, `dynamicParams = false` so only
-catalogued slugs resolve).
+**Build time** (`scripts/build-catalog.ts`, run by `pnpm build` before tsdown): reads the manifest +
+the authored recipes/blocks/templates (JSDoc descriptions) + the reference stories/examples **read
+verbatim** as usage examples → catalog records (`src/catalog/schema.ts`, validated with Zod). Each
+record is embedded with **MiniLM** (`@huggingface/transformers`, loaded by lazy dynamic import).
+The result is written to `catalog.db` — a `node:sqlite` database with a `components` table, an FTS5
+`components_fts` index, and a `vectors` table of embeddings. `catalog.db` is gitignored; if the
+model is unavailable at build time the vectors stay empty and the catalog degrades to lexical-only.
 
-## Querying it (the `mcp-ui` server)
+**Runtime** (`src/catalog/db.ts`): opens `catalog.db` read-only, loads records + vectors into memory,
+and serves **hybrid search** — FTS5/bm25 (name column weighted, stopwords dropped) fused with
+brute-force cosine over the MiniLM vectors. The query is embedded lazily at search time; if the model
+can't load, search falls back to pure lexical ranking. `node:sqlite` requires Node ≥22.5 with
+`--experimental-sqlite` (set by the server bin's shebang and the npm scripts).
 
-`mcp-servers/ui` reads the generated registry (plain data — no React/CSS) and
-exposes five stdio tools:
+The pure scrape helpers live in `src/catalog/scrape.ts` (shared with the build script) and the whole
+pipeline is unit-tested — build→open round-trips, lexical/hybrid ranking, the embedding dimension
+guard, and the tools over an injected fake catalog.
 
-- `search_components` — zero-dependency lexical ranking over name, tier, render
-  environment, description, and intent. **Use this first.**
+## Querying it (the tools)
+
+`mcp-servers/ui` exposes five stdio tools. Each is a **read-only** query (declared via
+`readOnlyHint`/`idempotentHint`, `openWorldHint: false`) and returns **both** human-readable text and
+typed `structuredContent` validated against the tool's `outputSchema`:
+
+- `search_components` — hybrid (FTS5 + MiniLM) ranked results. **Use this first.**
 - `list_components`, `get_component`, `list_by_tier`, `filter_by_render_environment`.
+
+Inspect with `npx @modelcontextprotocol/inspector node --experimental-sqlite dist/index.mjs` after
+`pnpm build`.
 
 ## Enforcement
 
-`tooling/catalog-lint` runs custom ts-morph checks oxlint can't express, wired into
-lefthook (staged), CI, and `.claude` PostToolUse advisory hooks:
+`tooling/catalog-lint` runs custom ts-morph checks oxlint can't express, wired into lefthook
+(staged), CI, and `.claude` PostToolUse advisory hooks:
 
-- `lint:tokens` — bans arbitrary/raw-palette colors (semantic tokens only).
-- `lint:catalog` — flags a raw `<button>`/`<input>`/`<select>` in an app where a kit
-  component exists (`no-raw-html-with-catalog-equivalent`), and direct imports of
-  `clsx`/`tailwind-merge`/`class-variance-authority` in apps (`require-ui-import`).
+- `lint:tokens` — bans arbitrary/raw-palette colors; color must come from Radix props + the theme.
+- `lint:catalog` — the linchpin **Radix-encapsulation** rule: importing `@radix-ui/*` anywhere
+  outside `packages/ui` is a hard error, plus a raw-`<button>`/`<input>`/`<select>`-where-a-kit-
+  component-exists check. Encapsulation is real only because it's enforced, not merely documented.
 
-**Escape hatch:** when nothing in the catalog fits, add a catalog entry (see the
-`add-ui-component` skill) or compose Radix primitives within the token contract —
-never bypass the contract or copy a component's internals into an app.
+**Escape hatch:** when nothing in the kit fits, add a manifest entry (then `pnpm ui:codegen`) or
+hand-build a recipe/block/template composing the kit's components — never import Radix directly in an
+app or copy a component's internals.
 
 ## Release
 
-`@monorepo-boilerplate/ui` is publishable via Changesets (it is not in the
-`.changeset/config.json` ignore list). Because the kit is **consumed from source**
-(no build step — that is deliberate, for cross-package HMR), it is distributed as
-TypeScript + CSS source: consumers transpile it through their bundler exactly as the
-monorepo's `apps/web` does via `transpilePackages`, and process the Tailwind source
-via the `@source` directive in `styles.css`. Record changes with `pnpm changeset`;
-`changeset version` bumps + writes the changelog; `pnpm changeset:publish` publishes.
-
-## Opt-in: semantic retrieval (documented, NOT built by default)
-
-The lexical core above ships by default and has zero native dependencies — keep it
-that way for a lean install. A semantic layer is intentionally **left out** and
-documented here so adopters can add it deliberately:
-
-1. **Build-time embeddings.** A `catalog-extractor` mode emits `embeddings.json`
-   alongside the registry — one vector per component, computed from
-   name + description + intent using a small local model (e.g. ONNX MiniLM via
-   `onnxruntime-node`). The heavy/native dependency lives **only in `tooling/`**, so
-   it never reaches `packages/ui` or any app. The vectors are plain JSON (no native
-   vector store), committed like the registry.
-2. **Hybrid retrieval in `mcp-ui`.** `search_components` gains a path that embeds the
-   query, computes **brute-force cosine** similarity in JS over the JSON vectors
-   (the catalog is small — no index needed), and fuses that score with the existing
-   lexical score. The transport and tool surface stay unchanged.
-
-Both steps are additive and gated behind an explicit opt-in; the default catalog
-remains lexical-only and dependency-light.
+`@monorepo-boilerplate/ui` is publishable via Changesets. Because the kit is **consumed from source**
+(no build step — deliberate, for cross-package HMR), it is distributed as TypeScript + CSS source:
+consumers transpile it through their bundler (as `apps/web` does via `transpilePackages`) and process
+the Tailwind source via the `@source` directive in `styles.css`. Record changes with `pnpm
+changeset`; `changeset version` bumps + writes the changelog; `pnpm changeset:publish` publishes.

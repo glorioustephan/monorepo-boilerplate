@@ -72,6 +72,8 @@ describe('checkSourceFile', () => {
 
   it('allows Radix imports inside the kit (its sole importer)', () => {
     const code = 'import { Box } from "@radix-ui/themes";\nexport { Box };';
-    expect(checkSourceFile(parseAt('packages/ui/src/primitives/Box.tsx', code))).toHaveLength(0);
+    expect(
+      checkSourceFile(parseAt('packages/ui/src/components/layout/Box.tsx', code)),
+    ).toHaveLength(0);
   });
 });

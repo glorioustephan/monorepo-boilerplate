@@ -17,7 +17,7 @@ features:
   - title: oxlint + oxfmt
     details: Fast Rust-based linting and formatting, with custom AST checks (token contract, catalog enforcement) oxlint can't express.
   - title: AI-consumable UI catalog
-    details: The Tailwind v4 kit is a tiered, machine-readable catalog (Primitive / Recipe / Block) that agents query through the mcp-ui server.
+    details: The Radix Themes kit is a tiered vocabulary (Component / Recipe / Block / Template) that the mcp-ui server indexes into a node:sqlite + FTS5 database for agents to query with hybrid search.
   - title: Cross-agent conventions
     details: AGENTS.md and .claude/reference/ keep humans and AI coding agents consistent. This site is the browsable companion.
 ---

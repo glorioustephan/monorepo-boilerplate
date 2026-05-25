@@ -47,3 +47,10 @@ export const componentRecordSchema = z.object({
   parts: z.array(z.string()).optional(),
   example: z.string().optional(),
 });
+
+/** Schema for `list_components` summaries (drives the tool's `outputSchema`). */
+export const componentSummarySchema = z.object({
+  name: z.string(),
+  tier: z.enum(TIERS),
+  description: z.string(),
+});

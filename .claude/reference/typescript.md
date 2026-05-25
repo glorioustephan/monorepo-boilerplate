@@ -22,8 +22,12 @@ caught automatically.
 - **Acronyms are words.** Write `loadHttpUrl`, `parseJson`, `XmlParser` — not `loadHTTPURL`, `parseJSON`.
 - Avoid single-letter names outside short-lived loop indices or well-known math (`i`, `x`, `n`).
 - Boolean variables/props: use `is`/`has`/`can` prefix (`isLoading`, `hasError`).
-- File naming: **kebab-case** for modules (`user-service.ts`), PascalCase acceptable for component files
-  (`UserCard.tsx`). Framework files follow their required name (`page.tsx`, `layout.tsx`).
+- File naming: **kebab-case** for modules (`user-service.ts`); **PascalCase** for React component
+  files and their siblings (`UserCard.tsx`, `UserCard.stories.tsx`, `UserCard.test.tsx`,
+  `UserCard.example.tsx`); `useX.ts` for hooks. Framework files follow their required name
+  (`page.tsx`, `layout.tsx`).
+- Strings use **single quotes** (`'…'`); this is enforced by oxfmt — run `pnpm format`, never
+  hand-format.
 
 ---
 

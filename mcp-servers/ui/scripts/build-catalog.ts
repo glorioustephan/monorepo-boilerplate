@@ -22,13 +22,17 @@ import { components } from '@monorepo-boilerplate/ui/components/components.manif
 import { buildCatalog } from '../src/catalog/db';
 import { embed } from '../src/catalog/embed';
 import type { ComponentRecord, Tier } from '../src/catalog/schema';
+import {
+  categorySlug,
+  componentDoc,
+  detectRenderEnv,
+  isComponentFile,
+} from '../src/catalog/scrape';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const uiSrc = resolve(packageRoot, '../../packages/ui/src');
 const examplesDir = resolve(uiSrc, '../examples');
 const dbPath = join(packageRoot, 'catalog.db');
-
-const categorySlug = (category: string): string => category.toLowerCase().replaceAll(' ', '-');
 
 const readExample = (path: string): string | undefined =>
   existsSync(path) ? readFileSync(path, 'utf8') : undefined;
@@ -54,46 +58,20 @@ const COMPOSITE_TIERS: ReadonlyArray<{ dir: string; tier: Tier }> = [
   { dir: 'templates', tier: 'Template' },
 ];
 
-/** The JSDoc block immediately preceding `export function <name>`, flattened to one line. */
-function componentDoc(source: string, name: string): string | undefined {
-  // `(?:(?!\*\/)[\s\S])*?` keeps the capture within a single comment block (no crossing `*/`).
-  const match = source.match(
-    new RegExp(`/\\*\\*((?:(?!\\*/)[\\s\\S])*?)\\*/\\s*export function ${name}\\b`),
-  );
-  if (!match?.[1]) return undefined;
-  return (
-    match[1]
-      .split('\n')
-      .map((line) => line.replace(/^\s*\*\s?/, '').trim())
-      .filter(Boolean)
-      .join(' ')
-      .trim() || undefined
-  );
-}
-
 function scanComposites(): ComponentRecord[] {
   const records: ComponentRecord[] = [];
   for (const { dir, tier } of COMPOSITE_TIERS) {
     const full = join(uiSrc, dir);
     if (!existsSync(full)) continue;
     for (const file of readdirSync(full)) {
-      if (!file.endsWith('.tsx') || file.endsWith('.stories.tsx') || file.endsWith('.test.tsx')) {
-        continue;
-      }
+      if (!isComponentFile(file)) continue;
       const name = file.replace(/\.tsx$/, '');
       const source = readFileSync(join(full, file), 'utf8');
-      // No "use client" and no server-only directive ⇒ universal (renders in RSC or client).
-      // Quote-agnostic so it survives single- or double-quote formatting.
-      const renderEnv = /^\s*['"]use client['"]/m.test(source)
-        ? 'client'
-        : /^\s*['"]use server['"]/m.test(source)
-          ? 'server'
-          : 'universal';
       records.push({
         name,
         tier,
         category: tier,
-        renderEnv,
+        renderEnv: detectRenderEnv(source),
         description: componentDoc(source, name) ?? `${name} (${tier})`,
         example: readExample(join(examplesDir, `${name}.example.tsx`)),
       });
@@ -103,6 +81,15 @@ function scanComposites(): ComponentRecord[] {
 }
 
 const records = [...componentRecords, ...scanComposites()];
+
+// Surface components shipping without a usage example — they still index, but agents lose the
+// most valuable signal (a runnable snippet). Advisory, not fatal: keeps the build green.
+const missingExamples = records.filter((record) => !record.example).map((record) => record.name);
+if (missingExamples.length > 0) {
+  process.stderr.write(
+    `build-catalog: ${missingExamples.length} components have no example: ${missingExamples.join(', ')}\n`,
+  );
+}
 
 // Embed each record (one at a time — batching mean-pools over padding). If the model is
 // unavailable (offline / not installed), vectors stay empty and the catalog is lexical-only.
