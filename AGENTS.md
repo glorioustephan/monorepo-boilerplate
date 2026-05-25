@@ -23,13 +23,13 @@ tooling/       config-only + build-time tooling (ship nothing at runtime)
   ts-config/   TypeScript presets (base/node/react-library/next)
   oxc-config/  oxlint presets + oxfmt config
   test-config/ Vitest + Playwright presets
-  catalog-extractor/ build-time generator of the ui registry.generated.ts
-  catalog-lint/      custom checks oxlint can't express: tokens, catalog AST, code smells
+  catalog-codegen/   build-time generator of the ui atom layer (re-exports + stories) from the manifest
+  catalog-lint/      custom checks oxlint can't express: raw-color guard, Radix-encapsulation, code smells
   annotations/       harvests code TODO/FIXME/@deprecated markers → docs/todo.md
 packages/    real libraries (ship code; consumed from source)
   types/       cross-cutting shared types + error taxonomy (keep small)
   logger/      zero-dep structured logger (stderr-safe for the MCP servers)
-  ui/          Tailwind v4 UI kit, consumed from source for HMR
+  ui/          Radix Themes UI kit (Tailwind v4 for layout only), consumed from source for HMR; Storybook lives here
   environment/ t3-env + zod env validation, env:doctor helper
   providers/   third-party API clients + webhook handlers + resilience utils
   database/    Drizzle ORM data layer (schema, queries, migrations)
@@ -62,7 +62,7 @@ All packages share the `@monorepo-boilerplate/*` namespace. `apps/` = products,
 - TypeScript style → `.claude/reference/typescript.md`
 - React 19 / RSC / Compiler → `.claude/reference/react.md`
 - Next.js 16 → `.claude/reference/nextjs.md`
-- Tailwind v4 / token contract → `.claude/reference/tailwind.md`
+- Radix Themes + Tailwind v4 (layout only) → `.claude/reference/tailwind.md`
 - Documentation (VitePress site) → `.claude/reference/documentation.md`
 
 ## Scripts (`command:segment:subsegment`)
@@ -91,7 +91,8 @@ Verify a change end-to-end with: `pnpm lint && pnpm typecheck && pnpm test && pn
 - **A new package**: see the `scaffold-package` command/skill in `.claude/`. Decide
   `apps/` vs `tooling/` vs `packages/`; give it a `package.json`, a `tsconfig.json`
   extending the right `ts-config` preset, and source-pointing `exports` if it's a library.
-- **A UI component**: follow the `add-ui-component` skill; match the `Button` pattern.
+- **A UI component**: follow the `add-ui-component` skill — wrap the matching Radix Themes
+  component and ship the five files (wrapper, `*.catalog.ts`, example, `*.stories.tsx`, test).
 - **A provider**: copy `packages/providers/src/example` and add a subpath export.
 - **A documentation page**: run `/scaffold-doc <slug> "<Title>" "<description>"` — creates the
   page and registers it in the sidebar. See `.claude/reference/documentation.md`.

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # PostToolUse hook: warn (advisory, non-blocking) if the file the agent just
-# edited bypasses the semantic token contract (arbitrary/raw colors in classes).
-# Always exits 0 — enforcement happens in lefthook/CI via `pnpm lint:tokens`.
+# edited hand-writes color in Tailwind classes (arbitrary/raw palette colors) —
+# color belongs on Radix Themes props. Always exits 0 — enforcement happens in
+# lefthook/CI via `pnpm lint:tokens`.
 set -euo pipefail
 
 input="$(cat)"

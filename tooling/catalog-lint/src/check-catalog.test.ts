@@ -5,14 +5,16 @@ import { Project, type SourceFile, ts } from "ts-morph";
 import { checkSourceFile } from "./check-catalog";
 
 // In-memory project so the pure checker can be exercised without touching disk.
-// The filename is forced under apps/ since callers only pass app source.
-function parse(code: string): SourceFile {
+function parseAt(path: string, code: string): SourceFile {
   const project = new Project({
     useInMemoryFileSystem: true,
     compilerOptions: { jsx: ts.JsxEmit.ReactJSX },
   });
-  return project.createSourceFile("apps/web/src/Comp.tsx", code);
+  return project.createSourceFile(path, code);
 }
+
+// Default fixtures live under apps/ (app-surface rules apply).
+const parse = (code: string): SourceFile => parseAt("apps/web/src/Comp.tsx", code);
 
 describe("checkSourceFile", () => {
   it("flags a raw <button> where Button exists", () => {
@@ -52,5 +54,24 @@ describe("checkSourceFile", () => {
     const code =
       'import { Button, cn } from "@monorepo-boilerplate/ui";\nexport const X = () => <Button className={cn("p-2")}>Go</Button>;';
     expect(checkSourceFile(parse(code))).toHaveLength(0);
+  });
+
+  it("flags @radix-ui/themes imports outside the kit", () => {
+    const violations = checkSourceFile(parse('import { Box } from "@radix-ui/themes";'));
+    expect(violations).toHaveLength(1);
+    expect(violations[0]?.rule).toBe("no-radix-outside-kit");
+  });
+
+  it("flags radix imports in non-app packages too", () => {
+    const violations = checkSourceFile(
+      parseAt("packages/database/src/x.ts", 'import { Theme } from "radix-ui";'),
+    );
+    expect(violations).toHaveLength(1);
+    expect(violations[0]?.rule).toBe("no-radix-outside-kit");
+  });
+
+  it("allows Radix imports inside the kit (its sole importer)", () => {
+    const code = 'import { Box } from "@radix-ui/themes";\nexport { Box };';
+    expect(checkSourceFile(parseAt("packages/ui/src/primitives/Box.tsx", code))).toHaveLength(0);
   });
 });

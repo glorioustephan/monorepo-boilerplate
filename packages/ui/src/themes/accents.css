@@ -1,0 +1,84 @@
+/*
+ * Custom accent palette(s) for Radix Themes.
+ *
+ * Radix ships 25 built-in accent colors. To add a brand color that isn't one of
+ * them, define a 12-step solid scale (`--accent-1..12`), a 12-step alpha scale
+ * (`--accent-a1..12`), and the four functional tokens Radix reads
+ * (`--accent-contrast`, `--accent-surface`, `--accent-indicator`, `--accent-track`),
+ * scoped to `[data-accent-color="<name>"]`. The ThemeProvider sets that attribute
+ * when you pick the accent in the switcher (see theme-controls.ts ACCENT_COLORS).
+ *
+ * Step semantics (Radix scale): 1-2 app backgrounds · 3-5 component backgrounds ·
+ * 6-8 borders · 9 solid (the brand color) · 10 solid hover · 11 low-contrast text ·
+ * 12 high-contrast text. Alpha steps mirror the solids as transparency over the page,
+ * approximated here with color-mix so the single brand hue stays the source of truth.
+ */
+
+:where([data-accent-color="brand"]) {
+  --brand-hue: 195;
+
+  --accent-1: oklch(0.993 0.004 var(--brand-hue));
+  --accent-2: oklch(0.982 0.009 var(--brand-hue));
+  --accent-3: oklch(0.958 0.022 var(--brand-hue));
+  --accent-4: oklch(0.932 0.035 var(--brand-hue));
+  --accent-5: oklch(0.901 0.048 var(--brand-hue));
+  --accent-6: oklch(0.86 0.061 var(--brand-hue));
+  --accent-7: oklch(0.802 0.076 var(--brand-hue));
+  --accent-8: oklch(0.722 0.097 var(--brand-hue));
+  --accent-9: oklch(0.701 0.122 var(--brand-hue));
+  --accent-10: oklch(0.66 0.122 var(--brand-hue));
+  --accent-11: oklch(0.52 0.1 var(--brand-hue));
+  --accent-12: oklch(0.32 0.058 var(--brand-hue));
+
+  --accent-a1: color-mix(in oklab, oklch(0.6 0.13 var(--brand-hue)) 2%, transparent);
+  --accent-a2: color-mix(in oklab, oklch(0.6 0.13 var(--brand-hue)) 4%, transparent);
+  --accent-a3: color-mix(in oklab, oklch(0.6 0.13 var(--brand-hue)) 9%, transparent);
+  --accent-a4: color-mix(in oklab, oklch(0.6 0.13 var(--brand-hue)) 13%, transparent);
+  --accent-a5: color-mix(in oklab, oklch(0.6 0.13 var(--brand-hue)) 18%, transparent);
+  --accent-a6: color-mix(in oklab, oklch(0.6 0.13 var(--brand-hue)) 24%, transparent);
+  --accent-a7: color-mix(in oklab, oklch(0.6 0.13 var(--brand-hue)) 33%, transparent);
+  --accent-a8: color-mix(in oklab, oklch(0.6 0.13 var(--brand-hue)) 46%, transparent);
+  --accent-a9: color-mix(in oklab, oklch(0.6 0.13 var(--brand-hue)) 72%, transparent);
+  --accent-a10: color-mix(in oklab, oklch(0.58 0.13 var(--brand-hue)) 78%, transparent);
+  --accent-a11: color-mix(in oklab, oklch(0.5 0.1 var(--brand-hue)) 88%, transparent);
+  --accent-a12: color-mix(in oklab, oklch(0.3 0.06 var(--brand-hue)) 94%, transparent);
+
+  --accent-contrast: #fff;
+  --accent-surface: color-mix(in oklab, oklch(0.6 0.13 var(--brand-hue)) 6%, white);
+  --accent-indicator: var(--accent-9);
+  --accent-track: var(--accent-9);
+}
+
+:where(.dark, .dark-theme) :where([data-accent-color="brand"]),
+:where(.dark, .dark-theme)[data-accent-color="brand"] {
+  --accent-1: oklch(0.18 0.018 var(--brand-hue));
+  --accent-2: oklch(0.21 0.022 var(--brand-hue));
+  --accent-3: oklch(0.26 0.035 var(--brand-hue));
+  --accent-4: oklch(0.3 0.046 var(--brand-hue));
+  --accent-5: oklch(0.35 0.054 var(--brand-hue));
+  --accent-6: oklch(0.41 0.062 var(--brand-hue));
+  --accent-7: oklch(0.49 0.074 var(--brand-hue));
+  --accent-8: oklch(0.59 0.094 var(--brand-hue));
+  --accent-9: oklch(0.701 0.122 var(--brand-hue));
+  --accent-10: oklch(0.75 0.118 var(--brand-hue));
+  --accent-11: oklch(0.8 0.11 var(--brand-hue));
+  --accent-12: oklch(0.92 0.045 var(--brand-hue));
+
+  --accent-a1: color-mix(in oklab, oklch(0.75 0.12 var(--brand-hue)) 4%, transparent);
+  --accent-a2: color-mix(in oklab, oklch(0.75 0.12 var(--brand-hue)) 7%, transparent);
+  --accent-a3: color-mix(in oklab, oklch(0.75 0.12 var(--brand-hue)) 14%, transparent);
+  --accent-a4: color-mix(in oklab, oklch(0.75 0.12 var(--brand-hue)) 20%, transparent);
+  --accent-a5: color-mix(in oklab, oklch(0.75 0.12 var(--brand-hue)) 26%, transparent);
+  --accent-a6: color-mix(in oklab, oklch(0.75 0.12 var(--brand-hue)) 33%, transparent);
+  --accent-a7: color-mix(in oklab, oklch(0.75 0.12 var(--brand-hue)) 43%, transparent);
+  --accent-a8: color-mix(in oklab, oklch(0.75 0.12 var(--brand-hue)) 57%, transparent);
+  --accent-a9: color-mix(in oklab, oklch(0.78 0.13 var(--brand-hue)) 88%, transparent);
+  --accent-a10: color-mix(in oklab, oklch(0.82 0.12 var(--brand-hue)) 92%, transparent);
+  --accent-a11: color-mix(in oklab, oklch(0.84 0.11 var(--brand-hue)) 96%, transparent);
+  --accent-a12: color-mix(in oklab, oklch(0.94 0.045 var(--brand-hue)) 98%, transparent);
+
+  --accent-contrast: #fff;
+  --accent-surface: color-mix(in oklab, oklch(0.7 0.12 var(--brand-hue)) 8%, black);
+  --accent-indicator: var(--accent-9);
+  --accent-track: var(--accent-9);
+}

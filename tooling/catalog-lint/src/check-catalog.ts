@@ -1,26 +1,28 @@
 import { readdirSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
 
-import { getComponent } from "@monorepo-boilerplate/ui/registry";
+import { components } from "@monorepo-boilerplate/ui/components/components.manifest";
 import { Project, type SourceFile, SyntaxKind, ts } from "ts-morph";
 
 /**
- * Catalog enforcement (the inverse of the extractor: this reads app source and
- * the generated registry to push usage toward the kit). Two rules oxlint can't
- * express:
+ * Catalog enforcement — rules oxlint can't express, pushing all UI through the kit:
  *
- * - `no-raw-html-with-catalog-equivalent` — a raw `<button>`/`<input>`/`<select>`
- *   in an app where a kit component exists; use the component instead.
- * - `require-ui-import` — importing styling primitives the kit already wraps
- *   (`clsx`, `tailwind-merge`, `class-variance-authority`) in an app; import `cn`
- *   and components from `@monorepo-boilerplate/ui` instead.
+ * - `no-radix-outside-kit` — `@radix-ui/themes` / `radix-ui` may only be imported inside
+ *   `packages/ui` (the kit is Radix's sole importer). Anywhere else, import from
+ *   `@monorepo-boilerplate/ui`. This is what makes the kit's encapsulation real.
+ * - `no-raw-html-with-catalog-equivalent` — a raw `<button>`/`<input>`/`<select>`/`<textarea>`
+ *   in an app where a kit atom exists; use the atom instead.
+ * - `require-ui-import` — importing styling primitives the kit wraps (`clsx`, `tailwind-merge`,
+ *   `class-variance-authority`) in an app; import `cn`/components from the kit instead.
  *
- * Only app source is scanned — the kit itself legitimately uses raw elements and
- * CVA. Escape hatch (documented in AGENTS.md): if nothing in the catalog fits,
- * add a catalog entry or compose Radix within the token contract.
+ * `packages/ui` is exempt (it legitimately imports Radix and wraps primitives). The raw-element
+ * and require-ui-import rules target app source only; the Radix ban targets all non-kit source.
  */
 
-export type CatalogRule = "no-raw-html-with-catalog-equivalent" | "require-ui-import";
+export type CatalogRule =
+  | "no-radix-outside-kit"
+  | "no-raw-html-with-catalog-equivalent"
+  | "require-ui-import";
 
 export interface CatalogViolation {
   readonly file: string;
@@ -30,12 +32,16 @@ export interface CatalogViolation {
   readonly snippet: string;
 }
 
-// Raw intrinsic element → kit component. Filtered against the live registry at
-// runtime, so the rule never suggests a component that has been removed.
+// Component names the kit exposes (from the manifest) — the raw-element rule only
+// suggests an equivalent that actually exists in the kit.
+const COMPONENT_NAMES = new Set(components.map((spec) => spec.name));
+
+// Raw intrinsic element → kit atom.
 const RAW_ELEMENT_EQUIVALENTS: Record<string, string> = {
   button: "Button",
-  input: "Input",
+  input: "TextField",
   select: "Select",
+  textarea: "TextArea",
 };
 
 // Styling primitives the kit re-exports; apps should not import them directly.
@@ -48,32 +54,43 @@ function firstLine(text: string): string {
   return text.split("\n")[0]?.trim() ?? "";
 }
 
+const toPosix = (path: string): string => path.replaceAll("\\", "/");
+const isKitFile = (path: string): boolean => toPosix(path).includes("packages/ui/");
+const isAppSurface = (path: string): boolean => {
+  const p = toPosix(path);
+  return p.includes("/apps/") || p.startsWith("apps/");
+};
+
+/** True for any import that reaches into Radix Themes / the Radix primitives package. */
+function isRadixImport(specifier: string): boolean {
+  return (
+    specifier === "@radix-ui/themes" ||
+    specifier.startsWith("@radix-ui/themes/") ||
+    specifier === "radix-ui" ||
+    specifier.startsWith("radix-ui/")
+  );
+}
+
 /** Run the catalog rules over one parsed source file. Pure — used directly in tests. */
 export function checkSourceFile(sourceFile: SourceFile): CatalogViolation[] {
   const file = sourceFile.getFilePath();
-  const violations: CatalogViolation[] = [];
+  if (isKitFile(file)) return []; // the kit is the one place Radix may be imported.
 
-  const elements = [
-    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxOpeningElement),
-    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxSelfClosingElement),
-  ];
-  for (const element of elements) {
-    const tag = element.getTagNameNode().getText();
-    const equivalent = RAW_ELEMENT_EQUIVALENTS[tag];
-    if (equivalent && getComponent(equivalent)) {
-      violations.push({
-        file,
-        line: element.getStartLineNumber(),
-        rule: "no-raw-html-with-catalog-equivalent",
-        message: `use <${equivalent}> from @monorepo-boilerplate/ui instead of a raw <${tag}>`,
-        snippet: firstLine(element.getText()),
-      });
-    }
-  }
+  const violations: CatalogViolation[] = [];
+  const app = isAppSurface(file);
 
   for (const importDecl of sourceFile.getImportDeclarations()) {
     const specifier = importDecl.getModuleSpecifierValue();
-    if (KIT_STYLING_MODULES.has(specifier)) {
+    if (isRadixImport(specifier)) {
+      violations.push({
+        file,
+        line: importDecl.getStartLineNumber(),
+        rule: "no-radix-outside-kit",
+        message: `import UI from @monorepo-boilerplate/ui — Radix ("${specifier}") is encapsulated by the kit and must not be imported outside packages/ui`,
+        snippet: firstLine(importDecl.getText()),
+      });
+    }
+    if (app && KIT_STYLING_MODULES.has(specifier)) {
       violations.push({
         file,
         line: importDecl.getStartLineNumber(),
@@ -84,13 +101,27 @@ export function checkSourceFile(sourceFile: SourceFile): CatalogViolation[] {
     }
   }
 
-  return violations.toSorted((a, b) => a.line - b.line);
-}
+  if (app) {
+    const elements = [
+      ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxOpeningElement),
+      ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxSelfClosingElement),
+    ];
+    for (const element of elements) {
+      const tag = element.getTagNameNode().getText();
+      const equivalent = RAW_ELEMENT_EQUIVALENTS[tag];
+      if (equivalent && COMPONENT_NAMES.has(equivalent)) {
+        violations.push({
+          file,
+          line: element.getStartLineNumber(),
+          rule: "no-raw-html-with-catalog-equivalent",
+          message: `use <${equivalent}> from @monorepo-boilerplate/ui instead of a raw <${tag}>`,
+          snippet: firstLine(element.getText()),
+        });
+      }
+    }
+  }
 
-// Catalog rules target app UI only; the kit and tooling are out of scope.
-function isAppSurface(path: string): boolean {
-  const p = path.replaceAll("\\", "/");
-  return p.includes("/apps/") || p.startsWith("apps/");
+  return violations.toSorted((a, b) => a.line - b.line);
 }
 
 function walk(root: string): string[] {
@@ -133,9 +164,9 @@ function collectFiles(paths: readonly string[]): string[] {
   return files;
 }
 
-/** Scan the given files/directories (filtered to app source) for catalog violations. */
+/** Scan the given files/directories (excluding the kit itself) for catalog violations. */
 export function findCatalogViolations(paths: readonly string[]): CatalogViolation[] {
-  const files = collectFiles(paths).filter(isAppSurface);
+  const files = collectFiles(paths).filter((f) => !isKitFile(f));
   if (files.length === 0) return [];
 
   const project = new Project({
@@ -149,7 +180,9 @@ export function findCatalogViolations(paths: readonly string[]): CatalogViolatio
   return violations;
 }
 
-const DEFAULT_ROOTS = ["apps"];
+// Product/runtime code: apps, libraries, services, MCP servers. The kit (packages/ui) is
+// filtered out per-file; build-time tooling never ships UI, so it's out of scope.
+const DEFAULT_ROOTS = ["apps", "packages", "mcp-servers", "services"];
 
 function main(): void {
   const args = process.argv.slice(2);

@@ -14,6 +14,12 @@ next-env.d.ts
 # Turborepo
 .turbo/
 
+# Storybook build output
+storybook-static/
+
+# Generated MCP catalog database (built from the kit at build time)
+catalog.db
+
 # VitePress (docs site cache + build output)
 docs/.vitepress/cache/
 docs/.vitepress/dist/

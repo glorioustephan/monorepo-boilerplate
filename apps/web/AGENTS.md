@@ -10,8 +10,10 @@ Next.js 16 App Router (Turbopack, React Compiler on). Full conventions in
 - **Env**: import `env` from `src/env.ts`; never touch `process.env` directly. Add new vars to
   `src/env.schema.ts` (the single source `env.ts` and `scripts/env-doctor.ts` both consume — no
   mirroring). Server secrets fail-fast at startup; only `NEXT_PUBLIC_*` reaches the browser.
-- **Styling**: Tailwind v4. `src/app/globals.css` imports `tailwindcss` then
-  `@monorepo-boilerplate/ui/styles.css`. Use the kit's semantic token classes.
+- **Styling**: the kit is built on Radix Themes. `src/app/globals.css` imports `tailwindcss`
+  then `@monorepo-boilerplate/ui/styles.css`. The app tree is wrapped in the kit `ThemeProvider`
+  (in `src/app/layout.tsx`, with `suppressHydrationWarning` on `<html>`). Use kit components and
+  set color/size via their Radix props; reserve Tailwind for layout/spacing only — never color.
 - The UI kit is transpiled from source via `transpilePackages` in `next.config.ts` — editing
   `packages/ui/src` hot-reloads here. Don't duplicate UI primitives; add them to the kit.
 - Don't hand-memoize — React Compiler handles it.

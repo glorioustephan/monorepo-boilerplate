@@ -1,0 +1,10 @@
+/*
+ * Storybook CSS entry — mirrors the app's globals.css so stories render in the same
+ * environment as production. Tailwind + Radix Themes + the kit (accents + @source).
+ * `@radix-ui/themes` resolves from packages/ui's own node_modules under Vite.
+ */
+@import "tailwindcss";
+@import "@radix-ui/themes/tokens.css";
+@import "@radix-ui/themes/components.css";
+@import "@radix-ui/themes/utilities.css";
+@import "@monorepo-boilerplate/ui/styles.css";

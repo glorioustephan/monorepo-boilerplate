@@ -1,29 +1,50 @@
 # UI kit — `@monorepo-boilerplate/ui`
 
-Tailwind v4 component kit, **consumed from source** (exports point at `./src/*`) so
-consuming apps get HMR. See `.claude/reference/react.md` for component conventions.
+The single, unified UI vocabulary, built on **Radix Themes** (`@radix-ui/themes`) and
+**consumed from source** (exports point at `./src/*`) so consuming apps get HMR. The kit is
+**the only package allowed to import Radix** — everything else imports from
+`@monorepo-boilerplate/ui` (enforced by `pnpm lint:catalog`). See `.claude/reference/react.md`.
+
+## Layers
+
+Two axes: **tier** = origin/abstraction (the folder); **category** = function (Layout, Typography,
+Forms, Data Display, Overlays, Navigation — drives Storybook nav + the catalog facet).
+
+- **Components** (`src/components/<category>/`) — thin re-exports of **Radix Themes** components,
+  **generated** from `src/components/components.manifest.ts` by `pnpm ui:codegen` and sub-foldered by
+  category. Each gets a `<Name>.tsx` re-export and (for non-compound) a `<Name>.stories.tsx` matrix
+  story. **Don't edit generated files** — edit the manifest and regenerate. Compound components
+  (Dialog, Tabs, …) get a value-only re-export + a hand-authored story (the banner-safe prune keeps
+  it). These are Radix Themes _components_, not `@radix-ui/primitives` (the unstyled lib we don't use).
+- **Authored layers**, increasing scope, hand-built on those components: `src/recipes/` (compositions /
+  UX patterns, incl. small ones like `Field`), `src/blocks/` (page sections), `src/templates/` (pages).
+- **Theme layer** (`src/themes/`) — `ThemeProvider` (next-themes ⊃ Radix `<Theme>`),
+  `useThemeControls`, `ThemeSwitcher`, custom accents (`accents.css`).
 
 ## Rules
 
-- Components are **presentational and runtime-agnostic** — no `"use client"` unless a
-  component is genuinely interactive (state/effects/handlers). Most primitives work in
-  both Server and Client Components.
-- One component per file in `src/components/`, named export, re-exported from `src/index.ts`.
-- Variants via **`class-variance-authority`**; merge classes with **`cn()`** (`src/lib/cn.ts`).
-  Match `src/components/button.tsx` — it's the canonical pattern.
-- Style with **semantic token classes only** — never raw palette (`bg-red-600`), arbitrary
-  values (`bg-[#fff]`), or inline color styles. `pnpm lint:tokens` (+ a pre-commit hook) enforces
-  this. Full contract + theming rules: `.claude/reference/tailwind.md`. Token roles:
-  `bg-background`/`text-foreground` (page), `bg-surface`/`text-surface-foreground` (cards/panels),
-  `bg-primary`/`text-primary-foreground`, `bg-muted`/`text-muted-foreground`,
-  `bg-destructive`/`text-destructive-foreground`, `border-border`, `ring-ring` (focus),
-  radius `rounded-sm|md|lg`. The bare color token as ink on a neutral background is also
-  allowed — `text-destructive` (error/validation text), `text-primary` (brand text/icons).
-- **Theming**: tokens are CSS variables mapped via `@theme inline` in `src/themes/default.css`.
-  Add a theme as `src/themes/<name>.css` scoped to `[data-theme="<name>"]`; apps opt in by
-  importing `@monorepo-boilerplate/ui/themes/<name>` and setting `data-theme`. `.dark` toggles dark mode.
-- `src/styles.css` carries tokens + `@source "./components"` so Tailwind scans the kit from
-  any consumer. Don't move that `@source` — its relative path is what makes cross-app scanning work.
-- Tests: Vitest + Testing Library (`*.test.tsx`), jsdom via the `reactPreset`.
-- **Registry**: when you add a component, also add an entry to `src/registry.ts` (plain,
-  machine-readable metadata) — `mcp-servers/ui` surfaces it to agents via MCP.
+- **Color comes from Radix props, never Tailwind classes.** Style through `color`/`variant`/
+  `size`/`radius`/`highContrast` props + the active theme. Tailwind v4 is **layout/spacing only**
+  on non-Radix elements — never color. No raw palette (`bg-red-600`), arbitrary colors
+  (`bg-[#fff]`), or inline color styles. `pnpm lint:tokens` enforces this.
+- **Add a component** by adding an entry to `components/components.manifest.ts` (name, category,
+  renderEnv, usage, variant `axes`, `sample`/`sampleProps`, `compound`/`parts`) and running
+  `pnpm ui:codegen` (`pnpm ui:codegen:check` gates drift in CI). Re-exports flow out via the
+  generated `src/components/index.ts` → `src/index.ts`.
+- **Add a composite** by hand (in `recipes/`/`blocks/`/`templates/`): one `<Name>.tsx` per file (PascalCase), composing components; named
+  export re-exported from `src/index.ts`; merge any caller `className` with **`cn()`**. Ship the
+  four files — `<Name>.tsx` + `examples/<Name>.example.tsx` + `<Name>.stories.tsx` (Default reuses
+  the example) + `<Name>.test.tsx`. Add `"use client"` only when genuinely interactive.
+- **Theming**: add a custom accent by defining its 12-step solid + alpha scales under
+  `[data-accent-color="<name>"]` in `src/themes/accents.css` and adding the name to
+  `ACCENT_COLORS` in `src/themes/theme-controls.ts`.
+- **CSS setup** lives in the consuming **app**: `@import "tailwindcss"` → Radix
+  `tokens.css`/`components.css`/`utilities.css` → `@monorepo-boilerplate/ui/styles.css` (which
+  layers in `accents.css` + `@source`s the kit). Tailwind stays in the app so content detection
+  roots there; don't move the `@source` paths.
+- Tests: Vitest + Testing Library (`*.test.tsx`), jsdom. Render inside `<Theme>` via
+  `renderWithTheme` (`src/test-utils.tsx`). Atoms are re-exports and don't get unit tests.
+- **The catalog is not here.** `mcp-servers/ui` scrapes this kit (the manifest + composite source +
+  stories) into its own database — the kit ships no catalog/registry files.
+- **Storybook** lives here (`.storybook/`): `pnpm --filter @monorepo-boilerplate/ui storybook`.
+  A global toolbar switches appearance/accent/gray/radius/scaling across all stories.

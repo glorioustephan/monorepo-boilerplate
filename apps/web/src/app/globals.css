@@ -1,5 +1,17 @@
+/*
+ * App Tailwind + Radix Themes entry.
+ *
+ * Tailwind stays imported here (not in the kit) so its automatic content detection
+ * roots at this app and scans the app's own source. The Radix Themes stylesheets are
+ * imported here too — `@radix-ui/themes` is a direct dependency of this app, so the
+ * import resolves under both `next build` (Turbopack) and `next dev` (PostCSS). The kit
+ * stylesheet then layers in custom accents and `@source`s the kit for Tailwind.
+ *
+ * Cascade: Radix Themes is UNLAYERED; Tailwind v4 is layered. Unlayered wins, so Radix
+ * owns component styling and Tailwind contributes only layout/spacing on non-Radix elements.
+ */
 @import "tailwindcss";
-
-/* Pull in the UI kit's tokens and tell Tailwind to scan its components.
-   The kit's @source paths are relative to the kit, so this works from any app. */
+@import "@radix-ui/themes/tokens.css";
+@import "@radix-ui/themes/components.css";
+@import "@radix-ui/themes/utilities.css";
 @import "@monorepo-boilerplate/ui/styles.css";

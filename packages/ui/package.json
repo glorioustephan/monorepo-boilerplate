@@ -12,35 +12,44 @@
   ],
   "exports": {
     ".": "./src/index.ts",
-    "./registry": "./src/registry.ts",
-    "./catalog-schema": "./src/catalog-schema.ts",
-    "./examples/*": "./examples/*.example.tsx",
+    "./components/components.manifest": "./src/components/components.manifest.ts",
+    "./components/*": "./src/components/*.tsx",
     "./styles.css": "./src/styles.css",
     "./themes/*": "./src/themes/*.css"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:unit": "vitest run"
+    "test": "vitest run --passWithNoTests",
+    "test:unit": "vitest run --passWithNoTests",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@radix-ui/themes": "catalog:",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
+    "next-themes": "catalog:",
     "radix-ui": "catalog:",
     "tailwind-merge": "catalog:"
   },
   "devDependencies": {
     "@monorepo-boilerplate/test-config": "workspace:*",
     "@monorepo-boilerplate/ts-config": "workspace:*",
+    "@storybook/addon-docs": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "@tailwindcss/vite": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
     "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "storybook": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {

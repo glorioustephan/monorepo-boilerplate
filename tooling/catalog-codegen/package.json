@@ -1,0 +1,26 @@
+{
+  "name": "@monorepo-boilerplate/catalog-codegen",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Build-time generator of the UI kit's atom layer: reads primitives/atoms.manifest.ts and emits the thin Radix re-export modules + reference stories. Never imported at runtime.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:unit": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@monorepo-boilerplate/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@monorepo-boilerplate/test-config": "workspace:*",
+    "@monorepo-boilerplate/ts-config": "workspace:*",
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,60 +1,76 @@
-# Tailwind v4 + Token Contract
+# Radix Themes + Tailwind v4 (layout only)
 
-How styling works in `@monorepo-boilerplate`. Tailwind v4 is **CSS-first** — there is
-**no `tailwind.config.js`**. Read this before styling a component.
+How styling works in `@monorepo-boilerplate`. The UI kit is built on **Radix Themes**
+(`@radix-ui/themes`); Tailwind v4 is kept **only for layout/spacing**. Read this before
+styling a component.
 
 ---
 
 ## Setup (no config file)
 
-- Apps own their Tailwind entry (`apps/web/src/app/globals.css`): `@import "tailwindcss";`
-  then `@import "@monorepo-boilerplate/ui/styles.css";`. PostCSS via `@tailwindcss/postcss`.
-- `packages/ui/src/styles.css` is a **carrier, not an entry**: it ships the tokens and a
-  `@source "./components"` so the kit's utility classes are always generated. `@source` paths
-  are relative to the CSS file that declares them (a common v4 footgun).
+Tailwind v4 is CSS-first — there is **no `tailwind.config.js`**.
 
-## Semantic token contract
+- Apps own their Tailwind + Radix entry (`apps/web/src/app/globals.css`):
+  ```css
+  @import "tailwindcss";
+  @import "@radix-ui/themes/tokens.css";
+  @import "@radix-ui/themes/components.css";
+  @import "@radix-ui/themes/utilities.css";
+  @import "@monorepo-boilerplate/ui/styles.css";
+  ```
+  PostCSS via `@tailwindcss/postcss`. The Radix CSS is imported in the **app** (which declares
+  `@radix-ui/themes` as a direct dependency) so it resolves under both `next build` (Turbopack)
+  and `next dev` (PostCSS); importing it from inside the kit fails dev-mode resolution. Tailwind
+  stays in the app so its **content detection roots at the app**.
+- `packages/ui/src/styles.css` then layers in the kit's `accents.css` and `@source`s the kit
+  (`./components`, `./blocks`, `./recipes`, `./themes`). `@source` paths are relative to the CSS
+  file that declares them (a common v4 footgun) — don't move them.
+- **Cascade:** Radix Themes ships **unlayered** CSS; Tailwind v4 puts everything in `@layer`.
+  Unlayered beats layered, so Radix always wins where both target the same element/property.
+  That's intentional: Radix owns component appearance; Tailwind only positions things.
 
-Style with these token utilities only. Never raw palette (`bg-red-600`), arbitrary values
-(`bg-[#fff]`, `text-[oklch(...)]`), or inline color styles. Enforced by `pnpm lint:tokens`
-(pre-commit + CI + a `.claude` PostToolUse advisory hook).
+## Color comes from Radix, not classes
 
-| Utility                                          | Use                                                          |
-| ------------------------------------------------ | ------------------------------------------------------------ |
-| `bg-background` / `text-foreground`              | Page / root surface                                          |
-| `bg-surface` / `text-surface-foreground`         | Cards, panels, elevated containers                           |
-| `bg-primary` / `text-primary-foreground`         | Brand action surfaces                                        |
-| `bg-muted` / `text-muted-foreground`             | Subtle hover/disabled surfaces; secondary text               |
-| `bg-destructive` / `text-destructive-foreground` | Error/danger actions (text ON a destructive surface)         |
-| `text-destructive`                               | Error/validation text on a neutral background (no fill)      |
-| `text-primary`                                   | Brand-colored text/icons on a neutral background (no fill)   |
-| `border-border`                                  | All borders and dividers                                     |
-| `ring-ring`                                      | Focus rings (`focus-visible:ring-2 focus-visible:ring-ring`) |
-| `rounded-sm` / `rounded-md` / `rounded-lg`       | Radius scale                                                 |
+Set color/emphasis through Radix Themes **props**, never Tailwind color utilities:
 
-The `-foreground` tokens are for text placed _on_ the matching colored surface;
-the bare color token (`text-destructive`, `text-primary`) is the same role used as
-ink on a neutral (`bg-background`/`bg-surface`) background.
+- `color` — accent or any palette color (`"blue"`, `"red"`, `"gray"`, the custom `"brand"`, …).
+- `variant` — `solid` | `soft` | `surface` | `outline` | `ghost` (component-dependent).
+- `size` — `"1"`–`"4"` (component-dependent).
+- `radius` — `none` | `small` | `medium` | `large` | `full` (overrides the theme default).
+- `highContrast` — boolean, bumps contrast.
 
-## Adding a token
+Banned in hand-written code: raw palette (`bg-red-600`), arbitrary colors (`bg-[#fff]`,
+`text-[oklch(...)]`), inline color styles. Enforced by `pnpm lint:tokens` (pre-commit + CI +
+a `.claude` PostToolUse advisory hook).
 
-1. Add the raw CSS variable to `:root` (and `.dark`) in `src/themes/default.css`.
-2. Map it in the `@theme inline` block there (`--color-x: var(--x)`). Use a **distinct** raw
-   var name to avoid self-reference (radius uses `--rad-*` → `--radius-*`).
-3. Update the contract table above + `packages/ui/AGENTS.md`.
+Tailwind is allowed **only** for layout/spacing on non-Radix elements — `flex`, `grid`, `gap-*`,
+`p-*`, `m-*`, `w-*`, `h-*`, `max-w-*`, etc. Prefer Radix layout primitives (`Box`, `Flex`,
+`Grid`, `Container`, `Section`) where they fit; reach for Tailwind only for one-off positioning.
 
-## Adding a theme
+## Theming
 
-1. Create `src/themes/<name>.css`. Override only the raw variables that differ.
-2. **Do not** repeat the `@theme inline` block — it lives only in `default.css`.
-3. Include both light (`[data-theme="<name>"]`) and dark
-   (`.dark[data-theme="<name>"], [data-theme="<name>"] .dark`) selectors (see `emerald.css`).
-4. Apps opt in: `@import "@monorepo-boilerplate/ui/themes/<name>";` + `data-theme="<name>"` on a root.
+`src/themes/theme-provider.tsx` composes **`next-themes`** (owns light/dark `appearance` via the
+`class` attribute) _outside_ Radix `<Theme>`, which receives `accentColor` / `grayColor` /
+`radius` / `scaling` / `panelBackground` from `useThemeControls()`. Wrap the app once near the
+root (`apps/web/src/app/layout.tsx`, with `suppressHydrationWarning` on `<html>`); nest `<Theme>`
+to override a subtree.
 
-## CVA conventions
+Switch themes at runtime with the kit `ThemeSwitcher` (or `useThemeControls()`); selections
+persist to `localStorage`. Storybook exposes the same axes via its global toolbar.
 
-- Variant class strings contain **only** semantic token utilities; `size` uses the Tailwind
-  spacing/typography scale (no arbitrary values).
-- Base classes put focus on `focus-visible:ring-ring`.
-- Export the `xVariants` CVA fn (e.g. `buttonVariants`) so non-component elements (a `<Link>`)
-  can adopt the look without duplicating classes. `src/components/button.tsx` is canonical.
+## Adding a custom accent color
+
+1. Define the 12-step solid scale (`--accent-1..12`), 12-step alpha scale (`--accent-a1..12`),
+   and the functional tokens (`--accent-contrast`, `--accent-surface`, `--accent-indicator`,
+   `--accent-track`) under `[data-accent-color="<name>"]` (and a dark-mode variant) in
+   `src/themes/accents.css`. See the `"brand"` example.
+2. Add `"<name>"` to `ACCENT_COLORS` in `src/themes/theme-controls.ts` so it appears in the
+   switcher and the Storybook toolbar.
+
+## Per-component pattern
+
+Each catalogued component wraps the matching Radix Themes component and ships five files —
+wrapper `<slug>.tsx`, `<slug>.catalog.ts` sidecar, `examples/<slug>.example.tsx`,
+`<slug>.stories.tsx`, `<slug>.test.tsx`. Declare variant axes and compound `subcomponents` on the
+sidecar (Radix components aren't CVA, so variants are sidecar-authored). Re-export the compound
+namespace for multi-part components; merge any caller `className` with `cn()`.

@@ -2,11 +2,13 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
 
 /**
- * Token-bypass check. The UI kit and apps must style with the semantic token
- * contract (`bg-primary`, `text-foreground`, `ring-ring`, …) — never arbitrary
- * color values (`bg-[#fff]`, `text-[oklch(...)]`) or raw Tailwind palette colors
- * (`bg-red-600`). oxlint has no Tailwind rule, so this is a focused regex check
- * over `.ts`/`.tsx` source. Theme CSS files are intentionally not scanned.
+ * Raw-color guard. Color in the kit and apps comes from Radix Themes — component
+ * `color`/`variant` props and the theme's accent/gray scales — not from hand-written
+ * Tailwind color classes. Tailwind is kept only for layout/spacing. So hand-written
+ * arbitrary color values (`bg-[#fff]`, `text-[oklch(...)]`) and raw Tailwind palette
+ * colors (`bg-red-600`) are bypasses and banned. oxlint has no Tailwind rule, so this
+ * is a focused regex check over `.ts`/`.tsx` source. Theme/accent CSS files (which
+ * legitimately define color scales) are intentionally not scanned.
  */
 
 export interface TokenViolation {
@@ -111,8 +113,8 @@ function main(): void {
   for (const v of violations) {
     const fix =
       v.rule === "arbitrary-color"
-        ? "use a semantic token utility (bg-primary, text-foreground, …)"
-        : "use a semantic token utility instead of a raw palette color";
+        ? "drop the arbitrary color — use a Radix Themes `color`/`variant` prop instead"
+        : "drop the raw palette color — use a Radix Themes `color`/`variant` prop instead";
     process.stderr.write(`${v.file}:${v.line}: [${v.rule}] ${fix}\n    ${v.snippet}\n`);
   }
   if (violations.length > 0) {

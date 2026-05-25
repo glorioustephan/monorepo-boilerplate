@@ -1,3 +1,4 @@
+#!/usr/bin/env -S node --experimental-sqlite
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { createLogger } from "@monorepo-boilerplate/logger";
 

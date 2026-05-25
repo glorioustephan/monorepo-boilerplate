@@ -1,34 +1,43 @@
 # UI-kit MCP server — `@monorepo-boilerplate/mcp-ui`
 
-A Model Context Protocol server (stdio) that exposes the UI kit's generated
-component **catalog** so agents can discover components while building UIs.
-Bundled with tsdown like the other MCP server.
+A Model Context Protocol server (stdio) that **owns the UI component catalog** so agents
+can discover components while building UIs. It scrapes the kit at build time into its own
+`node:sqlite` database and serves search/retrieval at runtime. Bundled with tsdown.
+
+## How the catalog works
+
+- **Build time** (`scripts/build-catalog.ts`, run by `pnpm build` before tsdown): reads the
+  kit's atom manifest (`@monorepo-boilerplate/ui/primitives/atoms.manifest`) — and the
+  generated reference stories as verbatim examples — into catalog records, then writes
+  `catalog.db` (a `node:sqlite` DB: a `components` table, an FTS5 `components_fts` index, and a
+  reserved `vectors` table for the future semantic layer). `catalog.db` is gitignored.
+- **Runtime** (`src/catalog/db.ts`): opens `catalog.db` read-only and serves queries. Lexical
+  search is FTS5/bm25. `packages/ui` carries **no** catalog files — the kit is just a UI kit.
+- **node:sqlite** requires Node ≥22.5 with `--experimental-sqlite`; the server bin's shebang
+  sets it, and the npm scripts use `NODE_OPTIONS=--experimental-sqlite`. If you invoke
+  `node dist/index.mjs` directly, pass `--experimental-sqlite` (or set `NODE_OPTIONS`).
 
 ## Tools
 
-All read the generated catalog (`@monorepo-boilerplate/ui/registry`); querying is
-in-memory and zero-dependency.
-
-| Tool                           | Input                                         | Returns                                             |
-| ------------------------------ | --------------------------------------------- | --------------------------------------------------- |
-| `search_components`            | `query` (free text)                           | components ranked by lexical score (use this first) |
-| `list_components`              | —                                             | every component (name, description, tier)           |
-| `get_component`                | `name`                                        | full metadata (props, variants, examples, intent)   |
-| `list_by_tier`                 | `tier` (Primitive/Recipe/Block/Template)      | components in that tier                             |
-| `filter_by_render_environment` | `renderEnvironment` (server/client/universal) | components for that environment                     |
-
-`search_components` scores each component over name (highest), tier, render
-environment, description, and authored intent; only positive scores are returned,
-ordered by score. Semantic/embedding retrieval is **not** built in (documented as
-an opt-in layer in `roadmap.md`).
+| Tool                           | Input                                         | Returns                                         |
+| ------------------------------ | --------------------------------------------- | ----------------------------------------------- |
+| `search_components`            | `query` (free text)                           | FTS5/bm25-ranked components (use this first)    |
+| `list_components`              | —                                             | every component (name, tier, description)       |
+| `get_component`                | `name`                                        | full record (variants, parts, verbatim example) |
+| `list_by_tier`                 | `tier` (Atom/Primitive/Recipe/Block/Template) | components in that tier                         |
+| `filter_by_render_environment` | `renderEnvironment` (server/client/universal) | components for that environment                 |
 
 ## Rules
 
-- Reads `@monorepo-boilerplate/ui/registry` (plain data — no React/CSS). Don't import UI
-  components or CSS here; only the registry.
-- Tools live as pure functions in `src/tools.ts` (testable without a transport); `src/server.ts`
-  registers them; `src/index.ts` is the stdio wiring.
-- **Never write to stdout** — log to stderr via `@monorepo-boilerplate/logger`.
-- The kit gains a component via its `*.catalog.ts` sidecar + `pnpm catalog:generate`; this server
-  surfaces it automatically (no change here). Add new tools as the catalog grows new facets.
-- Inspect with: `npx @modelcontextprotocol/inspector node dist/index.mjs` (after `pnpm build`).
+- Tools are pure functions in `src/tools.ts` over `src/catalog/db.ts` (the catalog is opened
+  lazily as a singleton from `../catalog.db`). `src/server.ts` registers them; `src/index.ts` is
+  the stdio wiring (carries the `--experimental-sqlite` shebang).
+- **Never write to stdout** — that's the JSON-RPC channel; log to stderr via
+  `@monorepo-boilerplate/logger`. (The `--experimental-sqlite` warning goes to stderr — harmless.)
+- The catalog schema lives here (`src/catalog/schema.ts`), not in the kit. When the kit gains a
+  component, `pnpm --filter @monorepo-boilerplate/mcp-ui build-catalog` refreshes the DB.
+- **Planned (not yet built):** MiniLM embeddings computed at build time into the `vectors` table,
+  with runtime hybrid retrieval (FTS5 lexical fused with brute-force cosine). See the TODO in
+  `scripts/build-catalog.ts`.
+- Inspect with: `npx @modelcontextprotocol/inspector node --experimental-sqlite dist/index.mjs`
+  (after `pnpm build`).

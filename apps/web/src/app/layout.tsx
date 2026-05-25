@@ -1,3 +1,4 @@
+import { ThemeProvider, ThemeSwitcher } from "@monorepo-boilerplate/ui";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
@@ -9,9 +10,19 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  // suppressHydrationWarning: next-themes sets the appearance class on <html> before
+  // hydration, so the server/client class attribute differs by design.
   return (
-    <html lang="en">
-      <body className="bg-background text-foreground antialiased">{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className="antialiased">
+        <ThemeProvider>
+          <header className="flex flex-wrap items-center justify-between gap-4 px-6 py-4">
+            <strong>monorepo-boilerplate</strong>
+            <ThemeSwitcher />
+          </header>
+          <main className="px-6 pb-12">{children}</main>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

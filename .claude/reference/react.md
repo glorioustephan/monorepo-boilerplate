@@ -79,14 +79,12 @@ Enforced by oxlint with `react` + `react-hooks` + `jsx-a11y` plugins (`tooling/o
 
 - Prefer **`children` / slot props** over boolean flag explosions (`isLarge`, `hasIcon`, `isLoading` → compose instead).
 - Use **`cn()`** (re-exported from `@monorepo-boilerplate/ui`) for conditional class merging.
-- Use **`class-variance-authority` (CVA)** for variant logic. The `Button` component in `packages/ui/src/components/button.tsx` is the canonical pattern — follow it for any new variant-bearing primitive.
-  ```tsx
-  const variants = cva("base-classes", {
-    variants: { intent: { primary: "...", ghost: "..." } },
-    defaultVariants: { intent: "primary" },
-  });
-  ```
-- Keep variant definitions co-located with the component, not in a separate constants file.
+- UI kit components **wrap Radix Themes** — variants come from Radix `variant`/`size`/`color`/
+  `radius` props, not CVA. When building a kit component, re-export/thin-wrap the matching Radix
+  Themes component and declare its variant axes on the `*.catalog.ts` sidecar. See
+  `packages/ui/AGENTS.md` and `.claude/reference/tailwind.md`.
+- For compound components, re-export the namespace (`Dialog.Root/Trigger/Content/...`) rather than
+  inventing a flat API.
 
 ---
 

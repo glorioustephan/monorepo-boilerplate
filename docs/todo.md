@@ -12,10 +12,11 @@ A ⚠ flags a `TODO`/`FIXME` missing an issue link (`TODO(#123)`).
 
 <!-- BEGIN GENERATED:annotations -->
 
-_1 annotation(s), 1 ⚠ missing an issue link (`TODO(#123)`)._
+_2 annotation(s), 2 ⚠ missing an issue link (`TODO(#123)`)._
 
-## TODO (1)
+## TODO (2)
 
 - ⚠ `apps/web/src/app/api/webhooks/[provider]/route.ts:38` — dispatch `event` to a handler keyed by `provider` / `event.type`.
+- ⚠ `mcp-servers/ui/scripts/build-catalog.ts:9` — (semantic): compute MiniLM embeddings here and populate the `vectors` table so
 
 <!-- END GENERATED:annotations -->

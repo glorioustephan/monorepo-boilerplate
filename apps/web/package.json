@@ -20,6 +20,7 @@
     "@monorepo-boilerplate/providers": "workspace:*",
     "@monorepo-boilerplate/types": "workspace:*",
     "@monorepo-boilerplate/ui": "workspace:*",
+    "@radix-ui/themes": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

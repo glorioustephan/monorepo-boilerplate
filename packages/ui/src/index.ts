@@ -1,27 +1,27 @@
-export { Badge, badgeVariants, type BadgeProps } from "./components/badge";
-export { Button, buttonVariants, type ButtonProps } from "./components/button";
-export { Card, type CardProps } from "./components/card";
-export {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "./components/dialog";
-export { Input, type InputProps } from "./components/input";
-export {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./components/select";
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./components/tooltip";
+// Public surface of @monorepo-boilerplate/ui.
+//
+// - Atoms (re-exported from Radix Themes) are generated into ./primitives and
+//   re-exported here by the codegen step (see primitives/atoms.manifest.ts).
+// - Composites (primitives/recipes/blocks/templates) are hand-built on those atoms.
+// - This file currently exports the theme layer + cn; atoms/composites are appended
+//   as those layers land.
+
 export { cn } from "./lib/cn";
-export { ConfirmDialog, type ConfirmDialogProps } from "./recipes/confirm-dialog";
-export { FormField, type FormFieldProps } from "./recipes/form-field";
-export { Cta, type CtaProps } from "./blocks/cta";
-export { type Feature, FeatureGrid, type FeatureGridProps } from "./blocks/feature-grid";
-export { Hero, type HeroProps } from "./blocks/hero";
+
+// Components — generated from components/components.manifest.ts (thin Radix Themes re-exports).
+export * from "./components";
+
+export {
+  type AccentColor,
+  ACCENT_COLORS,
+  type Appearance,
+  APPEARANCES,
+  type GrayColor,
+  GRAY_COLORS,
+  type Radius,
+  RADIUS_OPTIONS,
+  type Scaling,
+  SCALING_OPTIONS,
+} from "./themes/theme-controls";
+export { ThemeProvider, type ThemeProviderProps, useThemeControls } from "./themes/theme-provider";
+export { ThemeSwitcher, type ThemeSwitcherProps } from "./themes/theme-switcher";

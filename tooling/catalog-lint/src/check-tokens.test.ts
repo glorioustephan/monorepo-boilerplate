@@ -27,9 +27,9 @@ describe("findTokenViolations", () => {
     expect(v[0]?.rule).toBe("palette-color");
   });
 
-  it("passes semantic token utilities", () => {
+  it("passes layout utilities (color comes from Radix props, not classes)", () => {
     const file = fixture(
-      'export const x = <div className="bg-primary text-primary-foreground ring-ring" />;',
+      'export const x = <Flex className="flex gap-4 p-6 items-center"><Button color="blue" /></Flex>;',
     );
     expect(findTokenViolations([file])).toHaveLength(0);
   });

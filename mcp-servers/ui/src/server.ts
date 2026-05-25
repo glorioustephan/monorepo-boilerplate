@@ -44,7 +44,7 @@ export function createServer(): McpServer {
     {
       title: "Search UI components",
       description:
-        "Rank kit components against a free-text query (name, tier, render environment, description, intent). Use this first when looking for a component to build a UI.",
+        "Full-text search (FTS5/bm25) over the kit catalog — matches name, category, render environment, description, variants, and compound parts. Use this first when looking for a component to build a UI.",
       inputSchema: searchComponentsInputSchema,
     },
     async (args) => searchComponentsTool(args),
@@ -54,7 +54,8 @@ export function createServer(): McpServer {
     "list_by_tier",
     {
       title: "List components by tier",
-      description: "List components in one taxonomy tier: Primitive, Recipe, Block, or Template.",
+      description:
+        "List components in one taxonomy tier: Component (Radix re-export), Recipe, Block, or Template.",
       inputSchema: listByTierInputSchema,
     },
     async (args) => listByTierTool(args),
