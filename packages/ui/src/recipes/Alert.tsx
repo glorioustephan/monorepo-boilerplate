@@ -2,7 +2,7 @@
 
 import { type ComponentProps, type ReactNode } from 'react';
 
-import { Callout, Flex, IconButton, Text } from '../components';
+import { Box, Callout, Flex, IconButton, Text } from '../components';
 import { cn } from '../lib/cn';
 
 /** Infer the Callout.Root color type from the compound atom. */
@@ -11,7 +11,7 @@ type CalloutVariant = ComponentProps<typeof Callout.Root>['variant'];
 
 /** Alert props — status/intent banner with optional dismiss and action slots. */
 export interface AlertProps {
-  /** Optional heading rendered in medium weight above the body. */
+  /** Optional heading rendered in bold above the body. */
   readonly title?: ReactNode;
   /** Alert body content. */
   readonly children: ReactNode;
@@ -54,27 +54,40 @@ export function Alert({
   className,
 }: AlertProps) {
   return (
-    <Callout.Root color={color} variant={variant} className={cn(className)}>
+    <Callout.Root
+      color={color}
+      variant={variant}
+      className={cn(className)}
+      style={{ position: 'relative' }}
+    >
       {icon ? <Callout.Icon>{icon}</Callout.Icon> : undefined}
       <Callout.Text>
-        <Flex direction="column" gap="1">
-          {title ? (
-            <Text as="span" weight="medium">
-              {title}
-            </Text>
-          ) : undefined}
-          {children}
-        </Flex>
+        {title ? (
+          <Text as="span" weight="bold" mb="1" style={{ display: 'block' }}>
+            {title}
+          </Text>
+        ) : undefined}
+        {children}
       </Callout.Text>
       {actions ? (
-        <Flex gap="3" mt="2">
-          {actions}
-        </Flex>
+        <Box gridColumn={icon ? '2' : '1'} mt="2" pr={onDismiss ? '5' : undefined}>
+          <Flex gap="3" align="center" wrap="wrap">
+            {actions}
+          </Flex>
+        </Box>
       ) : undefined}
       {onDismiss ? (
-        <IconButton variant="ghost" color="gray" aria-label={dismissLabel} onClick={onDismiss}>
-          {dismissIcon}
-        </IconButton>
+        <Box position="absolute" top="2" right="2">
+          <IconButton
+            size="1"
+            variant="ghost"
+            color="gray"
+            aria-label={dismissLabel}
+            onClick={onDismiss}
+          >
+            {dismissIcon}
+          </IconButton>
+        </Box>
       ) : undefined}
     </Callout.Root>
   );

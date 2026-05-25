@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 
-import { Button, Flex, Text } from '../components';
+import { Button, Flex, IconButton, Text } from '../components';
 import { cn } from '../lib/cn';
 
 /** Pagination props — page-navigation control with prev/next and numbered page buttons. */
@@ -67,20 +67,25 @@ export function Pagination({
         {tokens.map((token) => {
           if (token === 'gap-start' || token === 'gap-end') {
             return (
-              <Text key={token} size="2" color="gray">
-                …
-              </Text>
+              <Flex key={token} align="center" justify="center" width="32px">
+                <Text size="2" color="gray">
+                  …
+                </Text>
+              </Flex>
             );
           }
           const isCurrent = token === page;
           return (
-            <Button
+            <IconButton
               key={token}
-              variant={isCurrent ? 'solid' : 'ghost'}
+              variant={isCurrent ? 'solid' : 'soft'}
+              color={isCurrent ? undefined : 'gray'}
+              aria-label={`Page ${token}`}
+              aria-current={isCurrent ? 'page' : undefined}
               onClick={() => onPageChange(token)}
             >
               {token}
-            </Button>
+            </IconButton>
           );
         })}
       </Flex>

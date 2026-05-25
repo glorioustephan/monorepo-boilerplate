@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { Avatar, Box, Flex, Separator, Text } from '../components';
+import { Box, Flex, Separator, Text } from '../components';
 import { cn } from '../lib/cn';
 
 /**
@@ -38,17 +38,16 @@ export function Feed({ items, className }: FeedProps) {
       {items.map((item, index) => (
         <Flex key={item.id} direction="column">
           <Flex gap="3" align="start" py="3">
-            {/* Leading icon slot — falls back to a small neutral avatar placeholder */}
-            <Flex direction="column" align="center" flexShrink="0">
-              <Box width="32px" height="32px">
-                {item.icon != null ? (
-                  <Flex align="center" justify="center" width="100%" height="100%">
-                    {item.icon}
-                  </Flex>
-                ) : (
-                  <Avatar size="2" fallback="?" color="gray" variant="soft" />
-                )}
-              </Box>
+            {/* Leading icon slot — falls back to a subtle timeline dot when no icon is given. */}
+            <Flex
+              direction="column"
+              align="center"
+              justify="center"
+              flexShrink="0"
+              width="32px"
+              height="32px"
+            >
+              {item.icon != null ? item.icon : <Box className="mb-feed-dot" />}
             </Flex>
 
             {/* Content column */}

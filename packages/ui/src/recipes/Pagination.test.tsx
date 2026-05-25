@@ -38,7 +38,7 @@ describe('Pagination', () => {
   it('calls onPageChange with the correct page when a page button is clicked', () => {
     const onPageChange = vi.fn();
     renderWithTheme(<Pagination page={1} pageCount={5} onPageChange={onPageChange} />);
-    fireEvent.click(screen.getByRole('button', { name: '4' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Page 4' }));
     expect(onPageChange).toHaveBeenCalledWith(4);
   });
 
