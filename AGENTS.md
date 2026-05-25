@@ -23,7 +23,9 @@ tooling/       config-only + build-time tooling (ship nothing at runtime)
   ts-config/   TypeScript presets (base/node/react-library/next)
   oxc-config/  oxlint presets + oxfmt config
   test-config/ Vitest + Playwright presets
-  annotations/ harvests code TODO/FIXME/@deprecated markers → docs/todo.md
+  catalog-extractor/ build-time generator of the ui registry.generated.ts
+  catalog-lint/      custom checks oxlint can't express: tokens, catalog AST, code smells
+  annotations/       harvests code TODO/FIXME/@deprecated markers → docs/todo.md
 packages/    real libraries (ship code; consumed from source)
   types/       cross-cutting shared types + error taxonomy (keep small)
   logger/      zero-dep structured logger (stderr-safe for the MCP servers)
