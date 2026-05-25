@@ -1,4 +1,12 @@
 export { Banner, type BannerProps } from './Banner';
+export { BentoGrid, type BentoGridProps, type BentoItem } from './BentoGrid';
+export {
+  BlogSection,
+  type BlogPost,
+  type BlogPostAuthor,
+  type BlogSectionProps,
+} from './BlogSection';
+export { ContentSection, type ContentSectionProps } from './ContentSection';
 export { ContactSection, type ContactSectionProps } from './ContactSection';
 export { Cta, type CtaProps } from './Cta';
 export { DataTable, type DataTableProps } from './DataTable';

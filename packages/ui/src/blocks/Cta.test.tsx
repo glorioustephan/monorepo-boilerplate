@@ -11,4 +11,18 @@ describe('Cta', () => {
     expect(screen.getByRole('heading', { name: 'Ready?' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument();
   });
+
+  it('renders the panel variant with title and actions', () => {
+    renderWithTheme(
+      <Cta
+        variant="panel"
+        title="Go Panel"
+        description="Emphasized surface."
+        actions={<Button>Launch</Button>}
+      />,
+    );
+    expect(screen.getByRole('heading', { name: 'Go Panel' })).toBeInTheDocument();
+    expect(screen.getByText('Emphasized surface.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Launch' })).toBeInTheDocument();
+  });
 });

@@ -1,4 +1,16 @@
-import { Card, Container, Flex, Grid, type GridProps, Heading, Section, Text } from '../components';
+import type { ReactNode } from 'react';
+
+import {
+  Box,
+  Card,
+  Container,
+  Flex,
+  Grid,
+  type GridProps,
+  Heading,
+  Section,
+  Text,
+} from '../components';
 
 export interface Feature {
   readonly title: string;
@@ -11,13 +23,55 @@ export interface FeatureGridProps {
   readonly features: readonly Feature[];
   /** Responsive column count (defaults to 1 → 2 → 3 across breakpoints). */
   readonly columns?: GridProps['columns'];
+  /**
+   * Visual layout variant.
+   * - `'grid'` (default) — responsive card grid, same as the original output.
+   * - `'split'` — two-column grid with the feature list on the left and `media` on the right.
+   */
+  readonly layout?: 'grid' | 'split';
+  /**
+   * Optional media node rendered in the right column when `layout === 'split'`.
+   * Ignored when `layout === 'grid'`.
+   */
+  readonly media?: ReactNode;
 }
 
 // Stable reference so the default prop doesn't break referential equality per render.
 const DEFAULT_COLUMNS: GridProps['columns'] = { initial: '1', sm: '2', md: '3' };
 
 /** FeatureGrid — a responsive grid of feature cards. */
-export function FeatureGrid({ features, columns = DEFAULT_COLUMNS }: FeatureGridProps) {
+export function FeatureGrid({
+  features,
+  columns = DEFAULT_COLUMNS,
+  layout = 'grid',
+  media,
+}: FeatureGridProps) {
+  if (layout === 'split' && media !== undefined) {
+    return (
+      <Section size="3">
+        <Container size="4">
+          <Grid columns={{ initial: '1', md: '2' }} gap="8" align="center">
+            <Flex direction="column" gap="5">
+              {features.map((feature) => (
+                <Card key={feature.id ?? feature.title} size="2">
+                  <Flex direction="column" gap="1">
+                    <Heading as="h3" size="3">
+                      {feature.title}
+                    </Heading>
+                    <Text size="2" color="gray">
+                      {feature.description}
+                    </Text>
+                  </Flex>
+                </Card>
+              ))}
+            </Flex>
+            <Box>{media}</Box>
+          </Grid>
+        </Container>
+      </Section>
+    );
+  }
+
   return (
     <Section size="3">
       <Container size="4">

@@ -7,14 +7,21 @@ export interface CtaProps {
   readonly description?: ReactNode;
   /** Action slot, e.g. one or more `<Button>`s. */
   readonly actions?: ReactNode;
+  /**
+   * Visual variant.
+   * - `'plain'` (default) — today's exact output: content inside a `Card` on a neutral surface.
+   * - `'panel'` — wraps content in a tinted accent `Card` for a more emphasized call-to-action.
+   */
+  readonly variant?: 'plain' | 'panel';
 }
 
 /** Cta — a closing call-to-action panel centered on a surface card. */
-export function Cta({ title, description, actions }: CtaProps) {
+export function Cta({ title, description, actions, variant = 'plain' }: CtaProps) {
+  const cardVariant = variant === 'panel' ? 'surface' : undefined;
   return (
     <Section size="3">
       <Container size="3">
-        <Card size="4">
+        <Card size="4" variant={cardVariant}>
           <Flex direction="column" align="center" gap="3">
             <Heading as="h2" size="6" align="center">
               {title}

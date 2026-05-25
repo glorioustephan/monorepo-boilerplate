@@ -3,6 +3,8 @@ export { Alert, type AlertProps } from './Alert';
 export { Breadcrumb, type BreadcrumbProps } from './Breadcrumb';
 export { CardHeading, type CardHeadingProps } from './CardHeading';
 export { Collapsible, type CollapsibleProps } from './Collapsible';
+export { Combobox, type ComboboxOption, type ComboboxProps } from './Combobox';
+export { type CommandItem, CommandPalette, type CommandPaletteProps } from './CommandPalette';
 export { ConfirmDialog, type ConfirmDialogProps } from './ConfirmDialog';
 export {
   DescriptionList,

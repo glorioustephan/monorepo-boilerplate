@@ -162,3 +162,41 @@
     animation: none;
   }
 }
+
+/*
+ * CommandPalette (src/recipes/CommandPalette.tsx) — removes Dialog.Content's default padding
+ * and sizes it for a search overlay. Layout only.
+ */
+.mb-command-content {
+  padding: 0;
+  width: min(560px, 92vw);
+  max-width: 92vw;
+}
+
+/* Active/hovered option highlight — uses Radix gray tokens (theme-driven, not raw color). */
+.mb-command-option {
+  border-radius: var(--radius-2);
+  cursor: pointer;
+}
+
+.mb-command-option[data-active='true'] {
+  background-color: var(--gray-a3);
+}
+
+/*
+ * Combobox (src/recipes/Combobox.tsx) — anchors the autocomplete listbox under the input.
+ * Layout only; the list surface/colors come from the Card it wraps.
+ */
+.mb-combobox {
+  position: relative;
+}
+
+.mb-combobox-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 40;
+  max-height: 16rem;
+  overflow-y: auto;
+}

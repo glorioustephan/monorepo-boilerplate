@@ -1,3 +1,4 @@
+import { Button } from '@monorepo-boilerplate/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import CtaExample from '../../examples/Cta.example';
@@ -16,4 +17,22 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => <CtaExample />,
+};
+
+export const Panel: Story = {
+  render: () => (
+    <Cta
+      variant="panel"
+      title="Ready to build?"
+      description="Fork the boilerplate and ship your first feature in minutes."
+      actions={
+        <>
+          <Button size="3">Get started</Button>
+          <Button size="3" variant="soft">
+            Star on GitHub
+          </Button>
+        </>
+      }
+    />
+  ),
 };

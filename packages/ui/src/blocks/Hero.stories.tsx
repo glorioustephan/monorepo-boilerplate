@@ -29,3 +29,37 @@ export const LeftAligned: Story = {
     />
   ),
 };
+
+export const Split: Story = {
+  render: () => (
+    <Hero
+      layout="split"
+      title="Ship your next idea"
+      description="A split layout places your headline and actions beside a media element."
+      actions={
+        <>
+          <Button size="3">Get started</Button>
+          <Button size="3" variant="soft">
+            Learn more
+          </Button>
+        </>
+      }
+      media={<AspectRatioPlaceholder />}
+    />
+  ),
+};
+
+/** Inline placeholder — avoids importing an image in stories. */
+function AspectRatioPlaceholder() {
+  // Box with a fixed aspect ratio using Radix props only (no Tailwind color).
+  return (
+    <div
+      style={{
+        width: '100%',
+        aspectRatio: '16/9',
+        borderRadius: 'var(--radius-3)',
+        background: 'var(--accent-a3)',
+      }}
+    />
+  );
+}
