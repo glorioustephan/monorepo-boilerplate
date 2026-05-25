@@ -33,6 +33,7 @@
   "devDependencies": {
     "@monorepo-boilerplate/test-config": "workspace:*",
     "@monorepo-boilerplate/ts-config": "workspace:*",
+    "@radix-ui/react-icons": "catalog:",
     "@storybook/addon-docs": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@tailwindcss/vite": "catalog:",

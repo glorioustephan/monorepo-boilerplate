@@ -21,3 +21,44 @@
 @source "./recipes";
 @source "./themes";
 @source "../examples";
+
+/*
+ * Collapsible primitive (src/recipes/Collapsible.tsx). Layout + animation only — no color.
+ * The content animates open/closed via an animatable `grid-template-rows` (0fr↔1fr); the inner
+ * wrapper clips overflow so the row can collapse to zero height.
+ */
+.mb-collapsible-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.mb-collapsible-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms ease;
+}
+
+.mb-collapsible[data-state='open'] > .mb-collapsible-content {
+  grid-template-rows: 1fr;
+}
+
+.mb-collapsible-content-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mb-collapsible-content {
+    transition: none;
+  }
+}

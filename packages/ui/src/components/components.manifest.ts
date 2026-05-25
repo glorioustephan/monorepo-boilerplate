@@ -140,6 +140,14 @@ export const components: readonly ComponentSpec[] = [
     sample: '16 / 9',
     usage: 'Constrains its child to a fixed width:height ratio.',
   },
+  {
+    name: 'VisuallyHidden',
+    category: 'Layout',
+    renderEnv: 'universal',
+    sample: 'Screen-reader-only text',
+    usage:
+      'Hides content visually while keeping it available to screen readers (e.g. labels for icon-only controls, hidden dialog titles).',
+  },
 
   // ---------- Typography ----------
   {

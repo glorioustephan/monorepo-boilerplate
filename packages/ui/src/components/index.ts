@@ -51,3 +51,4 @@ export * from './typography/Text';
 export * from './forms/TextArea';
 export * from './forms/TextField';
 export * from './overlays/Tooltip';
+export * from './layout/VisuallyHidden';
