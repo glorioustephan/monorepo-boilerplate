@@ -20,7 +20,7 @@ import {
   type Scaling,
   SCALING_OPTIONS,
 } from "./theme-controls";
-import { useThemeControls } from "./theme-provider";
+import { useThemeControls } from "./ThemeProvider";
 
 const APPEARANCE_OPTIONS: readonly Appearance[] = ["light", "dark", "system"];
 

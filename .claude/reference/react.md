@@ -79,12 +79,13 @@ Enforced by oxlint with `react` + `react-hooks` + `jsx-a11y` plugins (`tooling/o
 
 - Prefer **`children` / slot props** over boolean flag explosions (`isLarge`, `hasIcon`, `isLoading` → compose instead).
 - Use **`cn()`** (re-exported from `@monorepo-boilerplate/ui`) for conditional class merging.
-- UI kit components **wrap Radix Themes** — variants come from Radix `variant`/`size`/`color`/
-  `radius` props, not CVA. When building a kit component, re-export/thin-wrap the matching Radix
-  Themes component and declare its variant axes on the `*.catalog.ts` sidecar. See
+- The UI kit is built on **Radix Themes** — variants come from Radix `variant`/`size`/`color`/
+  `radius` props, not CVA. The atom layer (`packages/ui/src/components/`) is **generated** from
+  `components/components.manifest.ts` (`pnpm ui:codegen`); don't hand-write it. Build value-add as
+  **composites** (`recipes/`/`blocks/`/`templates/`) composing those components. See
   `packages/ui/AGENTS.md` and `.claude/reference/tailwind.md`.
-- For compound components, re-export the namespace (`Dialog.Root/Trigger/Content/...`) rather than
-  inventing a flat API.
+- For compound components, re-export/consume the namespace (`Dialog.Root/Trigger/Content/...`) rather
+  than inventing a flat API.
 
 ---
 

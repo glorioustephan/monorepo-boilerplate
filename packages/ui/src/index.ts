@@ -28,5 +28,5 @@ export {
   type Scaling,
   SCALING_OPTIONS,
 } from "./themes/theme-controls";
-export { ThemeProvider, type ThemeProviderProps, useThemeControls } from "./themes/theme-provider";
-export { ThemeSwitcher, type ThemeSwitcherProps } from "./themes/theme-switcher";
+export { ThemeProvider, type ThemeProviderProps, useThemeControls } from "./themes/ThemeProvider";
+export { ThemeSwitcher, type ThemeSwitcherProps } from "./themes/ThemeSwitcher";

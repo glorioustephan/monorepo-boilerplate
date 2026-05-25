@@ -2,8 +2,9 @@
 
 An opinionated **Turborepo + pnpm** monorepo template, built to be forked as the
 starting point for new projects. It ships a working Next.js 16 + React 19 web app,
-a Model Context Protocol (MCP) server, a Tailwind v4 UI kit, and a cohesive
-**cross-agent convention layer** so both humans and AI coding agents stay consistent.
+a Model Context Protocol (MCP) server, a Radix Themes UI kit (themable, with a Storybook
+workshop and a runtime theme switcher), and a cohesive **cross-agent convention layer** so
+both humans and AI coding agents stay consistent.
 
 > Status: **Phases 0–6 complete** (see the [roadmap](./docs/roadmap.md)) — foundation, hardening,
 > data layer, providers, auth, deployment, and a UI kit with its own MCP server. The kit has
@@ -30,18 +31,18 @@ discoverable by people and agents alike.
 
 ## Stack
 
-| Area          | Choice                                                                |
-| ------------- | --------------------------------------------------------------------- |
-| Monorepo      | Turborepo 2 + pnpm workspaces (with **catalogs** for version pinning) |
-| Web           | Next.js 16 (App Router, Turbopack, React Compiler)                    |
-| UI            | React 19 + Tailwind v4 kit, consumed from source for HMR              |
-| MCP           | `@modelcontextprotocol/sdk` over stdio                                |
-| Language      | TypeScript (strict)                                                   |
-| Lint / format | **oxlint + oxfmt** (Rust, fast)                                       |
-| Env           | `@t3-oss/env-nextjs` + zod, with an `env:doctor`                      |
-| Testing       | Vitest (unit) + Playwright (e2e)                                      |
-| Versioning    | Changesets                                                            |
-| Git hooks     | lefthook                                                              |
+| Area          | Choice                                                                     |
+| ------------- | -------------------------------------------------------------------------- |
+| Monorepo      | Turborepo 2 + pnpm workspaces (with **catalogs** for version pinning)      |
+| Web           | Next.js 16 (App Router, Turbopack, React Compiler)                         |
+| UI            | React 19 + Radix Themes kit (Tailwind v4 for layout), consumed from source |
+| MCP           | `@modelcontextprotocol/sdk` over stdio                                     |
+| Language      | TypeScript (strict)                                                        |
+| Lint / format | **oxlint + oxfmt** (Rust, fast)                                            |
+| Env           | `@t3-oss/env-nextjs` + zod, with an `env:doctor`                           |
+| Testing       | Vitest (unit) + Playwright (e2e)                                           |
+| Versioning    | Changesets                                                                 |
+| Git hooks     | lefthook                                                                   |
 
 ## Layout
 
@@ -59,7 +60,7 @@ tooling/          config-only + build-time tooling (ship nothing)
 packages/         real libraries
   types/          cross-cutting types + AppError taxonomy
   logger/         zero-dep structured logger
-  ui/             Tailwind v4 UI kit — tiered catalog (primitives/recipes/blocks) + examples
+  ui/             Radix Themes UI kit — generated components/ + recipes/blocks/templates, Storybook
   environment/    typed env validation + env:doctor
   providers/      API clients, resilience utils, webhook verification
   database/       Drizzle ORM data layer (schema, queries, migrations)
@@ -92,44 +93,49 @@ npx @modelcontextprotocol/inspector node mcp-servers/example/dist/index.mjs
 
 ## Scripts (`command:segment:subsegment`)
 
-| Command                             | Description                                |
-| ----------------------------------- | ------------------------------------------ |
-| `pnpm dev`                          | run all dev servers                        |
-| `pnpm build`                        | build all apps/packages (Turborepo-cached) |
-| `pnpm lint` / `pnpm lint:fix`       | oxlint across the repo                     |
-| `pnpm format` / `pnpm format:check` | oxfmt write / check                        |
-| `pnpm typecheck`                    | `tsc --noEmit` per package                 |
-| `pnpm test` / `pnpm test:unit`      | Vitest                                     |
-| `pnpm test:e2e`                     | Playwright (web)                           |
-| `pnpm docs:dev` / `pnpm docs:build` | VitePress docs (build = dead-link gate)    |
-| `pnpm lint:tokens`                  | ban non-token colors in UI/app classes     |
-| `pnpm lint:catalog`                 | flag raw HTML where a kit component exists |
-| `pnpm catalog:generate`             | regenerate the component catalog           |
-| `pnpm catalog:check`                | fail if the catalog is stale (CI)          |
-| `pnpm env:doctor`                   | validate environment variables             |
-| `pnpm changeset`                    | record a versioned change                  |
+| Command                             | Description                                       |
+| ----------------------------------- | ------------------------------------------------- |
+| `pnpm dev`                          | run all dev servers                               |
+| `pnpm build`                        | build all apps/packages (Turborepo-cached)        |
+| `pnpm lint` / `pnpm lint:fix`       | oxlint across the repo                            |
+| `pnpm format` / `pnpm format:check` | oxfmt write / check                               |
+| `pnpm typecheck`                    | `tsc --noEmit` per package                        |
+| `pnpm test` / `pnpm test:unit`      | Vitest                                            |
+| `pnpm test:e2e`                     | Playwright (web)                                  |
+| `pnpm docs:dev` / `pnpm docs:build` | VitePress docs (build = dead-link gate)           |
+| `pnpm lint:tokens`                  | ban non-token colors in UI/app classes            |
+| `pnpm lint:catalog`                 | enforce Radix encapsulation + kit usage           |
+| `pnpm ui:codegen`                   | regenerate the kit's atom layer from the manifest |
+| `pnpm ui:codegen:check`             | fail if the atom layer is stale (CI)              |
+| `pnpm env:doctor`                   | validate environment variables                    |
+| `pnpm changeset`                    | record a versioned change                         |
 
 ## How internal-package HMR works
 
 Every package under `packages/` sets its `exports` to **TypeScript source**
 (`./src/*.ts`) — they have no build step. The web app lists the internal packages it
 imports in `transpilePackages`, so Next transpiles them on the fly. Editing
-`packages/ui/src/components/button.tsx` hot-reloads `apps/web` instantly, with no
+`packages/ui/src/blocks/Hero.tsx` hot-reloads `apps/web` instantly, with no
 rebuild or version bump. Only the MCP servers (`mcp-servers/example`, `mcp-servers/ui`)
 are bundled (with tsdown), because they run as standalone Node processes — and tsdown
 inlines the internal packages so there are no `.ts` imports at runtime.
 
 Tailwind v4 follows the same source-first idea: `apps/web/src/app/globals.css` imports
-`@monorepo-boilerplate/ui/styles.css`, which carries the design tokens and an
-`@source` directive that points back at the kit's components — so utility classes used
+Tailwind + Radix Themes, then `@monorepo-boilerplate/ui/styles.css`, which layers in the kit's
+custom accents and an `@source` directive pointing back at the kit — so utility classes used
 inside the kit are always generated, from any consuming app.
 
-## The component catalog
+## The UI kit and its catalog
 
-`packages/ui` is an **AI-consumable catalog**, not just a folder of components: tiered
-(Primitive → Recipe → Block → Template), described by a generated machine-readable record,
-queried by agents through the **`mcp-ui`** MCP server, and enforced by `pnpm lint:catalog`.
-See the [UI Kit Catalog](./docs/phases/ui-kit-catalog.md) docs for the full design.
+`packages/ui` is the single, **enforced** UI vocabulary, built on **Radix Themes**: a generated
+component layer (`components/`, sub-foldered by category, from `components.manifest.ts` via
+`pnpm ui:codegen`) plus authored `recipes/` → `blocks/` → `templates/`. Color comes from Radix
+props; `pnpm lint:catalog` makes `@radix-ui/*` importable **only** inside `packages/ui`, so the
+kit stays the one front door. The component **catalog** (search/retrieval for agents) is owned by
+the **`mcp-ui`** MCP server, which scrapes the kit at build time into a `node:sqlite` + FTS5
+database. Theme switching (light/dark, accent, gray, radius, scaling) is live via the kit's
+`ThemeProvider`/`ThemeSwitcher`; explore every component themed in Storybook
+(`pnpm --filter @monorepo-boilerplate/ui storybook`).
 
 ## The agent convention layer
 

@@ -67,10 +67,16 @@ persist to `localStorage`. Storybook exposes the same axes via its global toolba
 2. Add `"<name>"` to `ACCENT_COLORS` in `src/themes/theme-controls.ts` so it appears in the
    switcher and the Storybook toolbar.
 
-## Per-component pattern
+## Layers (two axes: tier × category)
 
-Each catalogued component wraps the matching Radix Themes component and ships five files —
-wrapper `<slug>.tsx`, `<slug>.catalog.ts` sidecar, `examples/<slug>.example.tsx`,
-`<slug>.stories.tsx`, `<slug>.test.tsx`. Declare variant axes and compound `subcomponents` on the
-sidecar (Radix components aren't CVA, so variants are sidecar-authored). Re-export the compound
-namespace for multi-part components; merge any caller `className` with `cn()`.
+- **Components** (`packages/ui/src/components/<category>/`, PascalCase) — thin re-exports of Radix
+  Themes components, **generated** from `components/components.manifest.ts` via `pnpm ui:codegen`
+  (re-export + matrix story per component, sub-foldered by category). Add a component = add a
+  manifest entry + regenerate; never hand-edit generated files.
+- **Composites** (authored, increasing scope): `recipes/` (UX patterns like `Field`/`ConfirmDialog`),
+  `blocks/` (page sections), `templates/` (pages). Each ships `<Name>.tsx` +
+  `examples/<Name>.example.tsx` + `<Name>.stories.tsx` + `<Name>.test.tsx`, composing the components
+  above; merge any caller `className` with `cn()`.
+
+The component catalog (search/retrieval for agents) is **owned by `mcp-servers/ui`**, which scrapes
+the kit — `packages/ui` ships no catalog files.

@@ -11,11 +11,11 @@ export interface FeatureGridProps {
   readonly columns?: GridProps["columns"];
 }
 
+// Stable reference so the default prop doesn't break referential equality per render.
+const DEFAULT_COLUMNS: GridProps["columns"] = { initial: "1", sm: "2", md: "3" };
+
 /** FeatureGrid — a responsive grid of feature cards. */
-export function FeatureGrid({
-  features,
-  columns = { initial: "1", sm: "2", md: "3" },
-}: FeatureGridProps) {
+export function FeatureGrid({ features, columns = DEFAULT_COLUMNS }: FeatureGridProps) {
   return (
     <Section size="3">
       <Container size="4">
