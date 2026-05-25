@@ -1,16 +1,32 @@
-import { Button, Card } from "@monorepo-boilerplate/ui";
+import { Button, Cta, FeatureGrid, Hero } from "@monorepo-boilerplate/ui";
+
+const features = [
+  { title: "Themable", description: "Switch accent, gray, radius, and scaling at runtime." },
+  { title: "Agent-ready", description: "An MCP catalog exposes every component to tooling." },
+  { title: "Type-safe", description: "Strict TypeScript and source-consumed HMR across packages." },
+];
 
 export default function HomePage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center gap-6 p-8">
-      <h1 className="text-3xl font-bold">Hello, monorepo 👋</h1>
-      <Card className="flex flex-col items-center gap-4 text-center">
-        <p className="text-muted-foreground">
-          This page renders a <code>Button</code> from <code>@monorepo-boilerplate/ui</code>,
-          consumed directly from source so edits hot-reload across package boundaries.
-        </p>
-        <Button>Get started</Button>
-      </Card>
-    </main>
+    <>
+      <Hero
+        title="Hello, monorepo 👋"
+        description="A themable Radix Themes design system, consumed from source — try the theme switcher above."
+        actions={
+          <>
+            <Button size="3">Get started</Button>
+            <Button size="3" variant="soft">
+              Read the docs
+            </Button>
+          </>
+        }
+      />
+      <FeatureGrid features={features} />
+      <Cta
+        title="Ready to build?"
+        description="Fork the boilerplate and ship your first feature in minutes."
+        actions={<Button size="3">Get started</Button>}
+      />
+    </>
   );
 }

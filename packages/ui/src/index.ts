@@ -11,6 +11,11 @@ export { cn } from "./lib/cn";
 // Components — generated from components/components.manifest.ts (thin Radix Themes re-exports).
 export * from "./components";
 
+// Authored composition layers, built on the components above.
+export * from "./recipes";
+export * from "./blocks";
+export * from "./templates";
+
 export {
   type AccentColor,
   ACCENT_COLORS,

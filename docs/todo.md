@@ -17,6 +17,6 @@ _2 annotation(s), 2 ⚠ missing an issue link (`TODO(#123)`)._
 ## TODO (2)
 
 - ⚠ `apps/web/src/app/api/webhooks/[provider]/route.ts:38` — dispatch `event` to a handler keyed by `provider` / `event.type`.
-- ⚠ `mcp-servers/ui/scripts/build-catalog.ts:9` — (semantic): compute MiniLM embeddings here and populate the `vectors` table so
+- ⚠ `mcp-servers/ui/scripts/build-catalog.ts:12` — (semantic): compute MiniLM embeddings here and populate the `vectors` table so the runtime
 
 <!-- END GENERATED:annotations -->
