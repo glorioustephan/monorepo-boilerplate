@@ -1,3 +1,4 @@
+export { ActionPanel, type ActionPanelProps } from './ActionPanel';
 export { Alert, type AlertProps } from './Alert';
 export { Breadcrumb, type BreadcrumbProps } from './Breadcrumb';
 export { CardHeading, type CardHeadingProps } from './CardHeading';
@@ -15,4 +16,5 @@ export { PageHeading, type PageHeadingProps } from './PageHeading';
 export { Pagination, type PaginationProps } from './Pagination';
 export { SectionHeading, type SectionHeadingProps } from './SectionHeading';
 export { SignInForm, type SignInFormProps } from './SignInForm';
+export { Feed, type FeedItem, type FeedProps } from './Feed';
 export { StatCard, type StatCardProps } from './StatCard';
