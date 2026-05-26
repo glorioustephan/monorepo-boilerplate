@@ -18,7 +18,7 @@ const meta = {
     ),
   },
   render: (args) => <PageHeading {...args} />,
-  parameters: { layout: 'padded' },
+  parameters: { layout: 'padded', a11y: { test: 'error' } },
 } satisfies Meta<typeof PageHeading>;
 
 export default meta;

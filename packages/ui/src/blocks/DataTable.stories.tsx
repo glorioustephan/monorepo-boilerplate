@@ -28,7 +28,7 @@ const meta = {
       <DataTable {...args} />
     </Box>
   ),
-  parameters: { layout: 'padded' },
+  parameters: { layout: 'padded', a11y: { test: 'error' } },
 } satisfies Meta<ConcreteDataTable>;
 
 export default meta;

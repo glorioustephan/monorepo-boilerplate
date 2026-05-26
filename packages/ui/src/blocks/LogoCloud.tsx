@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { Container, Flex, Link, Section, Text } from '../components';
+import { Container, Flex, Link, Section, Text, VisuallyHidden } from '../components';
 import { cn } from '../lib/cn';
 
 /** A single logo entry in the cloud. */
@@ -44,8 +44,9 @@ export function LogoCloud({ logos, title, className }: LogoCloudProps) {
                   {item.logo}
                 </Link>
               ) : (
-                <Flex key={item.id} align="center" aria-label={item.label}>
+                <Flex key={item.id} align="center">
                   {item.logo}
+                  {item.label ? <VisuallyHidden>{item.label}</VisuallyHidden> : undefined}
                 </Flex>
               ),
             )}

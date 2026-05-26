@@ -16,7 +16,7 @@ const meta = {
     ],
   },
   render: (args) => <Breadcrumb {...args} />,
-  parameters: { layout: 'padded' },
+  parameters: { layout: 'padded', a11y: { test: 'error' } },
 } satisfies Meta<typeof Breadcrumb>;
 
 export default meta;

@@ -1,5 +1,13 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { Avatar, Badge, DataTable, Flex, IconButton, Text } from '@monorepo-boilerplate/ui';
+import {
+  Avatar,
+  Badge,
+  DataTable,
+  Flex,
+  IconButton,
+  Text,
+  VisuallyHidden,
+} from '@monorepo-boilerplate/ui';
 import type { TableColumn } from '@monorepo-boilerplate/ui';
 
 interface User {
@@ -81,14 +89,14 @@ const columns: ReadonlyArray<TableColumn<User>> = [
     header: 'Status',
     width: '8rem',
     cell: (row) => (
-      <Badge color={STATUS_COLOR[row.status]} variant="soft" radius="full">
+      <Badge color={STATUS_COLOR[row.status]} variant="soft" radius="full" highContrast>
         {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
       </Badge>
     ),
   },
   {
     key: 'actions',
-    header: '',
+    header: <VisuallyHidden>Actions</VisuallyHidden>,
     width: '3rem',
     align: 'right',
     cell: () => (

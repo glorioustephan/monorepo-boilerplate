@@ -47,7 +47,12 @@ export function Banner({
     // `.mb-banner` overrides Callout's grid with a centered flex row so the message (a <p> via
     // Callout.Text, inline content only) sits beside the action + dismiss as valid siblings —
     // never a <div>/<button> nested inside the <p>.
-    <Callout.Root color={color} variant="surface" className={cn('mb-banner', className)}>
+    <Callout.Root
+      color={color}
+      variant="surface"
+      highContrast
+      className={cn('mb-banner', className)}
+    >
       <Callout.Text size="2">{children}</Callout.Text>
       {action != null ? action : undefined}
       {onDismiss != null ? (

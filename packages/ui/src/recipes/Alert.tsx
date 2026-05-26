@@ -56,7 +56,12 @@ export function Alert({
   return (
     // `.mb-alert` overrides Callout's internal grid with a flex row (icon | content | dismiss)
     // so actions stack below the message and the dismiss aligns to the first line.
-    <Callout.Root color={color} variant={variant} className={cn('mb-alert', className)}>
+    <Callout.Root
+      color={color}
+      variant={variant}
+      highContrast
+      className={cn('mb-alert', className)}
+    >
       {icon ? <Callout.Icon>{icon}</Callout.Icon> : undefined}
 
       <Flex direction="column" gap="1" flexGrow="1" minWidth="0">

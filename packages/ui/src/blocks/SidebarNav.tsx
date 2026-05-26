@@ -96,7 +96,7 @@ function SidebarNavSectionRows({ items }: { readonly items: readonly SidebarNavI
 export function SidebarNav({ header, sections, footer, className }: SidebarNavProps) {
   return (
     <Box asChild height="100%" className={cn(className)}>
-      <nav>
+      <nav aria-label="Sidebar">
         <Flex direction="column" gap="4" height="100%">
           {header ? <Box>{header}</Box> : undefined}
 

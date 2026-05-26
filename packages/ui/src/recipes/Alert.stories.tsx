@@ -16,7 +16,8 @@ const meta = {
     dismissLabel: 'Dismiss',
   },
   render: (args) => <Alert {...args} />,
-  parameters: { layout: 'padded' },
+  // Triaged + accessible — enforce a11y as a hard gate for this composite.
+  parameters: { layout: 'padded', a11y: { test: 'error' } },
 } satisfies Meta<typeof Alert>;
 
 export default meta;

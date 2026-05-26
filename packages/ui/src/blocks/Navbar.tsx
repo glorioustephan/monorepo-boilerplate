@@ -67,7 +67,7 @@ export function Navbar({ brand, links, actions, menuIcon, className }: NavbarPro
             <Flex align="center" gap="6">
               {brand}
               <Flex asChild gap="5" display={{ initial: 'none', sm: 'flex' }}>
-                <nav>
+                <nav aria-label="Primary">
                   {links.map((link) => (
                     <Link
                       key={link.href}

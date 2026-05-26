@@ -14,7 +14,7 @@ const meta = {
     action: undefined,
   },
   render: (args) => <Banner {...args} />,
-  parameters: { layout: 'fullscreen' },
+  parameters: { layout: 'fullscreen', a11y: { test: 'error' } },
 } satisfies Meta<typeof Banner>;
 
 export default meta;

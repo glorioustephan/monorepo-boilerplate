@@ -16,7 +16,9 @@ export default function PageHeadingExample() {
       title="Acme Corp"
       meta={
         <>
-          <Badge color="green">Active</Badge>
+          <Badge color="green" highContrast>
+            Active
+          </Badge>
           <Badge variant="outline">Enterprise</Badge>
         </>
       }

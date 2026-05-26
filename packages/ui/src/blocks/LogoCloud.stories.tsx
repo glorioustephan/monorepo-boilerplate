@@ -29,7 +29,7 @@ const meta = {
     ],
   },
   render: (args) => <LogoCloud {...args} />,
-  parameters: { layout: 'fullscreen' },
+  parameters: { layout: 'fullscreen', a11y: { test: 'error' } },
 } satisfies Meta<typeof LogoCloud>;
 
 export default meta;

@@ -35,7 +35,10 @@ const toItems = (values: readonly string[]) => values.map((value) => ({ value, t
 
 const preview: Preview = {
   parameters: {
-    controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
+    // Only auto-detect date controls. The default `color` matcher is intentionally omitted:
+    // the kit's `color` props are Radix accent-name enums (e.g. "grass"), not CSS colors, so a
+    // color picker would be wrong — they get a select/text control from their prop type instead.
+    controls: { matchers: { date: /Date$/i } },
     // addon-a11y runs axe on every story. Report-only mode here: violations surface in the
     // Storybook a11y panel and the story-test run but do not fail it — the right adoption mode
     // for a component library, where bare-primitive showcases trip rules real usage resolves

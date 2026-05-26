@@ -13,10 +13,10 @@ export default function AlertExample() {
       onDismiss={() => undefined}
       actions={
         <>
-          <Button size="1" variant="soft" color="green">
+          <Button size="1" variant="soft" color="green" highContrast>
             View changes
           </Button>
-          <Button size="1" variant="ghost" color="gray">
+          <Button size="1" variant="ghost" color="gray" highContrast>
             Undo
           </Button>
         </>

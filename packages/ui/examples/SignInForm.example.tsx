@@ -46,7 +46,7 @@ export default function SignInFormExample() {
       footer={
         <>
           Not a member?{' '}
-          <Link href="/sign-up" size="2">
+          <Link href="/sign-up" size="2" underline="always">
             Sign up
           </Link>
         </>

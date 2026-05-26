@@ -10,7 +10,7 @@ const meta = {
   component: SignInForm,
   args: { title: 'Sign in to your account', submitLabel: 'Sign in', forgotHref: '#' },
   render: (args) => <SignInForm {...args} />,
-  parameters: { layout: 'padded' },
+  parameters: { layout: 'padded', a11y: { test: 'error' } },
 } satisfies Meta<typeof SignInForm>;
 
 export default meta;
