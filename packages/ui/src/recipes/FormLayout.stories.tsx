@@ -9,13 +9,17 @@ const meta = {
   title: 'Recipes/FormLayout',
   component: FormLayout,
   args: {
-    title: 'Section',
+    title: 'Account',
+    description: 'Manage your account settings.',
+    columns: 1,
     children: (
       <Field label="Name" htmlFor="name">
-        <TextField.Root />
+        <TextField.Root id="name" />
       </Field>
     ),
+    footer: <button type="submit">Save</button>,
   },
+  render: (args) => <FormLayout {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof FormLayout>;
 
@@ -23,26 +27,30 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-/** Two-column profile form with Save/Cancel footer. */
-export const Default: Story = {
+/** Args-driven — edit title/description/columns in the Controls panel. */
+export const Default: Story = {};
+
+/** Rich reference example — two-column profile form with Save/Cancel footer. */
+export const Example: Story = {
   render: () => <FormLayoutExample />,
 };
 
 /** Single-column stacked layout — useful for narrower side-panel forms. */
 export const OneColumn: Story = {
-  render: () => (
-    <FormLayout
-      title="Account"
-      description="Manage your account settings."
-      columns={1}
-      footer={<button type="submit">Save</button>}
-    >
-      <Field label="Display name" htmlFor="display-name">
-        <TextField.Root id="display-name" />
-      </Field>
-      <Field label="Bio" htmlFor="bio">
-        <TextField.Root id="bio" />
-      </Field>
-    </FormLayout>
-  ),
+  args: {
+    title: 'Account',
+    description: 'Manage your account settings.',
+    columns: 1,
+    children: (
+      <>
+        <Field label="Display name" htmlFor="display-name">
+          <TextField.Root id="display-name" />
+        </Field>
+        <Field label="Bio" htmlFor="bio">
+          <TextField.Root id="bio" />
+        </Field>
+      </>
+    ),
+    footer: <button type="submit">Save</button>,
+  },
 };

@@ -8,6 +8,8 @@ import { SignInForm } from './SignInForm';
 const meta = {
   title: 'Recipes/SignInForm',
   component: SignInForm,
+  args: { title: 'Sign in to your account', submitLabel: 'Sign in', forgotHref: '#' },
+  render: (args) => <SignInForm {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof SignInForm>;
 
@@ -15,24 +17,25 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-/** Full sign-in card with Google + GitHub OAuth buttons and a sign-up footer link. */
-export const Default: Story = {
+/** Args-driven — edit title/submitLabel/forgotHref in Controls (no OAuth slot). */
+export const Default: Story = {};
+
+/** Reference example: full card with Google + GitHub OAuth buttons and a sign-up footer link. */
+export const Example: Story = {
   render: () => <SignInFormExample />,
 };
 
-/** Credentials only — no OAuth providers or footer link. */
-export const NoOAuth: Story = {
-  render: () => (
-    <SignInForm
-      title="Welcome back"
-      submitLabel="Continue"
-      forgotHref="/forgot-password"
-      oauth={
-        <Button variant="outline" style={{ width: '100%' }}>
-          <GitHubLogoIcon style={{ marginRight: 8 }} />
-          Continue with GitHub
-        </Button>
-      }
-    />
-  ),
+/** Credentials + a single OAuth provider, custom labels. */
+export const SingleProvider: Story = {
+  args: {
+    title: 'Welcome back',
+    submitLabel: 'Continue',
+    forgotHref: '/forgot-password',
+    oauth: (
+      <Button variant="outline" style={{ width: '100%' }}>
+        <GitHubLogoIcon style={{ marginRight: 8 }} />
+        Continue with GitHub
+      </Button>
+    ),
+  },
 };

@@ -7,7 +7,18 @@ import { StackedList } from './StackedList';
 const meta = {
   title: 'Blocks/StackedList',
   component: StackedList,
-  args: { items: [] },
+  args: {
+    items: [
+      { id: '1', title: 'Home', description: 'The landing page' },
+      { id: '2', title: 'Docs', description: 'Component documentation' },
+      { id: '3', title: 'Blog', description: 'Latest news and updates' },
+    ],
+  },
+  render: (args) => (
+    <Box p="4" style={{ maxWidth: '36rem' }}>
+      <StackedList {...args} />
+    </Box>
+  ),
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof StackedList>;
 
@@ -15,7 +26,11 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** Args-driven — edit items in the Controls panel. */
+export const Default: Story = {};
+
+/** Rich reference example composing the kit's atoms. */
+export const Example: Story = {
   render: () => (
     <Box p="4" style={{ maxWidth: '36rem' }}>
       <StackedListExample />
@@ -24,23 +39,15 @@ export const Default: Story = {
 };
 
 export const Empty: Story = {
-  render: () => (
-    <Box p="4" style={{ maxWidth: '36rem' }}>
-      <StackedList items={[]} />
-    </Box>
-  ),
+  args: { items: [] },
 };
 
 export const WithLinks: Story = {
-  render: () => (
-    <Box p="4" style={{ maxWidth: '36rem' }}>
-      <StackedList
-        items={[
-          { id: '1', title: 'Home', description: 'The landing page', href: '/' },
-          { id: '2', title: 'Docs', description: 'Component documentation', href: '/docs' },
-          { id: '3', title: 'Blog', description: 'Latest news and updates', href: '/blog' },
-        ]}
-      />
-    </Box>
-  ),
+  args: {
+    items: [
+      { id: '1', title: 'Home', description: 'The landing page', href: '/' },
+      { id: '2', title: 'Docs', description: 'Component documentation', href: '/docs' },
+      { id: '3', title: 'Blog', description: 'Latest news and updates', href: '/blog' },
+    ],
+  },
 };

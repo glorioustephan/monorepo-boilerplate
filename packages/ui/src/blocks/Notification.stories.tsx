@@ -6,6 +6,17 @@ import { Notification } from './Notification';
 const meta = {
   title: 'Blocks/Notification',
   component: Notification,
+  args: {
+    title: 'Deployment complete',
+    children: 'Your app is live at monorepo-boilerplate.vercel.app.',
+    color: 'green',
+    onDismiss: () => {},
+  },
+  render: (args) => (
+    <div style={{ padding: '2rem', maxWidth: '400px' }}>
+      <Notification {...args} />
+    </div>
+  ),
   parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof Notification>;
 
@@ -13,16 +24,10 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <NotificationExample />,
-};
+/** Args-driven single toast — edit title/body/color or toggle the dismiss button in Controls. */
+export const Default: Story = {};
 
-export const InlineCard: Story = {
-  render: () => (
-    <div style={{ padding: '2rem', maxWidth: '400px' }}>
-      <Notification title="Deployment complete" color="green">
-        Your app is live at monorepo-boilerplate.vercel.app.
-      </Notification>
-    </div>
-  ),
+/** Reference example: a portal'd NotificationRegion stacking dismissable toasts in a corner. */
+export const Region: Story = {
+  render: () => <NotificationExample />,
 };

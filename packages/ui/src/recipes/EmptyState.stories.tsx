@@ -8,7 +8,13 @@ import { EmptyState } from './EmptyState';
 const meta = {
   title: 'Recipes/EmptyState',
   component: EmptyState,
-  args: { title: 'Nothing here yet' },
+  args: {
+    title: 'Nothing here yet',
+    description: 'Get started by creating your first item.',
+    icon: <MagnifyingGlassIcon width={32} height={32} />,
+    action: <Button variant="soft">Get started</Button>,
+  },
+  render: (args) => <EmptyState {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof EmptyState>;
 
@@ -16,25 +22,32 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** Args-driven — edit title/description/icon/action in the Controls panel. */
+export const Default: Story = {};
+
+/** Rich reference example composing the kit's atoms (mirrors the catalog example). */
+export const Example: Story = {
   render: () => <EmptyStateExample />,
 };
 
 export const NoResults: Story = {
-  render: () => (
-    <EmptyState
-      icon={<MagnifyingGlassIcon width={32} height={32} />}
-      title="No results found"
-      description="Try adjusting your search or filters to find what you're looking for."
-      action={
-        <Button variant="soft" onClick={() => undefined}>
-          Clear filters
-        </Button>
-      }
-    />
-  ),
+  args: {
+    icon: <MagnifyingGlassIcon width={32} height={32} />,
+    title: 'No results found',
+    description: "Try adjusting your search or filters to find what you're looking for.",
+    action: (
+      <Button variant="soft" onClick={() => {}}>
+        Clear filters
+      </Button>
+    ),
+  },
 };
 
 export const Minimal: Story = {
-  render: () => <EmptyState title="No items" />,
+  args: {
+    title: 'No items',
+    description: undefined,
+    icon: undefined,
+    action: undefined,
+  },
 };

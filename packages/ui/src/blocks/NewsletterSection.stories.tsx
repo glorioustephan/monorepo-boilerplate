@@ -6,7 +6,15 @@ import { NewsletterSection } from './NewsletterSection';
 const meta = {
   title: 'Blocks/NewsletterSection',
   component: NewsletterSection,
-  args: { title: 'NewsletterSection' },
+  args: {
+    title: 'Stay in the loop',
+    description:
+      'Get the latest updates, articles, and resources delivered straight to your inbox.',
+    placeholder: 'Enter your email',
+    submitLabel: 'Subscribe',
+    onSubmit: () => {},
+  },
+  render: (args) => <NewsletterSection {...args} />,
   parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof NewsletterSection>;
 
@@ -14,18 +22,18 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** Args-driven — edit title, description, placeholder, and submitLabel in the Controls panel. */
+export const Default: Story = {};
+
+/** Rich reference example from the catalog. */
+export const Example: Story = {
   render: () => <NewsletterSectionExample />,
 };
 
 export const MinimalNoDescription: Story = {
-  render: () => (
-    <NewsletterSection
-      title="Subscribe to our newsletter"
-      submitLabel="Join now"
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-    />
-  ),
+  args: {
+    title: 'Subscribe to our newsletter',
+    description: undefined,
+    submitLabel: 'Join now',
+  },
 };

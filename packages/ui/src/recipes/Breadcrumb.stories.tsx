@@ -15,6 +15,7 @@ const meta = {
       { label: 'Current page' },
     ],
   },
+  render: (args) => <Breadcrumb {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Breadcrumb>;
 
@@ -22,36 +23,36 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** Args-driven — edit items in the Controls panel. */
+export const Default: Story = {};
+
+/** Rich reference example composing the kit's atoms (mirrors the catalog example). */
+export const Example: Story = {
   render: () => <BreadcrumbExample />,
 };
 
 export const SlashSeparator: Story = {
-  render: () => (
-    <Breadcrumb
-      items={[
-        { label: 'Docs', href: '/docs' },
-        { label: 'Components', href: '/docs/components' },
-        { label: 'Breadcrumb' },
-      ]}
-      separator={
-        <Text color="gray" aria-hidden>
-          <SlashIcon />
-        </Text>
-      }
-    />
-  ),
+  args: {
+    items: [
+      { label: 'Docs', href: '/docs' },
+      { label: 'Components', href: '/docs/components' },
+      { label: 'Breadcrumb' },
+    ],
+    separator: (
+      <Text color="gray" aria-hidden>
+        <SlashIcon />
+      </Text>
+    ),
+  },
 };
 
 export const TwoLevels: Story = {
-  render: () => (
-    <Breadcrumb
-      items={[{ label: 'Settings', href: '/settings' }, { label: 'Profile' }]}
-      separator={
-        <Text color="gray" aria-hidden>
-          <ChevronRightIcon />
-        </Text>
-      }
-    />
-  ),
+  args: {
+    items: [{ label: 'Settings', href: '/settings' }, { label: 'Profile' }],
+    separator: (
+      <Text color="gray" aria-hidden>
+        <ChevronRightIcon />
+      </Text>
+    ),
+  },
 };

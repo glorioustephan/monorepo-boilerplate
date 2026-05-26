@@ -6,7 +6,11 @@ import { ActionPanel } from './ActionPanel';
 const meta = {
   title: 'Recipes/ActionPanel',
   component: ActionPanel,
-  args: { title: 'Setting' },
+  args: {
+    title: 'Export data',
+    description: 'Download a full export of your account data in JSON format.',
+  },
+  render: (args) => <ActionPanel {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof ActionPanel>;
 
@@ -14,19 +18,24 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** Args-driven — edit title/description/action in the Controls panel. */
+export const Default: Story = {};
+
+/** Rich reference example composing the kit's atoms (mirrors the catalog example). */
+export const Example: Story = {
   render: () => <ActionPanelExample />,
 };
 
 export const TitleOnly: Story = {
-  render: () => <ActionPanel title="Enable notifications" />,
+  args: {
+    title: 'Enable notifications',
+    description: undefined,
+  },
 };
 
 export const WithDescription: Story = {
-  render: () => (
-    <ActionPanel
-      title="Export data"
-      description="Download a full export of your account data in JSON format."
-    />
-  ),
+  args: {
+    title: 'Export data',
+    description: 'Download a full export of your account data in JSON format.',
+  },
 };

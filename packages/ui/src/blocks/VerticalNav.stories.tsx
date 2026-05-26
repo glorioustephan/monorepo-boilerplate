@@ -7,7 +7,19 @@ import { VerticalNav } from './VerticalNav';
 const meta = {
   title: 'Blocks/VerticalNav',
   component: VerticalNav,
-  args: { items: [] },
+  args: {
+    items: [
+      { label: 'General', href: '/settings/general', active: true },
+      { label: 'Security', href: '/settings/security' },
+      { label: 'Billing', href: '/settings/billing' },
+      { label: 'Notifications', href: '/settings/notifications' },
+    ],
+  },
+  render: (args) => (
+    <Box p="4" style={{ maxWidth: '16rem' }}>
+      <VerticalNav {...args} />
+    </Box>
+  ),
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof VerticalNav>;
 
@@ -15,7 +27,11 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** Args-driven — edit items in the Controls panel. */
+export const Default: Story = {};
+
+/** Rich reference example composing the kit's atoms. */
+export const Example: Story = {
   render: () => (
     <Box p="4" style={{ maxWidth: '16rem' }}>
       <VerticalNavExample />
@@ -24,16 +40,12 @@ export const Default: Story = {
 };
 
 export const WithoutIcons: Story = {
-  render: () => (
-    <Box p="4" style={{ maxWidth: '16rem' }}>
-      <VerticalNav
-        items={[
-          { label: 'General', href: '/settings/general', active: true },
-          { label: 'Security', href: '/settings/security' },
-          { label: 'Billing', href: '/settings/billing' },
-          { label: 'Notifications', href: '/settings/notifications' },
-        ]}
-      />
-    </Box>
-  ),
+  args: {
+    items: [
+      { label: 'General', href: '/settings/general', active: true },
+      { label: 'Security', href: '/settings/security' },
+      { label: 'Billing', href: '/settings/billing' },
+      { label: 'Notifications', href: '/settings/notifications' },
+    ],
+  },
 };

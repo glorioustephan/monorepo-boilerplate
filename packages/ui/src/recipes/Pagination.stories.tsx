@@ -6,7 +6,8 @@ import { Pagination } from './Pagination';
 const meta = {
   title: 'Recipes/Pagination',
   component: Pagination,
-  args: { page: 1, pageCount: 10, onPageChange: () => undefined },
+  args: { page: 1, pageCount: 10, onPageChange: () => {} },
+  render: (args) => <Pagination {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Pagination>;
 
@@ -14,7 +15,11 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** Args-driven — edit page/pageCount in the Controls panel. */
+export const Default: Story = {};
+
+/** Rich reference example composing the kit's atoms (mirrors the catalog example). */
+export const Example: Story = {
   render: () => <PaginationExample />,
 };
 

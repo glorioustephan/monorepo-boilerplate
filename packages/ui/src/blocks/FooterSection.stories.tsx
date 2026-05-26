@@ -8,8 +8,30 @@ const meta = {
   title: 'Blocks/FooterSection',
   component: FooterSection,
   args: {
-    groups: [{ title: 'Links', links: [{ label: 'Home', href: '/' }] }],
+    groups: [
+      {
+        title: 'Product',
+        links: [
+          { label: 'Features', href: '/features' },
+          { label: 'Pricing', href: '/pricing' },
+        ],
+      },
+      {
+        title: 'Company',
+        links: [
+          { label: 'About', href: '/about' },
+          { label: 'Blog', href: '/blog' },
+        ],
+      },
+    ],
+    brand: undefined,
+    bottom: (
+      <Text size="2" color="gray">
+        &copy; 2025 Acme Inc.
+      </Text>
+    ),
   },
+  render: (args) => <FooterSection {...args} />,
   parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof FooterSection>;
 
@@ -17,34 +39,21 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** Args-driven — edit groups/brand/bottom in the Controls panel. */
+export const Default: Story = {};
+
+/** Rich reference example composing the kit's atoms. */
+export const Example: Story = {
   render: () => <FooterSectionExample />,
 };
 
 export const NoBrand: Story = {
-  render: () => (
-    <FooterSection
-      groups={[
-        {
-          title: 'Product',
-          links: [
-            { label: 'Features', href: '/features' },
-            { label: 'Pricing', href: '/pricing' },
-          ],
-        },
-        {
-          title: 'Company',
-          links: [
-            { label: 'About', href: '/about' },
-            { label: 'Blog', href: '/blog' },
-          ],
-        },
-      ]}
-      bottom={
-        <Text size="2" color="gray">
-          &copy; {new Date().getFullYear()} Acme Inc.
-        </Text>
-      }
-    />
-  ),
+  args: {
+    brand: undefined,
+    bottom: (
+      <Text size="2" color="gray">
+        &copy; {new Date().getFullYear()} Acme Inc.
+      </Text>
+    ),
+  },
 };
