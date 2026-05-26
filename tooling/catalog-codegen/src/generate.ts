@@ -28,6 +28,38 @@ function instance(spec: ComponentSpec, attrs: string): string {
   return spec.sample === undefined ? `<${open} />` : `<${open}>${spec.sample}</${tag}>`;
 }
 
+/** Args-driven instance for the controls Playground: `<Name {...args} />`.
+ *  Everything (sample text via `args.children`, mandatory props via `args`) flows through the
+ *  Controls panel; per-prop sample values stay on the matrix stories below. */
+function argsInstance(spec: ComponentSpec): string {
+  return `<${spec.name} {...args} />`;
+}
+
+/** Build the `args` object literal seeding the Playground (sample text + any mandatory props). */
+function metaArgsObject(spec: ComponentSpec): string | undefined {
+  const parts: string[] = [];
+  if (spec.sample !== undefined) parts.push(`children: ${JSON.stringify(spec.sample)}`);
+  if (spec.metaArgs) {
+    const inner = spec.metaArgs.trim().replace(/^\{/, '').replace(/\}$/, '').trim();
+    if (inner) parts.push(inner);
+  }
+  return parts.length > 0 ? `{ ${parts.join(', ')} }` : undefined;
+}
+
+/** Build `argTypes` select controls from the declared variant axes — controls that conform
+ *  exactly to the props the kit exposes for this atom (no novel knobs). */
+function argTypesObject(spec: ComponentSpec): string | undefined {
+  const axes = spec.axes ?? [];
+  if (axes.length === 0) return undefined;
+  const entries = axes
+    .map(
+      (axis) =>
+        `    ${axis.prop}: { control: { type: "select" }, options: ${JSON.stringify(axis.values)} },`,
+    )
+    .join('\n');
+  return `{\n${entries}\n  }`;
+}
+
 /** Generated re-export module for one component. */
 export function renderModule(spec: ComponentSpec): string {
   const rn = radixOf(spec);
@@ -60,10 +92,18 @@ export function renderStory(spec: ComponentSpec): string {
   const named = [...new Set(hasAxes ? [name, 'Flex'] : [name])].join(', ');
   const imports = `import { ${named} } from "@monorepo-boilerplate/ui";\nimport type { Meta, StoryObj } from "@storybook/react-vite";\n`;
 
-  const argsLine = spec.metaArgs ? `  args: ${spec.metaArgs},\n` : '';
-  const head = `const meta = {\n  title: "${spec.category}/${name}",\n  component: ${name},\n${argsLine}  parameters: { layout: "padded" },\n} satisfies Meta<typeof ${name}>;\n\nexport default meta;\n\ntype Story = StoryObj<typeof meta>;\n`;
+  // Args-driven meta: a render that spreads args + argTypes derived from the manifest axes, so
+  // the Default story exposes Controls that conform exactly to the props the kit declares.
+  const argsObj = metaArgsObject(spec);
+  const argsLine = argsObj ? `  args: ${argsObj},\n` : '';
+  const argTypes = argTypesObject(spec);
+  const argTypesLine = argTypes ? `  argTypes: ${argTypes},\n` : '';
+  const renderLine = `  render: (args) => ${argsInstance(spec)},\n`;
+  const head = `const meta = {\n  title: "${spec.category}/${name}",\n  component: ${name},\n${argsLine}${argTypesLine}${renderLine}  parameters: { layout: "padded" },\n} satisfies Meta<typeof ${name}>;\n\nexport default meta;\n\ntype Story = StoryObj<typeof meta>;\n`;
 
-  const defaultStory = `export const Default: Story = {\n  render: () => ${instance(spec, '')},\n};\n`;
+  // Default is args-driven (uses meta render + Controls). Matrix stories below stay as static
+  // showcases of every value for an axis.
+  const defaultStory = `export const Default: Story = {};\n`;
 
   const axisStories = (spec.axes ?? []).map((axis) => {
     const values = JSON.stringify(axis.values);

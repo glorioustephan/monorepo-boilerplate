@@ -6,6 +6,13 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Data Display/Badge',
   component: Badge,
+  args: { children: 'Badge' },
+  argTypes: {
+    variant: { control: { type: 'select' }, options: ['solid', 'soft', 'surface', 'outline'] },
+    size: { control: { type: 'select' }, options: ['1', '2', '3'] },
+    color: { control: { type: 'select' }, options: ['indigo', 'crimson', 'grass', 'amber'] },
+  },
+  render: (args) => <Badge {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Badge>;
 
@@ -13,9 +20,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Badge>Badge</Badge>,
-};
+export const Default: Story = {};
 
 export const Variant: Story = {
   render: () => (

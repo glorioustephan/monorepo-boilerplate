@@ -6,6 +6,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Typography/Quote',
   component: Quote,
+  args: { children: 'a quoted phrase' },
+  render: (args) => <Quote {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Quote>;
 
@@ -13,6 +15,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Quote>a quoted phrase</Quote>,
-};
+export const Default: Story = {};

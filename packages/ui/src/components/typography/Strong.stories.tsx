@@ -6,6 +6,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Typography/Strong',
   component: Strong,
+  args: { children: 'strong' },
+  render: (args) => <Strong {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Strong>;
 
@@ -13,6 +15,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Strong>strong</Strong>,
-};
+export const Default: Story = {};

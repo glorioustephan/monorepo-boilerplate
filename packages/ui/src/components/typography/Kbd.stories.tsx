@@ -6,6 +6,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Typography/Kbd',
   component: Kbd,
+  args: { children: '⌘K' },
+  argTypes: {
+    size: { control: { type: 'select' }, options: ['1', '3', '5'] },
+  },
+  render: (args) => <Kbd {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Kbd>;
 
@@ -13,9 +18,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Kbd>⌘K</Kbd>,
-};
+export const Default: Story = {};
 
 export const Size: Story = {
   render: () => (

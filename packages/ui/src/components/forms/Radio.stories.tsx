@@ -7,6 +7,11 @@ const meta = {
   title: 'Forms/Radio',
   component: Radio,
   args: { value: 'a' },
+  argTypes: {
+    variant: { control: { type: 'select' }, options: ['classic', 'surface', 'soft'] },
+    size: { control: { type: 'select' }, options: ['1', '2', '3'] },
+  },
+  render: (args) => <Radio {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Radio>;
 
@@ -14,9 +19,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Radio value="a" defaultChecked />,
-};
+export const Default: Story = {};
 
 export const Variant: Story = {
   render: () => (

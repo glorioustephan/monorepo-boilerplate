@@ -6,6 +6,16 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Forms/Button',
   component: Button,
+  args: { children: 'Button' },
+  argTypes: {
+    variant: {
+      control: { type: 'select' },
+      options: ['classic', 'solid', 'soft', 'surface', 'outline', 'ghost'],
+    },
+    size: { control: { type: 'select' }, options: ['1', '2', '3', '4'] },
+    color: { control: { type: 'select' }, options: ['indigo', 'crimson', 'grass', 'amber'] },
+  },
+  render: (args) => <Button {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Button>;
 
@@ -13,9 +23,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Button>Button</Button>,
-};
+export const Default: Story = {};
 
 export const Variant: Story = {
   render: () => (

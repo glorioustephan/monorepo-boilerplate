@@ -6,6 +6,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Layout/Inset',
   component: Inset,
+  args: { children: 'Inset' },
+  render: (args) => <Inset {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Inset>;
 
@@ -13,6 +15,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Inset>Inset</Inset>,
-};
+export const Default: Story = {};

@@ -6,6 +6,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Data Display/Skeleton',
   component: Skeleton,
+  args: { children: 'Loading placeholder' },
+  render: (args) => <Skeleton {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Skeleton>;
 
@@ -13,6 +15,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Skeleton>Loading placeholder</Skeleton>,
-};
+export const Default: Story = {};

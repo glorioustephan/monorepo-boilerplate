@@ -6,6 +6,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Typography/Heading',
   component: Heading,
+  args: { children: 'Heading' },
+  argTypes: {
+    size: { control: { type: 'select' }, options: ['3', '4', '5', '6', '7', '8'] },
+  },
+  render: (args) => <Heading {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Heading>;
 
@@ -13,9 +18,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Heading>Heading</Heading>,
-};
+export const Default: Story = {};
 
 export const Size: Story = {
   render: () => (

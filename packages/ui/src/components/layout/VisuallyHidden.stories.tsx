@@ -6,6 +6,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Layout/VisuallyHidden',
   component: VisuallyHidden,
+  args: { children: 'Screen-reader-only text' },
+  render: (args) => <VisuallyHidden {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof VisuallyHidden>;
 
@@ -13,6 +15,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <VisuallyHidden>Screen-reader-only text</VisuallyHidden>,
-};
+export const Default: Story = {};

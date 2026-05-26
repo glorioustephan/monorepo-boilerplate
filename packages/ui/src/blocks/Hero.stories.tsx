@@ -7,7 +7,16 @@ import { Hero } from './Hero';
 const meta = {
   title: 'Blocks/Hero',
   component: Hero,
-  args: { title: 'Hero' },
+  // Default args + a render that spreads them, so the Controls panel drives the component.
+  // Controls are derived from HeroProps (title/description/align/layout) — nothing novel.
+  args: {
+    title: 'Build faster with the kit',
+    description: 'A themable Radix Themes design system, agent-ready, in a single import.',
+    align: 'center',
+    layout: 'centered',
+    actions: <Button size="3">Get started</Button>,
+  },
+  render: (args) => <Hero {...args} />,
   parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof Hero>;
 
@@ -15,43 +24,36 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** Args-driven — edit title/description/align/layout in the Controls panel. */
+export const Default: Story = {};
+
+/** Rich reference example composing the kit's atoms (mirrors the catalog example). */
+export const Example: Story = {
   render: () => <HeroExample />,
 };
 
 export const LeftAligned: Story = {
-  render: () => (
-    <Hero
-      align="left"
-      title="Ship your next idea"
-      description="Left-aligned hero for content-led pages."
-      actions={<Button size="3">Start building</Button>}
-    />
-  ),
+  args: { align: 'left' },
 };
 
 export const Split: Story = {
-  render: () => (
-    <Hero
-      layout="split"
-      title="Ship your next idea"
-      description="A split layout places your headline and actions beside a media element."
-      actions={
-        <>
-          <Button size="3">Get started</Button>
-          <Button size="3" variant="soft">
-            Learn more
-          </Button>
-        </>
-      }
-      media={<AspectRatioPlaceholder />}
-    />
-  ),
+  args: {
+    layout: 'split',
+    description: 'A split layout places your headline and actions beside a media element.',
+    actions: (
+      <>
+        <Button size="3">Get started</Button>
+        <Button size="3" variant="soft">
+          Learn more
+        </Button>
+      </>
+    ),
+    media: <AspectRatioPlaceholder />,
+  },
 };
 
 /** Inline placeholder — avoids importing an image in stories. */
 function AspectRatioPlaceholder() {
-  // Box with a fixed aspect ratio using Radix props only (no Tailwind color).
   return (
     <div
       style={{

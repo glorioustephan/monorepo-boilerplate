@@ -6,6 +6,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Typography/Link',
   component: Link,
+  args: { children: 'Link' },
+  argTypes: {
+    underline: { control: { type: 'select' }, options: ['auto', 'always', 'hover', 'none'] },
+    size: { control: { type: 'select' }, options: ['2', '3', '4'] },
+  },
+  render: (args) => <Link {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Link>;
 
@@ -13,9 +19,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Link>Link</Link>,
-};
+export const Default: Story = {};
 
 export const Underline: Story = {
   render: () => (

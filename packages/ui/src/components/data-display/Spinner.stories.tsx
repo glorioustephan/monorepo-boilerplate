@@ -6,6 +6,10 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Data Display/Spinner',
   component: Spinner,
+  argTypes: {
+    size: { control: { type: 'select' }, options: ['1', '2', '3'] },
+  },
+  render: (args) => <Spinner {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Spinner>;
 
@@ -13,9 +17,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Spinner />,
-};
+export const Default: Story = {};
 
 export const Size: Story = {
   render: () => (

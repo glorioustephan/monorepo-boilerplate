@@ -6,6 +6,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Layout/Flex',
   component: Flex,
+  args: { children: 'Flex' },
+  render: (args) => <Flex {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Flex>;
 
@@ -13,6 +15,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Flex>Flex</Flex>,
-};
+export const Default: Story = {};

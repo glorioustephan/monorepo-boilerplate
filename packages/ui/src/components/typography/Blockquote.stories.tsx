@@ -6,6 +6,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Typography/Blockquote',
   component: Blockquote,
+  args: { children: 'Design is not just what it looks like — it is how it works.' },
+  argTypes: {
+    size: { control: { type: 'select' }, options: ['2', '3', '4', '5'] },
+  },
+  render: (args) => <Blockquote {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Blockquote>;
 
@@ -13,11 +18,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => (
-    <Blockquote>Design is not just what it looks like — it is how it works.</Blockquote>
-  ),
-};
+export const Default: Story = {};
 
 export const Size: Story = {
   render: () => (

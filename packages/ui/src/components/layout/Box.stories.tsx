@@ -6,6 +6,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Layout/Box',
   component: Box,
+  args: { children: 'Box' },
+  render: (args) => <Box {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Box>;
 
@@ -13,6 +15,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Box>Box</Box>,
-};
+export const Default: Story = {};

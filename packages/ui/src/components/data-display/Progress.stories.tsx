@@ -6,6 +6,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Data Display/Progress',
   component: Progress,
+  argTypes: {
+    variant: { control: { type: 'select' }, options: ['classic', 'surface', 'soft'] },
+    size: { control: { type: 'select' }, options: ['1', '2', '3'] },
+  },
+  render: (args) => <Progress {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Progress>;
 
@@ -13,9 +18,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Progress value={60} />,
-};
+export const Default: Story = {};
 
 export const Variant: Story = {
   render: () => (

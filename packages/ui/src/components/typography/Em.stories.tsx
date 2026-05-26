@@ -6,6 +6,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Typography/Em',
   component: Em,
+  args: { children: 'emphasized' },
+  render: (args) => <Em {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Em>;
 
@@ -13,6 +15,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Em>emphasized</Em>,
-};
+export const Default: Story = {};

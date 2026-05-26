@@ -6,6 +6,10 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Layout/Separator',
   component: Separator,
+  argTypes: {
+    size: { control: { type: 'select' }, options: ['1', '2', '3', '4'] },
+  },
+  render: (args) => <Separator {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Separator>;
 
@@ -13,9 +17,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Separator />,
-};
+export const Default: Story = {};
 
 export const Size: Story = {
   render: () => (

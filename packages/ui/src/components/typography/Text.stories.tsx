@@ -6,6 +6,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Typography/Text',
   component: Text,
+  args: { children: 'The quick brown fox jumps over the lazy dog.' },
+  argTypes: {
+    size: { control: { type: 'select' }, options: ['1', '2', '3', '4', '5', '6'] },
+    weight: { control: { type: 'select' }, options: ['light', 'regular', 'medium', 'bold'] },
+  },
+  render: (args) => <Text {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Text>;
 
@@ -13,9 +19,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Text>The quick brown fox jumps over the lazy dog.</Text>,
-};
+export const Default: Story = {};
 
 export const Size: Story = {
   render: () => (

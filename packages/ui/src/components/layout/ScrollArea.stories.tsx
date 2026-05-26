@@ -6,6 +6,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Layout/ScrollArea',
   component: ScrollArea,
+  args: { children: 'Scrollable content' },
+  render: (args) => <ScrollArea {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof ScrollArea>;
 
@@ -13,6 +15,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <ScrollArea>Scrollable content</ScrollArea>,
-};
+export const Default: Story = {};

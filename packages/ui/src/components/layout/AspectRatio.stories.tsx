@@ -6,6 +6,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Layout/AspectRatio',
   component: AspectRatio,
+  args: { children: '16 / 9' },
+  render: (args) => <AspectRatio {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof AspectRatio>;
 
@@ -13,6 +15,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <AspectRatio>16 / 9</AspectRatio>,
-};
+export const Default: Story = {};

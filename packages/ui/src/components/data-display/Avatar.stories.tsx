@@ -7,6 +7,12 @@ const meta = {
   title: 'Data Display/Avatar',
   component: Avatar,
   args: { fallback: 'A' },
+  argTypes: {
+    variant: { control: { type: 'select' }, options: ['solid', 'soft'] },
+    size: { control: { type: 'select' }, options: ['1', '2', '3', '4', '5'] },
+    color: { control: { type: 'select' }, options: ['indigo', 'crimson', 'grass', 'amber'] },
+  },
+  render: (args) => <Avatar {...args} />,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Avatar>;
 
@@ -14,9 +20,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Avatar fallback="A" />,
-};
+export const Default: Story = {};
 
 export const Variant: Story = {
   render: () => (
