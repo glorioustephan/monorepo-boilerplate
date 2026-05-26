@@ -36,11 +36,11 @@ const toItems = (values: readonly string[]) => values.map((value) => ({ value, t
 const preview: Preview = {
   parameters: {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
-    // addon-a11y runs axe on every story. 'todo' = report violations (Storybook a11y panel +
-    // the story test run) without failing — the right adoption mode for a component library, where
-    // many bare-primitive showcases trip rules that real usage resolves via <Field>/page landmarks.
-    // The hard gate here is that every story RENDERS; promote specific stories to `test: 'error'`
-    // (story-level `parameters.a11y.test`) as they're triaged.
+    // addon-a11y runs axe on every story. Report-only mode here: violations surface in the
+    // Storybook a11y panel and the story-test run but do not fail it — the right adoption mode
+    // for a component library, where bare-primitive showcases trip rules real usage resolves
+    // via <Field>/page landmarks. The hard gate is that every story RENDERS; raise a story to a
+    // failing a11y check via its own `parameters.a11y` once triaged.
     a11y: { test: 'todo' },
   },
   initialGlobals: {
