@@ -32,6 +32,9 @@
     "test:unit": {
       "outputs": []
     },
+    "test:stories": {
+      "outputs": []
+    },
     "test:e2e": {
       "dependsOn": ["build"],
       "outputs": []

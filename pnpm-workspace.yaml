@@ -61,6 +61,8 @@ catalog:
   storybook: ^10.4.1
   '@storybook/react-vite': ^10.4.1
   '@storybook/addon-docs': ^10.4.1
+  '@storybook/addon-a11y': ^10.4.1
+  '@storybook/addon-vitest': ^10.4.1
   vite: ^8.0.14
 
   # MCP
@@ -83,8 +85,11 @@ catalog:
 
   # Testing
   vitest: ^4.1.7
+  '@vitest/browser': ^4.1.7
+  '@vitest/browser-playwright': ^4.1.7
   '@vitejs/plugin-react': ^6.0.2
   '@playwright/test': ^1.60.0
+  playwright: ^1.60.0
   jsdom: ^29.1.1
   '@testing-library/react': ^16.3.2
   '@testing-library/dom': ^10.4.1

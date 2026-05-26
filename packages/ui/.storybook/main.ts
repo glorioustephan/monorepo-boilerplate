@@ -5,7 +5,7 @@ const config: StorybookConfig = {
   framework: '@storybook/react-vite',
   // Stories live next to each component (src/<tier>/<slug>.stories.tsx).
   stories: ['../src/**/*.stories.@(ts|tsx)'],
-  addons: ['@storybook/addon-docs'],
+  addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-vitest'],
   viteFinal: (viteConfig) => {
     // Tailwind v4 via the Vite plugin (matches the app's v4 setup, not PostCSS).
     // The kit's self-import inside examples (`@monorepo-boilerplate/ui`) resolves to

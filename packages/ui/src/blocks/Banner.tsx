@@ -2,7 +2,7 @@
 
 import { type ComponentProps, type ReactNode } from 'react';
 
-import { Callout, Flex, IconButton, Text } from '../components';
+import { Callout, IconButton, Text } from '../components';
 import { cn } from '../lib/cn';
 
 /** Infer the Radix accent color type from the Callout atom this banner is built on. */
@@ -44,24 +44,23 @@ export function Banner({
   className,
 }: BannerProps) {
   return (
-    <Callout.Root color={color} variant="surface" className={cn(className)}>
-      <Callout.Text>
-        <Flex align="center" justify="center" gap="3" wrap="wrap">
-          <Text size="2">{children}</Text>
-          {action != null ? action : undefined}
-          {onDismiss != null ? (
-            <IconButton
-              variant="ghost"
-              color="gray"
-              size="1"
-              aria-label={dismissLabel}
-              onClick={onDismiss}
-            >
-              {dismissIcon}
-            </IconButton>
-          ) : undefined}
-        </Flex>
-      </Callout.Text>
+    // `.mb-banner` overrides Callout's grid with a centered flex row so the message (a <p> via
+    // Callout.Text, inline content only) sits beside the action + dismiss as valid siblings —
+    // never a <div>/<button> nested inside the <p>.
+    <Callout.Root color={color} variant="surface" className={cn('mb-banner', className)}>
+      <Callout.Text size="2">{children}</Callout.Text>
+      {action != null ? action : undefined}
+      {onDismiss != null ? (
+        <IconButton
+          variant="ghost"
+          color="gray"
+          size="1"
+          aria-label={dismissLabel}
+          onClick={onDismiss}
+        >
+          {dismissIcon}
+        </IconButton>
+      ) : undefined}
     </Callout.Root>
   );
 }

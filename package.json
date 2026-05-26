@@ -25,6 +25,7 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "test:unit": "turbo run test:unit",
+    "test:stories": "turbo run test:stories",
     "test:e2e": "turbo run test:e2e",
     "clean": "turbo run clean && rm -rf node_modules",
     "env:doctor": "turbo run env:doctor",

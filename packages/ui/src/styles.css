@@ -231,6 +231,18 @@
 }
 
 /*
+ * Banner (src/blocks/Banner.tsx) — overrides Callout's grid with a centered flex row so the
+ * message, action, and dismiss are siblings (no <div>/<button> nested inside Callout.Text's <p>).
+ */
+.mb-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+/*
  * Combobox (src/recipes/Combobox.tsx) — anchors the autocomplete listbox under the input.
  * Layout only; the list surface/colors come from the Card it wraps.
  */

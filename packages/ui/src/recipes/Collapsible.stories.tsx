@@ -1,6 +1,7 @@
 import { Flex, Text } from '@monorepo-boilerplate/ui';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect } from 'storybook/test';
 
 import CollapsibleExample from '../../examples/Collapsible.example';
 import { Collapsible } from './Collapsible';
@@ -35,4 +36,11 @@ export const ClosedByDefault: Story = {
       </Text>
     </Collapsible>
   ),
+  /** Proves the CSS-only disclosure toggles `aria-expanded` on click. */
+  play: async ({ canvas, userEvent }) => {
+    const trigger = canvas.getByRole('button', { name: /show advanced options/i });
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.click(trigger);
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+  },
 };
