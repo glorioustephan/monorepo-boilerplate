@@ -24,12 +24,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-
+      # Node must be set up BEFORE pnpm: pnpm@11 requires Node >=22.13, and
+      # pnpm/action-setup's self-install runs under whatever Node is on PATH.
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: pnpm
+
+      - uses: pnpm/action-setup@v4
+
+      # setup-node's `cache: pnpm` can't be used (pnpm isn't installed when it runs),
+      # so cache the pnpm store explicitly instead.
+      - name: Resolve pnpm store path
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> "$GITHUB_ENV"
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-${{ matrix.node }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-${{ matrix.node }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -67,12 +80,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-
+      # Node before pnpm (pnpm@11 needs Node >=22.13).
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Resolve pnpm store path
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> "$GITHUB_ENV"
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
