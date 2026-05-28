@@ -5,7 +5,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["NEXT_PUBLIC_*"],
+      "env": ["NEXT_PUBLIC_*", "DOCS_BASE"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", ".vitepress/dist/**", "catalog.db"]
     },
     "dev": {

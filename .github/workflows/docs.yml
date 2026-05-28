@@ -1,0 +1,73 @@
+name: Deploy Docs
+
+# Builds the VitePress docs site (docs/) and publishes it to GitHub Pages.
+# Pages must be configured with Source = "GitHub Actions" (Settings → Pages).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Least privilege needed to publish to Pages via the official deploy action.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deploy; don't cancel an in-progress publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+
+jobs:
+  build:
+    name: Build docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node before pnpm (pnpm@11 needs Node >=22.13).
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Resolve pnpm store path
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> "$GITHUB_ENV"
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - uses: actions/configure-pages@v5
+
+      # DOCS_BASE makes VitePress emit asset/links under the project-page path
+      # (https://<owner>.github.io/<repo>/). Derived from the repo name so forks work.
+      - name: Build docs
+        run: pnpm docs:build
+        env:
+          DOCS_BASE: /${{ github.event.repository.name }}/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/.vitepress/dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
