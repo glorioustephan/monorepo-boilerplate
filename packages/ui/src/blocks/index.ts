@@ -1,4 +1,10 @@
 export { Banner, type BannerProps } from './Banner';
+export {
+  ChatContainer,
+  type ChatContainerContentProps,
+  type ChatContainerRootProps,
+  type ChatContainerScrollAnchorProps,
+} from './ChatContainer';
 export { BentoGrid, type BentoGridProps, type BentoItem } from './BentoGrid';
 export {
   BlogSection,

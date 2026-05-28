@@ -57,6 +57,13 @@ catalog:
   '@radix-ui/themes': ^3.3.0
   '@radix-ui/react-icons': ^1.3.2
 
+  # AI chat primitives (prompt-kit port; runtime deps of packages/ui)
+  react-markdown: ^10.1.0
+  remark-gfm: ^4.0.1
+  remark-breaks: ^4.0.0
+  shiki: ^3.0.0
+  use-stick-to-bottom: ^1.1.1
+
   # Storybook (component workshop; lives in packages/ui)
   storybook: ^10.4.1
   '@storybook/react-vite': ^10.4.1

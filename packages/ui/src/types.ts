@@ -76,3 +76,60 @@ export interface StatItem {
     readonly trend: 'up' | 'down' | 'neutral';
   };
 }
+
+// ---------- AI chat (prompt-kit port) ----------
+
+/** A chat participant role. Used across the `Chat` family (Message, MessageThread, useChat, templates). */
+export type ChatRole = 'user' | 'assistant' | 'system';
+
+/**
+ * A single chat turn. `content` is markdown source for assistant turns and plain text otherwise.
+ * `id` is the stable React key for the thread.
+ */
+export interface ChatMessage {
+  /** Stable unique id (used as the React key). */
+  readonly id: string;
+  /** Who produced this turn. */
+  readonly role: ChatRole;
+  /** Message body — markdown source for assistant turns, plain text for user/system turns. */
+  readonly content: string;
+  /** Optional creation timestamp (epoch ms) for ordering/display. */
+  readonly createdAt?: number;
+}
+
+/** Lifecycle state of a tool call rendered by the `Tool` recipe; drives its status badge and icon. */
+export type ToolInvocationStatus =
+  | 'input-streaming'
+  | 'input-available'
+  | 'output-available'
+  | 'output-error';
+
+/**
+ * A tool/function call surfaced inline in an assistant turn. The kit-idiomatic shape consumed by
+ * the `ToolCalling` template; the `Tool` recipe also accepts prompt-kit's verbatim `ToolPart` for
+ * drop-in parity (see the recipe's own exported type).
+ */
+export interface ToolInvocation {
+  /** Tool name / type identifier, e.g. `'search_web'`. */
+  readonly name: string;
+  /** Current lifecycle state — drives the status `Badge` and icon. */
+  readonly status: ToolInvocationStatus;
+  /** Input arguments passed to the tool. */
+  readonly input?: Record<string, unknown>;
+  /** Tool result payload. */
+  readonly output?: Record<string, unknown>;
+  /** Provider-assigned call id. */
+  readonly callId?: string;
+  /** Error detail shown when `status === 'output-error'`. */
+  readonly errorText?: string;
+}
+
+/** A cited source surfaced by the `Source` recipe's hover card. */
+export interface ChatSource {
+  /** Destination URL. */
+  readonly href: string;
+  /** Short title shown in the hover card. */
+  readonly title: string;
+  /** One-line description shown in the hover card. */
+  readonly description?: string;
+}

@@ -29,7 +29,12 @@
     "@radix-ui/themes": "catalog:",
     "clsx": "catalog:",
     "next-themes": "catalog:",
-    "tailwind-merge": "catalog:"
+    "react-markdown": "catalog:",
+    "remark-breaks": "catalog:",
+    "remark-gfm": "catalog:",
+    "shiki": "catalog:",
+    "tailwind-merge": "catalog:",
+    "use-stick-to-bottom": "catalog:"
   },
   "devDependencies": {
     "@monorepo-boilerplate/test-config": "workspace:*",

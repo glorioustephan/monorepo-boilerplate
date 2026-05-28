@@ -6,3 +6,5 @@ export { ListPageTemplate, type ListPageTemplateProps } from './ListPageTemplate
 export { MarketingTemplate, type MarketingTemplateProps } from './MarketingTemplate';
 export { PricingTemplate, type PricingTemplateProps } from './PricingTemplate';
 export { SettingsTemplate, type SettingsTemplateProps } from './SettingsTemplate';
+export { Chatbot, type ChatbotProps } from './Chatbot';
+export { ToolCalling, type ToolCallingMessage, type ToolCallingProps } from './ToolCalling';

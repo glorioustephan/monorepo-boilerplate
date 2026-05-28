@@ -8,7 +8,18 @@
 export { cn } from './lib/cn';
 
 // Shared structural types for data-driven composite props.
-export type { BreadcrumbItem, NavItem, NavLink, StatItem, TableColumn } from './types';
+export type {
+  BreadcrumbItem,
+  ChatMessage,
+  ChatRole,
+  ChatSource,
+  NavItem,
+  NavLink,
+  StatItem,
+  TableColumn,
+  ToolInvocation,
+  ToolInvocationStatus,
+} from './types';
 
 // Components — generated from components/components.manifest.ts (thin Radix Themes re-exports).
 export * from './components';

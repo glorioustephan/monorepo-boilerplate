@@ -259,3 +259,693 @@
   max-height: 16rem;
   overflow-y: auto;
 }
+
+/* =============================================================================
+ * AI-chat component family — layout + animation only; no color.
+ * Colors come exclusively from Radix CSS variables (var(--*)).
+ * Every keyframe animation is guarded by @media (prefers-reduced-motion: reduce).
+ * ============================================================================= */
+
+/*
+ * PromptInput (src/recipes/Chat/PromptInput.tsx) — composer shell + textarea surface strip.
+ * The shell creates the rounded pill border the whole composer sits in; the textarea rule
+ * strips the Radix TextArea atom's own border/shadow/ring so it reads as inline content.
+ */
+.mb-prompt-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--gray-a6);
+  border-radius: var(--radius-5);
+  cursor: text;
+  overflow: hidden;
+}
+
+.mb-prompt-input[data-disabled='true'] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mb-prompt-input-textarea {
+  resize: none;
+  min-height: 44px;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background: transparent;
+}
+
+/* Strip the Radix TextArea's own inset so its text aligns to the shell padding (and to the
+ * actions row beneath it); the shell now owns the inset via its padding above. */
+.mb-prompt-input-textarea :where(textarea) {
+  padding: 0;
+}
+
+/*
+ * Message (src/recipes/Chat/Message.tsx) — bubble surface for assistant and user turns.
+ * The [data-role='user'] variant tints to the accent scale for visual role distinction;
+ * alignment is the template's concern — Message stays role-agnostic for layout.
+ */
+.mb-message-content {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-4);
+  background-color: var(--gray-a3);
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.mb-message-content[data-role='user'] {
+  background-color: var(--accent-a3);
+}
+
+/*
+ * CodeBlock (src/recipes/Chat/CodeBlock.tsx) — bordered code surface + inner pre layout.
+ * Shiki is invoked with `defaultColor: false` which emits --shiki-light / --shiki-dark
+ * custom properties on each token span. By default we activate the light theme variables.
+ * Radix Themes applies dark appearance via a `.dark` class on the root element (which may
+ * also carry `.radix-themes`); selecting `.dark .mb-codeblock-pre` is the broadest hook.
+ */
+.mb-codeblock {
+  border: 1px solid var(--gray-a6);
+  border-radius: var(--radius-3);
+  background-color: var(--gray-2);
+  overflow: hidden;
+}
+
+.mb-codeblock-pre {
+  overflow-x: auto;
+  font-size: 13px;
+}
+
+/* Shiki dual-theme: activate light token vars by default */
+.mb-codeblock-pre [style*='--shiki-light'] {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg, transparent);
+}
+
+/* Switch to dark token vars under Radix dark appearance (.dark root class) */
+.dark .mb-codeblock-pre [style*='--shiki-dark'] {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg, transparent);
+}
+
+/*
+ * Inner pre/code padding. Shiki's highlighted output is wrapped in a <div> by
+ * dangerouslySetInnerHTML, so the real <pre> is `.mb-codeblock-pre > div > pre` — a `> pre`
+ * child selector missed it (it only matched the pre-highlight fallback). Use a descendant
+ * selector so both the fallback and the highlighted <pre> get padding; zero the UA <pre> margin
+ * and leave right-side clearance for the absolutely-positioned copy button.
+ */
+.mb-codeblock-pre pre {
+  margin: 0;
+  padding: var(--space-4);
+  padding-right: var(--space-6);
+  line-height: 1.6;
+}
+
+/* Header band (filename + actions) — present when a CodeBlockGroup wraps the toolbar. */
+.mb-codeblock-group {
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--gray-a5);
+  min-height: var(--space-6);
+}
+
+/*
+ * Markdown (src/recipes/Chat/Markdown.tsx) — vertical rhythm + list styling for rendered prose.
+ * react-markdown emits each top-level block as a direct child of the .mb-markdown root, so a
+ * `> * + *` selector gives consistent block spacing; headings get a little extra room above.
+ * Radix's CSS reset strips list bullets/indent, so restore them here. Layout/spacing only.
+ */
+.mb-markdown > * + * {
+  margin-top: var(--space-3);
+}
+
+.mb-markdown > :first-child {
+  margin-top: 0;
+}
+
+.mb-markdown > :is(h1, h2, h3, h4, h5, h6) {
+  margin-top: var(--space-4);
+}
+
+.mb-markdown ul,
+.mb-markdown ol {
+  margin: 0;
+  padding-left: 1.5em;
+}
+
+.mb-markdown ul {
+  list-style: disc;
+}
+
+.mb-markdown ol {
+  list-style: decimal;
+}
+
+.mb-markdown li + li {
+  margin-top: var(--space-1);
+}
+
+.mb-markdown li::marker {
+  color: var(--gray-a9);
+}
+
+/*
+ * Loader (src/recipes/Chat/Loader.tsx) — CSS-only loader variants.
+ * Keyframes mirror prompt-kit originals; all `bg-primary` / `text-primary` tokens
+ * are replaced with Radix var(--accent-9) / var(--gray-a11) equivalents.
+ * circular/classic variants delegate to the Spinner atom — no CSS here for those.
+ */
+
+/* --- bounce-dots (DotsLoader) -------------------------------------------- */
+@keyframes mb-bounce-dots {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.mb-loader-dots {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.mb-loader-dots > span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background-color: var(--accent-9);
+  animation: mb-bounce-dots 1.4s ease-in-out infinite;
+}
+
+.mb-loader-dots > span:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.mb-loader-dots > span:nth-child(2) {
+  animation-delay: 160ms;
+}
+
+.mb-loader-dots > span:nth-child(3) {
+  animation-delay: 320ms;
+}
+
+/* --- typing (TypingLoader) ----------------------------------------------- */
+@keyframes mb-typing {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.mb-loader-typing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.mb-loader-typing > span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: var(--accent-9);
+  animation: mb-typing 1s ease-in-out infinite;
+}
+
+.mb-loader-typing > span:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.mb-loader-typing > span:nth-child(2) {
+  animation-delay: 250ms;
+}
+
+.mb-loader-typing > span:nth-child(3) {
+  animation-delay: 500ms;
+}
+
+/* --- wave (WaveLoader) --------------------------------------------------- */
+@keyframes mb-wave {
+  0%,
+  100% {
+    transform: scaleY(0.5);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.mb-loader-wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.mb-loader-wave > span {
+  display: inline-block;
+  width: 3px;
+  border-radius: 9999px;
+  background-color: var(--accent-9);
+  animation: mb-wave 1s ease-in-out infinite;
+}
+
+.mb-loader-wave > span:nth-child(1) {
+  height: 8px;
+  animation-delay: 0ms;
+}
+
+.mb-loader-wave > span:nth-child(2) {
+  height: 12px;
+  animation-delay: 100ms;
+}
+
+.mb-loader-wave > span:nth-child(3) {
+  height: 16px;
+  animation-delay: 200ms;
+}
+
+.mb-loader-wave > span:nth-child(4) {
+  height: 12px;
+  animation-delay: 300ms;
+}
+
+.mb-loader-wave > span:nth-child(5) {
+  height: 8px;
+  animation-delay: 400ms;
+}
+
+/* --- wave-bars (BarsLoader) ---------------------------------------------- */
+@keyframes mb-wave-bars {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.mb-loader-bars {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.mb-loader-bars > span {
+  display: inline-block;
+  width: 4px;
+  height: 20px;
+  border-radius: var(--radius-1);
+  background-color: var(--accent-9);
+  animation: mb-wave-bars 1.2s ease-in-out infinite;
+}
+
+.mb-loader-bars > span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.mb-loader-bars > span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.mb-loader-bars > span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* --- blink (TerminalLoader) ----------------------------------------------- */
+@keyframes mb-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.mb-loader-terminal {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-mono, monospace);
+}
+
+.mb-loader-terminal > .mb-loader-terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background-color: var(--accent-9);
+  animation: mb-blink 1s step-end infinite;
+}
+
+/* --- text-blink (TextBlinkLoader) ---------------------------------------- */
+@keyframes mb-text-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.mb-loader-text-blink {
+  animation: mb-text-blink 2s ease-in-out infinite;
+}
+
+/* --- loading-dots (TextDotsLoader) --------------------------------------- */
+@keyframes mb-loading-dots {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.mb-loader-loading-dots {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.mb-loader-loading-dots > .mb-loader-loading-dots-dot {
+  animation: mb-loading-dots 1.4s infinite;
+}
+
+.mb-loader-loading-dots > .mb-loader-loading-dots-dot:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.mb-loader-loading-dots > .mb-loader-loading-dots-dot:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.mb-loader-loading-dots > .mb-loader-loading-dots-dot:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mb-loader-dots > span,
+  .mb-loader-typing > span,
+  .mb-loader-wave > span,
+  .mb-loader-bars > span,
+  .mb-loader-terminal > .mb-loader-terminal-cursor,
+  .mb-loader-text-blink,
+  .mb-loader-loading-dots > .mb-loader-loading-dots-dot {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
+ * TextShimmer (src/recipes/Chat/TextShimmer.tsx) — animated gradient sweep over text.
+ * Gradient stops use Radix tokens (var(--gray-11) ↔ var(--gray-12)) in place of shadcn's
+ * --muted-foreground / --foreground. The sweep keyframe is driven by two inline custom
+ * properties set on the element: --mb-shimmer-duration (seconds) and --mb-shimmer-spread
+ * (a 5–45 percentage offset controlling gradient width). Reduced-motion degrades to a
+ * static, legible color.
+ */
+@keyframes mb-shimmer-sweep {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.mb-shimmer {
+  /* --mb-shimmer-spread is a unitless number (e.g. 20) from the component; multiply by 1% so the
+   * color-stop positions are valid percentages. (A bare `calc(50% - 20)` is invalid and silently
+   * drops the whole gradient to `none`, leaving transparent-clipped text invisible.) */
+  background-image: linear-gradient(
+    to right,
+    var(--gray-11) calc(50% - var(--mb-shimmer-spread, 20) * 1%),
+    var(--gray-12) 50%,
+    var(--gray-11) calc(50% + var(--mb-shimmer-spread, 20) * 1%)
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: mb-shimmer-sweep var(--mb-shimmer-duration, 4s) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mb-shimmer {
+    animation: none;
+    background-image: none;
+    color: var(--gray-11);
+    -webkit-text-fill-color: var(--gray-11);
+  }
+}
+
+/*
+ * ResponseStream (src/recipes/Chat/ResponseStream.tsx) — typewriter caret + per-word fade.
+ * .mb-stream-cursor appends a blinking caret pseudo-element in typewriter mode.
+ * .mb-stream-fade-segment drives per-word opacity reveal in fade mode; animation-delay
+ * is set inline per word index by the component.
+ */
+@keyframes mb-stream-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mb-stream-caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.mb-stream-cursor::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background-color: var(--gray-a11);
+  animation: mb-stream-caret-blink 0.8s step-end infinite;
+}
+
+.mb-stream-fade-segment {
+  display: inline;
+  opacity: 0;
+  animation: mb-stream-fade-in 300ms ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mb-stream-cursor::after {
+    animation: none;
+    opacity: 1;
+  }
+
+  .mb-stream-fade-segment {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/*
+ * ScrollButton (src/recipes/Chat/ScrollButton.tsx) — shows when user is not at the bottom.
+ * The component sets data-at-bottom='true'|'false' on the button; CSS drives the
+ * opacity + translate + scale transition (no motion library).
+ */
+.mb-scroll-button {
+  transition:
+    opacity 150ms ease-out,
+    transform 150ms ease-out;
+}
+
+.mb-scroll-button[data-at-bottom='false'] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.mb-scroll-button[data-at-bottom='true'] {
+  opacity: 0;
+  transform: translateY(4px) scale(0.95);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mb-scroll-button {
+    transition: opacity 150ms ease-out;
+  }
+
+  .mb-scroll-button[data-at-bottom='true'] {
+    transform: none;
+  }
+}
+
+/*
+ * ChatContainer (src/blocks/Chat/ChatContainer.tsx) — log region shell.
+ * Flex + overflow-y:auto only; StickToBottom controls scroll behavior.
+ */
+.mb-chat-container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/*
+ * Source (src/recipes/Chat/Source.tsx) — inline citation chip trigger.
+ * Renders as a small rounded-full pill inline within prose; max-width clamps it and
+ * text-overflow truncates long domain names gracefully.
+ */
+.mb-source-trigger {
+  display: inline-flex;
+  align-items: center;
+  max-width: clamp(60px, 20ch, 160px);
+  padding: 0 var(--space-2);
+  border-radius: 9999px;
+  background-color: var(--gray-a3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: baseline;
+  line-height: 1.5;
+}
+
+/*
+ * ChainOfThought (src/recipes/Chat/ChainOfThought.tsx) — a vertical "chain" of reasoning steps.
+ * The root stacks steps with breathing room (gap) and draws one continuous rail down the left
+ * gutter so the leading dots read as nodes on a timeline. Each step's dot (a DotFilledIcon in a
+ * 16px box) is centred at ~8px, so the 1px rail sits at left:7px and the dots overlay it. The rail
+ * is inset top/bottom so it begins/ends at the first/last dot rather than the container edges.
+ */
+.mb-cot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.mb-cot::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 11px;
+  bottom: 11px;
+  width: 1px;
+  background-color: var(--accent-a5);
+}
+
+/* A single step — relative so its expanded content can clear the rail via its own left padding. */
+.mb-cot-step {
+  position: relative;
+}
+
+/*
+ * Steps (src/recipes/Chat/Steps.tsx) — two-column layout for the step list.
+ * Left column (min-content) holds the vertical bar; right column (minmax(0,1fr)) holds
+ * the step items and grows to fill available space. A top margin separates the list from
+ * the trigger above it so the items don't crowd the header.
+ */
+.mb-steps-grid {
+  display: grid;
+  grid-template-columns: min-content minmax(0, 1fr);
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/*
+ * Image (src/recipes/Chat/Image.tsx) — image wrapper. Shrink-wraps the <img> (inline-block) so the
+ * rounded corners clip every side — a full-width block wrapper would only round the corners that
+ * happen to sit at a narrower image's edge. `line-height: 0` drops the inline descender gap. No color.
+ */
+.mb-chat-image {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-3);
+  line-height: 0;
+}
+
+.mb-chat-image > img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/*
+ * FileUpload (src/recipes/Chat/FileUpload.tsx) — drag-and-drop overlay + drop zone.
+ * The overlay is a fixed full-screen backdrop rendered via createPortal while dragging;
+ * the zone is a centered dashed rectangle indicating the drop target.
+ */
+@keyframes mb-file-upload-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mb-file-upload-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  background-color: var(--gray-a2);
+  animation: mb-file-upload-fade-in 150ms ease;
+}
+
+.mb-file-upload-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--gray-a6);
+  border-radius: var(--radius-3);
+  padding: var(--space-8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mb-file-upload-overlay {
+    animation: none;
+  }
+}
+
+/*
+ * ThinkingBar (src/recipes/Chat/ThinkingBar.tsx) — stop control decoration.
+ * A dotted bottom border signals the stop/answer-now control is interactive without
+ * relying on color alone.
+ */
+.mb-thinking-stop {
+  border-bottom: 1px dotted var(--gray-a8);
+  cursor: pointer;
+}
