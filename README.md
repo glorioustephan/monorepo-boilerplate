@@ -1,15 +1,34 @@
 # @monorepo-boilerplate
 
-An opinionated **Turborepo + pnpm** monorepo template, built to be forked as the
-starting point for new projects. It ships a working Next.js 16 + React 19 web app,
-a Model Context Protocol (MCP) server, a Radix Themes UI kit (themable, with a Storybook
-workshop and a runtime theme switcher), and a cohesive **cross-agent convention layer** so
-both humans and AI coding agents stay consistent.
+> An opinionated **Turborepo + pnpm** monorepo template, built to be forked as the
+> starting point for new projects.
 
-> Status: **Phases 0–6 complete** (see the [roadmap](./docs/roadmap.md)) — foundation, hardening,
-> data layer, providers, auth, deployment, and a UI kit with its own MCP server. The kit has
-> since grown into a tiered, AI-consumable **component catalog** (UI-Kit Expansion track U0–U8;
-> see the [UI Kit Catalog](./docs/phases/ui-kit-catalog.md) docs). This is a living
+<p align="center">
+  <a href="https://github.com/glorioustephan/monorepo-boilerplate/actions/workflows/ci.yml"><img src="https://github.com/glorioustephan/monorepo-boilerplate/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/code%20style-oxlint%20%2B%20oxfmt-6E40C9" alt="Code style: oxlint + oxfmt">
+  <img src="https://img.shields.io/badge/node-%E2%89%A522-339933?logo=node.js&logoColor=white" alt="Node >= 22">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome">
+  <br>
+  <img src="https://img.shields.io/badge/Turborepo-2-EF4444?logo=turborepo&logoColor=white" alt="Turborepo 2">
+  <img src="https://img.shields.io/badge/pnpm-workspaces-F69220?logo=pnpm&logoColor=white" alt="pnpm workspaces">
+  <img src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white" alt="TypeScript (strict)">
+  <img src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white" alt="Next.js 16">
+  <img src="https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white" alt="React 19">
+  <img src="https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind v4">
+</p>
+
+It ships a working Next.js 16 + React 19 web app, a Model Context Protocol (MCP) server, a
+themable **Radix Themes UI kit** — including a full **AI-chat component family** (chat input,
+streaming messages, markdown + syntax-highlighted code, tool-calling, reasoning, and ready-made
+chatbot templates) — with a Storybook workshop and a runtime theme switcher, plus a cohesive
+**cross-agent convention layer** so both humans and AI coding agents stay consistent.
+
+> **Status:** **Phases 0–6 complete** (see the [roadmap](./docs/roadmap.md)) — foundation,
+> hardening, data layer, providers, auth, deployment, and a UI kit with its own MCP server. The kit
+> has since grown into a tiered, AI-consumable **component catalog** (UI-Kit Expansion track U0–U8;
+> see the [UI Kit Catalog](./docs/phases/ui-kit-catalog.md) docs) and an AI-chat component family
+> ported from [prompt-kit](https://www.prompt-kit.com/) onto Radix Themes. This is a living
 > boilerplate; keep iterating holistically.
 
 ## Documentation
@@ -133,7 +152,12 @@ component layer (`components/`, sub-foldered by category, from `components.manif
 props; `pnpm lint:catalog` makes `@radix-ui/*` importable **only** inside `packages/ui`, so the
 kit stays the one front door. The component **catalog** (search/retrieval for agents) is owned by
 the **`mcp-ui`** MCP server, which scrapes the kit at build time into a `node:sqlite` database and
-serves **hybrid search** — FTS5 lexical fused with MiniLM semantic similarity. Theme switching (light/dark, accent, gray, radius, scaling) is live via the kit's
+serves **hybrid search** — FTS5 lexical fused with MiniLM semantic similarity. On top of the
+general-purpose recipes/blocks/templates, the kit ships a complete **AI-chat component family**
+(ported from [prompt-kit](https://www.prompt-kit.com/) onto Radix Themes): `PromptInput`, `Message`,
+`ChatContainer`, `Markdown`, `CodeBlock` (Shiki, dual light/dark themes), `Loader`, `Reasoning`,
+`Tool`, `Steps`, `ResponseStream`, and `Chatbot`/`ToolCalling` page templates wired by a headless
+`useChat` hook. Theme switching (light/dark, accent, gray, radius, scaling) is live via the kit's
 `ThemeProvider`/`ThemeSwitcher`; explore every component themed in Storybook
 (`pnpm --filter @monorepo-boilerplate/ui storybook`).
 
